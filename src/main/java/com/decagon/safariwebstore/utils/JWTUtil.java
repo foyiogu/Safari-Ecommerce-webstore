@@ -4,6 +4,9 @@ package com.decagon.safariwebstore.utils;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.env.Environment;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
@@ -14,7 +17,9 @@ import java.util.function.Function;
 
 @Service
 public class JWTUtil {
-    private final String SECRET = SecurityAuthorisationConstants.SECRET;
+
+    @Value("${jwt.secret}")
+    private String SECRET;
 
     private long EXPIRATION_TIME = SecurityAuthorisationConstants.TOKEN_EXPIRATION_TIME;
 
@@ -51,6 +56,7 @@ public class JWTUtil {
 
     private String createToken(Map<String, Object> claims, String subject) {
         return Jwts.builder()
+                .setHeaderParam("typ", "JWT")
                 .setClaims(claims)
                 .setSubject(subject)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
