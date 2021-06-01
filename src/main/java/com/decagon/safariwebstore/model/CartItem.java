@@ -20,11 +20,11 @@ public class CartItem {
     @Column(columnDefinition = "decimal")
     private double price;
     @ManyToOne
-    @JoinColumn(name = "produt_id")
+    @JoinColumn(name = "product_id")
     private Product product;
 
     @ManyToOne
-    @JoinColumn(name = "account_id")
-    private Account account;
+    @JoinColumn(name = "user_id")
+    private User user;
 
 }

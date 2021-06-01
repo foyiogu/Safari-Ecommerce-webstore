@@ -11,7 +11,7 @@ import java.util.List;
 @Setter
 @Entity
 @Table(name = "accounts")
-public class Account extends AutoDate{
+public class User extends AutoDate{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -31,12 +31,12 @@ public class Account extends AutoDate{
     private Date passwordResetExpireDate;
     @ManyToMany
     @JoinTable(name = "user_roles",
-            joinColumns = @JoinColumn(name = "account_id"),
+            joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id"))
     private List<Role> roles;
     @ManyToMany
     @JoinTable(name = "favorite_products",
-            joinColumns = @JoinColumn(name = "account_id"),
+            joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "product_id")
     )
     private List<Product> favouriteProducts;

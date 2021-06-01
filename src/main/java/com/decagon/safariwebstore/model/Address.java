@@ -18,8 +18,8 @@ public class Address {
     private String location;
     private String phone;
     @ManyToOne
-    @JoinColumn(name = "account_id")
-    private Account account;
+    @JoinColumn(name = "user_id")
+    private User user;
     @Column(name = "is_shipping_address")
     private boolean isShippingAddress;
 
