@@ -14,7 +14,7 @@
     <name>Safari-Web-Store</name>
     <description>Safari-Web-Store</description>
     <properties>
-        <java.version>16</java.version>
+        <java.version>11</java.version>
     </properties>
     <dependencies>
        
@@ -113,6 +113,7 @@
     </dependencies>
 
     <build>
+        <finalName>safari-web-store</finalName>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
@@ -127,6 +128,7 @@
                 </configuration>
             </plugin>
         </plugins>
+
     </build>
 
 </project>
