@@ -33,6 +33,6 @@ public class Product extends AutoDate {
     private List<ProductImage> productImages;
 
     @ManyToMany(mappedBy = "favouriteProducts")
-    private List<Account> accounts;
+    private List<User> users;
 
 }

@@ -20,7 +20,7 @@ public class CheckOut {
     private Date dateOrder;
     @ManyToOne
     @JoinColumn(name = "account_id")
-    private Account account;
+    private User user;
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "date_delivered")
     private Date dateDelivered;
