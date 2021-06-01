@@ -1,4 +1,3 @@
-FROM openjdk:16-alpine as build
-ADD target/Safari-Web-Store.jar Safari-Web-Store.jar
-EXPOSE 80
-ENTRYPOINT [ "java", "-jar", "Safari-Web-Store.jar"]
+FROM adoptopenjdk/openjdk11:alpine-jre
+ADD target/safari-web-store.jar safari-web-store.jar
+ENTRYPOINT ["java", "-jar", "safari-web-store.jar"]

@@ -1,48 +1,18 @@
-# Docker Compose file Reference (https://docs.docker.com/compose/compose-file/)
-
-version: "3.9"
-
-# Define services
+version: '3.3'
 services:
-# Safari WebStore Backend Service
-  webapp:
-    # Configuration for building the docker image for the backend service
-    build:
-      context: . # Use an image built from the specified dockerfile in the `Safari-webstore` directory.
-      dockerfile: Dockerfile
+  safari_web_store_api:
+    container_name: safari-web-store
+    image: safari-web-store
+    build: ./
     ports:
-      - "80:80" # Forward the exposed port 80 on the container to port 80 on the host machine
-    restart: always
+      - "8045:8080"
     depends_on:
-      - db # This service depends on postgreSQL. Start that first.
-    environment: # Pass environment variables to the service
-      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/safari_webstore_db
-      SPRING_DATASOURCE_USERNAME: safari
-      SPRING_DATASOURCE_PASSWORD: safari
-    networks: # Networks to join (Services on the same network can communicate with each other using their name)
-      - backend
-      - frontend
-
-  # Safari WebStore Database Service (PostgreSQL)
-  db:
-    image: postgres:11.12-alpine
+      - postgresqldb
+  postgresqldb:
+    image: postgres
     ports:
-      - "5432:5432"
-    restart: always
+      - "5440:5432"
     environment:
-      POSTGRES_DATABASE: safari_webstore_db
-      POSTGRES_USER: safari
-      POSTGRES_PASSWORD: safari
-    volumes:
-      - db-data:/var/lib/postgresql/data
-    networks:
-      - backend
-
-# Volumes
-volumes:
-  db-data:
-
-# Networks to be created to facilitate communication between containers
-networks:
-  backend:
-  frontend:
+      - POSTGRES_PASSWORD=safari
+      - POSTGRES_USER=postgres
+      - POSTGRES_DB=safari_web_storeDB
