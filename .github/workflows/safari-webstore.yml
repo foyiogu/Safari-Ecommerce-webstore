@@ -26,6 +26,6 @@ jobs:
       - name: Build and Test with Maven
         run: |
           mvn -B package --file pom.xml -Dspring.profiles.active=test
-          # mkdir staging && cp target/*.jar staging
-          cp target/*.jar ./
+#          # mkdir staging && cp target/*.jar staging
+#          cp target/*.jar ./
 
