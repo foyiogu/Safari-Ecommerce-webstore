@@ -1,7 +1,7 @@
-package com.decagon.safariwebstore.security.models;
+package com.decagon.safariwebstore.model;
 
+import com.decagon.safariwebstore.model.Roles;
 import lombok.Setter;
-import org.springframework.security.core.GrantedAuthority;
 
 import java.util.Collection;
 import org.springframework.security.core.userdetails.UserDetails;

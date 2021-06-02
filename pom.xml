@@ -104,6 +104,7 @@
         <!--   jwt dependencies end     -->
 
         <!--  configuration dependency start      -->
+
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-configuration-processor</artifactId>
