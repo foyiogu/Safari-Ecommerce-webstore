@@ -1,6 +1,8 @@
-package com.decagon.safariwebstore.security.utils;
+package com.decagon.safariwebstore.utils;
 
 public class SecurityAuthorisationConstants {
+
+    public static final long TOKEN_EXPIRATION_TIME = 864_000_000;
     public static final String TOKEN_PREFIX = "Bearer ";
     public static final String HEADER_STRING = "Authorization";
     public static final String[] PUBLIC_URIS = new String[]{

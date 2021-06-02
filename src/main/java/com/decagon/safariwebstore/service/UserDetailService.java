@@ -1,7 +1,6 @@
-package com.decagon.safariwebstore.security.services;
+package com.decagon.safariwebstore.service;
 
-import com.decagon.safariwebstore.security.models.UserDetail;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.decagon.safariwebstore.model.UserDetail;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;

@@ -1,8 +1,8 @@
 package com.decagon.safariwebstore.security;
 
 import com.decagon.safariwebstore.security.filters.JWTRequestFilter;
-import com.decagon.safariwebstore.security.services.UserDetailService;
-import com.decagon.safariwebstore.security.utils.SecurityAuthorisationConstants;
+import com.decagon.safariwebstore.service.UserDetailService;
+import com.decagon.safariwebstore.utils.SecurityAuthorisationConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.authentication.AuthenticationManager;
