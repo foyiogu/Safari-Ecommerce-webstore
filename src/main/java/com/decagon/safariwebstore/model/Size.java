@@ -7,14 +7,16 @@ import lombok.Setter;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "sizes")
+@Table(name = "product_size")
 @Getter
 @Setter
 public class Size {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     private String size;
+
     @Column(name = "product_id")
     private Long productId;
 }

@@ -1,6 +1,5 @@
-package com.decagon.safariwebstore.service;
+package com.decagon.safariwebstore.security.service;
 
-import com.decagon.safariwebstore.model.UserDetail;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
