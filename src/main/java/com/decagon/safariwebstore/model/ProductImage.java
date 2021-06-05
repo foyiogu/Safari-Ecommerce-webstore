@@ -10,10 +10,8 @@ import javax.persistence.*;
 @Table(name = "product_images")
 @Getter
 @Setter
-public class ProductImage {
-        @Id
-        @GeneratedValue(strategy = GenerationType.IDENTITY)
-        private Long id;
+public class ProductImage extends BaseModel{
+      ;
         private String image;
         @Column(name = "product_id")
         private Long productId;
