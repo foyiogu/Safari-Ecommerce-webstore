@@ -16,7 +16,10 @@ public class SecurityAuthorisationConstants {
             "/swagger-ui.html",
             "/webjars/**",
             "/v3/api-docs/**",
-            "/swagger-ui/**"
+            "/swagger-ui/**",
+            "/login",
+            "/register",
+            "/admin/register"
             // -- Swagger UI v3 (OpenAPI) End
 
     };

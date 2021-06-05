@@ -1,8 +1,9 @@
 package com.decagon.safariwebstore.security;
 
 import com.decagon.safariwebstore.security.filters.JWTRequestFilter;
-import com.decagon.safariwebstore.service.UserDetailService;
+import com.decagon.safariwebstore.security.service.UserDetailService;
 import com.decagon.safariwebstore.utils.SecurityAuthorisationConstants;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -16,23 +17,20 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @EnableWebSecurity
+@AllArgsConstructor
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
-    @Autowired
-    UserDetailService userDetailsService;
+    private final UserDetailService userDetailsService;
 
+    private final JWTRequestFilter jwtRequestFilter;
 
-    @Autowired
-    JWTRequestFilter jwtRequestFilter;
-
-    @Autowired
-    PasswordEncoder bCryptPasswordEncoder;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth
                 .parentAuthenticationManager(authenticationManagerBean())
                 .userDetailsService(userDetailsService)
-                .passwordEncoder(bCryptPasswordEncoder);
+                .passwordEncoder(passwordEncoder);
     }
 
     @Override
@@ -58,8 +56,4 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         return super.authenticationManagerBean();
     }
 
-    @Bean
-    public BCryptPasswordEncoder bCryptPasswordEncoder(){
-        return new BCryptPasswordEncoder();
-    }
 }

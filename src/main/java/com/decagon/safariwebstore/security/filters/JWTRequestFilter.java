@@ -1,6 +1,6 @@
 package com.decagon.safariwebstore.security.filters;
 
-import com.decagon.safariwebstore.service.UserDetailService;
+import com.decagon.safariwebstore.security.service.UserDetailService;
 import com.decagon.safariwebstore.utils.JWTUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;

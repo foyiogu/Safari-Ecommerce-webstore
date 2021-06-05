@@ -1,4 +1,4 @@
-package com.decagon.safariwebstore.model;
+package com.decagon.safariwebstore.security.service;
 
 import com.decagon.safariwebstore.model.Roles;
 import lombok.Setter;
