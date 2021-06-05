@@ -2,7 +2,8 @@ package com.decagon.safariwebstore.security.filters;
 
 import com.decagon.safariwebstore.security.service.UserDetailService;
 import com.decagon.safariwebstore.utils.JWTUtil;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -17,15 +18,15 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 @Component
+@AllArgsConstructor
 public class JWTRequestFilter extends OncePerRequestFilter {
-    @Autowired
-    private UserDetailService userService;
 
-    @Autowired
-    private JWTUtil jwtUtil;
+    private final UserDetailService userService;
+
+    private final JWTUtil jwtUtil;
 
     @Override
-    protected void doFilterInternal(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, FilterChain filterChain) throws ServletException, IOException {
+    protected void doFilterInternal(HttpServletRequest httpServletRequest, @NotNull HttpServletResponse httpServletResponse, @NotNull FilterChain filterChain) throws ServletException, IOException {
         final String authorizationHeader = httpServletRequest.getHeader("Authorization");
 
         String username = null;
@@ -35,7 +36,7 @@ public class JWTRequestFilter extends OncePerRequestFilter {
             jwt = authorizationHeader.substring(7);
             username = jwtUtil.extractUserName(jwt);
         }
-        if (username != null && SecurityContextHolder.getContext() == null){
+        if (username != null){
             UserDetails userDetails = userService.loadUserByUsername(username);
 
             if (jwtUtil.validateToken(jwt, userDetails)){
