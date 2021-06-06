@@ -30,7 +30,7 @@ public class UserController {
         Role userRole = roleRepository.findByName(ERole.USER)
                 .orElseThrow(() -> new ResourceNotFoundException("Error: Role is not found."));
         // Lookup user in database by e-mail
-        Optional<User> userOptional = userService.findUserByEmail(accountEmail);
+        Optional<User> userOptional = userService.getUserByEmail(accountEmail);
         //url link that user will directed to from their email
         String appUrl = request.getScheme() + "://" + request.getServerName();
         Response res = userService.userForgotPassword(userRole, userOptional, appUrl);

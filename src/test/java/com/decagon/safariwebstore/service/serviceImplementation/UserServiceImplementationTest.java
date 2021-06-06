@@ -2,6 +2,7 @@ package com.decagon.safariwebstore.service.serviceImplementation;
 
 import com.decagon.safariwebstore.model.User;
 import com.decagon.safariwebstore.repository.UserRepository;
+import com.decagon.safariwebstore.service.UserService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -24,7 +25,7 @@ class UserServiceImplementationTest {
     @Mock
     private UserRepository userRepository;
     @InjectMocks
-    private UserServiceImplementation userService;
+    private UserService userService;
 
     @Test
     void contextLoads() {
@@ -54,7 +55,7 @@ class UserServiceImplementationTest {
         final String email = "user1@gmail.com";
         final User users = new User("austin", "sam", "austin@gmail.com", "male", "27-11-1999",  "password");
         given(userRepository.findByEmail(email)).willReturn(Optional.of(users));
-        final Optional<User> expected = userService.findUserByEmail(email);
+        final Optional<User> expected = userService.getUserByEmail(email);
         assertThat(expected).isNotNull();
     }
 

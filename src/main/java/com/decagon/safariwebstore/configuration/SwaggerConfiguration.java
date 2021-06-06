@@ -27,7 +27,7 @@ public class SwaggerConfiguration implements WebMvcConfigurer {
         return new Docket(DocumentationType.SWAGGER_2)
                 .select()
                 .paths(PathSelectors.any())
-                .apis(RequestHandlerSelectors.basePackage("com.decagon.safariwebstore.configuration"))
+                .apis(RequestHandlerSelectors.basePackage("com.decagon.safariwebstore"))
                 .build()
                 .useDefaultResponseMessages(false)
                 .apiInfo(apiDetails())

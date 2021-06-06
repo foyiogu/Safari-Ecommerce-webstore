@@ -2,6 +2,7 @@ package com.decagon.safariwebstore.service.serviceImplementation;
 
 import com.decagon.safariwebstore.exceptions.BadRequestException;
 import com.decagon.safariwebstore.model.Role;
+import com.decagon.safariwebstore.exceptions.ResourceNotFoundException;
 import com.decagon.safariwebstore.model.User;
 import com.decagon.safariwebstore.payload.request.auth.RegisterUser;
 import com.decagon.safariwebstore.payload.response.Response;
@@ -10,7 +11,6 @@ import com.decagon.safariwebstore.service.UserService;
 import com.decagon.safariwebstore.utils.DateUtils;
 import com.decagon.safariwebstore.utils.mailService.MailService;
 import com.mashape.unirest.http.exceptions.UnirestException;
-import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
@@ -18,14 +18,12 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-
+import java.util.Optional;
 @Service
 public class UserServiceImplementation implements UserService {
-
     UserRepository userRepository;
     BCryptPasswordEncoder bCryptPasswordEncoder;
     private MailService mailService;
-
     @Autowired
     public UserServiceImplementation(UserRepository userRepository, BCryptPasswordEncoder bCryptPasswordEncoder, MailService mailService){
         this.userRepository = userRepository;
@@ -62,7 +60,7 @@ public class UserServiceImplementation implements UserService {
         return userRepository.findByPasswordResetToken(resetToken);
     }
     @Override
-    public Optional<User> findUserByEmail(String email) {
+    public Optional<User> getUserByEmail(String email) {
         return userRepository.findByEmail(email);
     }
     /**
@@ -84,7 +82,7 @@ public class UserServiceImplementation implements UserService {
         });
     }
     /**
-     * Sends an email to the user with a url link to reset password
+     * Sends an email to the customer with a url link to reset password
      * the url link will be received in the frontend
      * @param appUrl
      * @param userOptional
@@ -116,7 +114,6 @@ public class UserServiceImplementation implements UserService {
             String mailBody = "To reset your password, click the link below:\n"
                     + appUrl + "/reset?token="
                     + user.getPasswordResetToken();
-            System.out.println(user.getPasswordResetToken());
             mailService.sendMessage(user.getEmail(), subject, mailBody);
             // Save token and expiring date to database
             this.saveUser(user);
@@ -162,6 +159,12 @@ public class UserServiceImplementation implements UserService {
             e.printStackTrace();
         }
         return responseHandler;
+    }
+    @Override
+    public User findUserByEmail(String email) {
+        Optional<User> user = userRepository.findByEmail(email);
+        if(user.isEmpty()) throw new ResourceNotFoundException("Incorrect parameter; email " + email + " does not exist");
+        return user.get();
     }
 
 }

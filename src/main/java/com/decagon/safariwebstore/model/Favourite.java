@@ -10,10 +10,8 @@ import javax.persistence.*;
 @Setter
 @Entity
 @Table(name = "favorite_products")
-public class Favourite {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public class Favourite extends BaseModel{
+
     @Column(name = "user_id")
     private Long userId;
     @Column(name = "product_id")

@@ -17,12 +17,13 @@ public class SecurityAuthorisationConstants {
             "/webjars/**",
             "/v3/api-docs/**",
             "/swagger-ui/**",
+            // -- Swagger UI v3 (OpenAPI) End
             "/login",
             "/register",
             "/admin/register",
-            "/api/customer/password_forgot",
-            "/api/customer/password_reset/"
+            "/api/customer/password-forgot",
+            "/api/customer/password-reset/",
             // -- Swagger UI v3 (OpenAPI) End
-
+            "/products/**"
     };
 }

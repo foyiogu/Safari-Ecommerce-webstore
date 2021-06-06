@@ -5,7 +5,6 @@ import com.decagon.safariwebstore.model.User;
 import com.decagon.safariwebstore.payload.request.auth.RegisterUser;
 import com.decagon.safariwebstore.payload.response.Response;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
@@ -15,8 +14,9 @@ public interface UserService {
     boolean existsByMail(String email);
     User registration(RegisterUser registerUser);
     Optional<User> findUserByResetToken(String resetToken);
-    Optional<User> findUserByEmail(String email);
+    Optional<User> getUserByEmail(String email);
     void deactivateResetPasswordToken();
-    Response userForgotPassword(Role customer, Optional<User> userOptional, String appUrl);
+    Response userForgotPassword(Role admin, Optional<User> userOptional, String appUrl);
     Response userResetPassword(Optional<User> userOptional, String password, String confirmPassword);
+    User findUserByEmail(String email);
 }
