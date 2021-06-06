@@ -10,10 +10,8 @@ import javax.persistence.*;
 @Table(name = "product_size")
 @Getter
 @Setter
-public class Size {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public class Size extends BaseModel{
+
 
     private String size;
 
