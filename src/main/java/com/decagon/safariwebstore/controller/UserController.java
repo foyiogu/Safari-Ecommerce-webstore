@@ -24,7 +24,7 @@ public class UserController {
     private UserService userService;
     @Autowired
     private RoleRepository roleRepository;
-    @PostMapping("/customer/password_forgot")
+    @PostMapping("/customer/password-forgot")
     public ResponseEntity<Response> userForgotPassword(@RequestParam("email") String accountEmail, HttpServletRequest request){
         ResponseEntity<Response> responseEntity = null;
         Role userRole = roleRepository.findByName(ERole.USER)
@@ -45,8 +45,8 @@ public class UserController {
         }
         return responseEntity;
     }
-    @PostMapping("/customer/password_reset")
-    public ResponseEntity<Response> adminResetPassword(@RequestParam Map<String, String> requestParams) {
+    @PostMapping("/customer/password-reset")
+    public ResponseEntity<Response> customerResetPassword(@RequestParam Map<String, String> requestParams) {
         ResponseEntity<Response> responseEntity = null;
         String password = requestParams.get("password");
         String confirmPassword = requestParams.get("confirmPassword");

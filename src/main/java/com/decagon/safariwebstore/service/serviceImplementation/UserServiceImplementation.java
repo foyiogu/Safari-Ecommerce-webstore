@@ -71,7 +71,6 @@ public class UserServiceImplementation implements UserService {
      * */
     @Override
     public void deactivateResetPasswordToken() {
-        System.out.println("Scheduler working");
         List<User> accountsList = userRepository.findAllByPasswordResetTokenIsNotNull();
         accountsList.forEach(account -> {
             String expireDate = account.getPasswordResetExpireDate();
