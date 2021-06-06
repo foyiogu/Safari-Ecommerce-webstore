@@ -19,7 +19,12 @@ import java.util.Date;
         value = {"createdAt", "updatedAt"},
         allowGetters = true
 )
-public class AutoDate implements Serializable {
+public class BaseModel implements Serializable {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "created_at")
     @CreatedDate

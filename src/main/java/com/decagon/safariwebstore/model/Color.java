@@ -1,15 +1,19 @@
 package com.decagon.safariwebstore.model;
 
 
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+
 import javax.persistence.*;
 
 @Entity
+@EqualsAndHashCode(callSuper = true)
 @Table(name = "colors")
-public class Color {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+@Data
+public class Color extends BaseModel {
+
     private String color;
+
     @Column(name = "product_id")
     private Long productId;
 

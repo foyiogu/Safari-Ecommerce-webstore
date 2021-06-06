@@ -19,4 +19,5 @@ public interface UserService {
     void deactivateResetPasswordToken();
     Response adminForgotPassword(Role admin, Optional<User> userOptional, String appUrl);
     Response adminResetPassword(Optional<User> userOptional, String password, String confirmPassword);
+    User findUserByEmail(String email);
 }

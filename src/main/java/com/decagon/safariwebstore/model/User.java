@@ -6,15 +6,12 @@ import javax.persistence.*;
 import java.util.List;
 
 @Data
+@EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "users")
 @AllArgsConstructor
 @NoArgsConstructor
-public class User extends AutoDate{
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public class User extends BaseModel{
 
     @Column(name = "first_name")
     private String firstName;
