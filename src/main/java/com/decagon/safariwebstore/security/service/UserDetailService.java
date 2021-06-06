@@ -1,17 +1,25 @@
 package com.decagon.safariwebstore.security.service;
 
+import com.decagon.safariwebstore.model.User;
+import com.decagon.safariwebstore.service.UserService;
+import lombok.AllArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-@Service
-public class UserDetailService implements UserDetailsService {
-//    @Autowired
-//    UserRepository repository;
-    @Override
-    public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
-        return new UserDetail();
+import javax.transaction.Transactional;
 
+@Service
+@AllArgsConstructor
+public class UserDetailService implements UserDetailsService {
+
+    private final UserService userService;
+
+    @Override
+    @Transactional
+    public UserDetails loadUserByUsername(String email) {
+        User user = userService.findUserByEmail(email);
+
+        return UserDetailsImpl.build(user);
     }
 }
