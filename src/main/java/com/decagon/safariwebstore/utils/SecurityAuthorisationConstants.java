@@ -20,8 +20,8 @@ public class SecurityAuthorisationConstants {
             "/login",
             "/register",
             "/admin/register",
-            "/api/admin/password_forgot",
-            "/api/admin/password_reset"
+            "/api/admin/password-forgot",
+            "/api/admin/password-reset"
             // -- Swagger UI v3 (OpenAPI) End
 
     };

@@ -15,7 +15,7 @@ public interface UserService {
     boolean existsByMail(String email);
     User registration(RegisterUser registerUser);
     Optional<User> findUserByResetToken(String resetToken);
-    Optional<User> findUserByEmail(String email);
+    Optional<User> getUserByEmail(String email);
     void deactivateResetPasswordToken();
     Response adminForgotPassword(Role admin, Optional<User> userOptional, String appUrl);
     Response adminResetPassword(Optional<User> userOptional, String password, String confirmPassword);
