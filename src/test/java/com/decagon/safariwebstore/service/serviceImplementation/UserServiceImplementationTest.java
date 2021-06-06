@@ -25,7 +25,7 @@ class UserServiceImplementationTest {
     @Mock
     private UserRepository userRepository;
     @InjectMocks
-    private UserService userService;
+    private UserServiceImplementation userService;
 
     @Test
     void contextLoads() {
