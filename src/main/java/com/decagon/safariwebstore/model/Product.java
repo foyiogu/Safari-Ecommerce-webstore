@@ -1,6 +1,7 @@
 package com.decagon.safariwebstore.model;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
@@ -10,6 +11,7 @@ import java.util.List;
 @Setter
 @Entity
 @Table(name = "products")
+@NoArgsConstructor
 public class Product extends AutoDate {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -35,4 +37,11 @@ public class Product extends AutoDate {
     @ManyToMany(mappedBy = "favouriteProducts")
     private List<User> users;
 
+    public Product(String name, double price, String description, Category category, SubCategory subCategory) {
+        this.name = name;
+        this.price = price;
+        this.description = description;
+        this.category = category;
+        this.subCategory = subCategory;
+    }
 }
