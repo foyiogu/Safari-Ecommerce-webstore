@@ -84,7 +84,7 @@ public class UserServiceImplementation implements UserService {
         });
     }
     /**
-     * Sends an email to the admin with a url link to reset password
+     * Sends an email to the user with a url link to reset password
      * the url link will be received in the frontend
      * @param appUrl
      * @param userOptional
