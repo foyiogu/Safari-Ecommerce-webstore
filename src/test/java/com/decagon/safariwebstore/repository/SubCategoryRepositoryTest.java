@@ -1,9 +1,12 @@
 package com.decagon.safariwebstore.repository;
 
 import com.decagon.safariwebstore.model.Category;
+import com.decagon.safariwebstore.model.CategoryDTO;
 import com.decagon.safariwebstore.model.SubCategory;
+import com.decagon.safariwebstore.model.SubCategoryDTO;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
@@ -20,6 +23,9 @@ class SubCategoryRepositoryTest {
     @Autowired
     private SubCategoryRepository subCategoryRepositoryUnderTest;
 
+    @Autowired
+    private ModelMapper modelMapper;
+
     @AfterEach
     void tearDown() {
         subCategoryRepositoryUnderTest.deleteAll();
@@ -29,20 +35,20 @@ class SubCategoryRepositoryTest {
     @Test
     void findByNameAndCategory() {
         // given
-        Category clothes = new Category("clothes");
+        Category clothes = modelMapper.map(new CategoryDTO("clothes"), Category.class);
         categoryRepositoryUnderTest.save(clothes);
-        Category shoes = new Category("shoes");
+        Category shoes = modelMapper.map(new CategoryDTO("shoes"), Category.class);
         categoryRepositoryUnderTest.save(shoes);
-        Category accessories = new Category("accessories");
+        Category accessories = modelMapper.map(new CategoryDTO("accessories"), Category.class);
         categoryRepositoryUnderTest.save(accessories);
 
-        SubCategory dresses = new SubCategory("dresses", clothes);
+        SubCategory dresses = modelMapper.map(new SubCategoryDTO("dresses", clothes), SubCategory.class);
         subCategoryRepositoryUnderTest.save(dresses);
-        SubCategory denim = new SubCategory("denim", clothes);
+        SubCategory denim = modelMapper.map(new SubCategoryDTO("denim", clothes), SubCategory.class);
         subCategoryRepositoryUnderTest.save(denim);
-        SubCategory flats = new SubCategory("flats", shoes);
+        SubCategory flats = modelMapper.map(new SubCategoryDTO("flats", shoes), SubCategory.class);
         subCategoryRepositoryUnderTest.save(flats);
-        SubCategory watches = new SubCategory("watches", accessories);
+        SubCategory watches = modelMapper.map(new SubCategoryDTO("watches", accessories), SubCategory.class);
         subCategoryRepositoryUnderTest.save(watches);
 
         // when

@@ -1,9 +1,7 @@
 package com.decagon.safariwebstore.service.serviceImplementation;
 
 import com.decagon.safariwebstore.exceptions.ResourceNotFoundException;
-import com.decagon.safariwebstore.model.Category;
-import com.decagon.safariwebstore.model.ProductPage;
-import com.decagon.safariwebstore.model.SubCategory;
+import com.decagon.safariwebstore.model.*;
 import com.decagon.safariwebstore.repository.CategoryRepository;
 import com.decagon.safariwebstore.repository.ProductRepository;
 import com.decagon.safariwebstore.repository.SubCategoryRepository;
@@ -13,6 +11,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Pageable;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
@@ -25,6 +24,8 @@ class ProductServiceImplementationTest {
 
     private ProductPage productPage;
 
+    private ModelMapper modelMapper;
+
     @Mock private ProductRepository productRepository;
 
     @Mock private CategoryRepository categoryRepository;
@@ -36,6 +37,7 @@ class ProductServiceImplementationTest {
     @BeforeEach
     void setUp() {
         productPage = new ProductPage();
+        modelMapper = new ModelMapper();
         productServiceUnderTest = new ProductServiceImplementation(productRepository,
                 categoryRepository, subCategoryRepository);
     }
@@ -55,7 +57,7 @@ class ProductServiceImplementationTest {
     @Test
     void canGetProductsByCategory() {
         // given
-        Category clothes = new Category("clothes");
+        Category clothes = modelMapper.map(new CategoryDTO("clothes"), Category.class);
         Pageable pageable = MethodUtils.getPageable(productPage);
         given(categoryRepository.findByName("clothes")).willReturn(java.util.Optional.of(clothes));
 
@@ -70,7 +72,7 @@ class ProductServiceImplementationTest {
     @Test
     void willThrowWhenCategoryIsNotFound1() {
         // given
-        Category clothes = new Category("clothes");
+        Category clothes = modelMapper.map(new CategoryDTO("clothes"), Category.class);
         Pageable pageable = MethodUtils.getPageable(productPage);
 
         // when
@@ -85,8 +87,8 @@ class ProductServiceImplementationTest {
     @Test
     void canGetProductsByCategoryAndSubCategory() {
         // given
-        Category clothes = new Category("clothes");
-        SubCategory dresses = new SubCategory("dresses", clothes);
+        Category clothes = modelMapper.map(new CategoryDTO("clothes"), Category.class);
+        SubCategory dresses = modelMapper.map(new SubCategoryDTO("dresses", clothes), SubCategory.class);
         Pageable pageable = MethodUtils.getPageable(productPage);
         given(categoryRepository.findByName("clothes")).willReturn(java.util.Optional.of(clothes));
         given(subCategoryRepository.findByNameAndCategory("dresses", clothes))
@@ -103,8 +105,8 @@ class ProductServiceImplementationTest {
     @Test
     void willThrowWhenCategoryIsNotFound2() {
         // given
-        Category clothes = new Category("clothes");
-        SubCategory dresses = new SubCategory("dresses", clothes);
+        Category clothes = modelMapper.map(new CategoryDTO("clothes"), Category.class);
+        SubCategory dresses = modelMapper.map(new SubCategoryDTO("dresses", clothes), SubCategory.class);
         Pageable pageable = MethodUtils.getPageable(productPage);
 
         // when
@@ -120,8 +122,8 @@ class ProductServiceImplementationTest {
     @Test
     void willThrowWhenSubCategoryIsNotFound() {
         // given
-        Category clothes = new Category("clothes");
-        SubCategory dresses = new SubCategory("dresses", clothes);
+        Category clothes = modelMapper.map(new CategoryDTO("clothes"), Category.class);
+        SubCategory dresses = modelMapper.map(new SubCategoryDTO("dresses", clothes), SubCategory.class);
         Pageable pageable = MethodUtils.getPageable(productPage);
         given(categoryRepository.findByName("clothes")).willReturn(java.util.Optional.of(clothes));
 

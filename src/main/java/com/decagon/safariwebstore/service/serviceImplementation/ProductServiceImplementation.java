@@ -25,7 +25,7 @@ public class ProductServiceImplementation implements ProductService {
     private final SubCategoryRepository subCategoryRepository;
 
     @Override
-    @Cacheable(value = "products", sync = true)
+    @Cacheable(cacheNames = "products", sync = true)
     public Page<Product> getAllProducts(ProductPage productPage) {
 
         Pageable pageable = MethodUtils.getPageable(productPage);
@@ -34,7 +34,7 @@ public class ProductServiceImplementation implements ProductService {
     }
 
     @Override
-    @Cacheable(value = "products", sync = true)
+    @Cacheable(cacheNames = "productsCategory", sync = true)
     public Page<Product> getProductsByCategory(ProductPage productPage, String categoryName) {
 
         Category category = getCategory(categoryName);
@@ -45,7 +45,7 @@ public class ProductServiceImplementation implements ProductService {
     }
 
     @Override
-    @Cacheable(value = "products", sync = true)
+    @Cacheable(cacheNames = "productsSubCategory", sync = true)
     public Page<Product> getProductsByCategoryAndSubCategory(ProductPage productPage,
                                                              String categoryName,
                                                              String subCategoryName) {

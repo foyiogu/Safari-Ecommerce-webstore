@@ -1,12 +1,10 @@
 package com.decagon.safariwebstore.repository;
 
-import com.decagon.safariwebstore.model.Category;
-import com.decagon.safariwebstore.model.Product;
-import com.decagon.safariwebstore.model.ProductPage;
-import com.decagon.safariwebstore.model.SubCategory;
+import com.decagon.safariwebstore.model.*;
 import com.decagon.safariwebstore.utils.MethodUtils;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.data.domain.Page;
@@ -26,6 +24,9 @@ class ProductRepositoryTest {
     @Autowired
     private SubCategoryRepository subCategoryRepositoryUnderTest;
 
+    @Autowired
+    private ModelMapper modelMapper;
+
     @AfterEach
     void tearDown() {
         productRepositoryUnderTest.deleteAll();
@@ -36,34 +37,34 @@ class ProductRepositoryTest {
     @Test
     void shouldFindAllProductsByCategory() {
         // given
-        Category clothes = new Category("clothes");
+        Category clothes = modelMapper.map(new CategoryDTO("clothes"), Category.class);
         categoryRepositoryUnderTest.save(clothes);
-        Category shoes = new Category("shoes");
+        Category shoes = modelMapper.map(new CategoryDTO("shoes"), Category.class);
         categoryRepositoryUnderTest.save(shoes);
-        Category accessories = new Category("accessories");
+        Category accessories = modelMapper.map(new CategoryDTO("accessories"), Category.class);
         categoryRepositoryUnderTest.save(accessories);
 
-        SubCategory dresses = new SubCategory("dresses", clothes);
+        SubCategory dresses = modelMapper.map(new SubCategoryDTO("dresses", clothes), SubCategory.class);
         subCategoryRepositoryUnderTest.save(dresses);
-        SubCategory denim = new SubCategory("denim", clothes);
+        SubCategory denim = modelMapper.map(new SubCategoryDTO("denim", clothes), SubCategory.class);
         subCategoryRepositoryUnderTest.save(denim);
-        SubCategory flats = new SubCategory("flats", shoes);
+        SubCategory flats = modelMapper.map(new SubCategoryDTO("flats", shoes), SubCategory.class);
         subCategoryRepositoryUnderTest.save(flats);
-        SubCategory watches = new SubCategory("watches", accessories);
+        SubCategory watches = modelMapper.map(new SubCategoryDTO("watches", accessories), SubCategory.class);
         subCategoryRepositoryUnderTest.save(watches);
 
-        Product product1 = new Product("Smart watch", 132738,
+        ProductDTO product1 = new ProductDTO("Smart watch", 132738,
                 "luxury watch for men", accessories, watches);
-        productRepositoryUnderTest.save(product1);
-        Product product2 = new Product("Rebook flat show", 7482,
+        productRepositoryUnderTest.save(modelMapper.map(product1, Product.class));
+        ProductDTO product2 = new ProductDTO("Rebook flat show", 7482,
                 "Cool shoe for all seasons", shoes, flats);
-        productRepositoryUnderTest.save(product2);
-        Product product3 = new Product("D&G jump suit", 42738,
+        productRepositoryUnderTest.save(modelMapper.map(product2, Product.class));
+        ProductDTO product3 = new ProductDTO("D&G jump suit", 42738,
                 "Beautiful piece for ladies", clothes, dresses);
-        productRepositoryUnderTest.save(product3);
-        Product product4 = new Product("Skirt suit", 17938,
+        productRepositoryUnderTest.save(modelMapper.map(product3, Product.class));
+        ProductDTO product4 = new ProductDTO("Skirt suit", 17938,
                 "Lovely 2 piece suit for ladies", clothes, denim);
-        productRepositoryUnderTest.save(product4);
+        productRepositoryUnderTest.save(modelMapper.map(product4, Product.class));
 
         ProductPage productPage = new ProductPage();
         Pageable pageable = MethodUtils.getPageable(productPage);
@@ -89,34 +90,34 @@ class ProductRepositoryTest {
     @Test
     void shouldFindAllByCategoryAndSubCategory() {
         // given
-        Category clothes = new Category("clothes");
+        Category clothes = modelMapper.map(new CategoryDTO("clothes"), Category.class);
         categoryRepositoryUnderTest.save(clothes);
-        Category shoes = new Category("shoes");
+        Category shoes = modelMapper.map(new CategoryDTO("shoes"), Category.class);
         categoryRepositoryUnderTest.save(shoes);
-        Category accessories = new Category("accessories");
+        Category accessories = modelMapper.map(new CategoryDTO("accessories"), Category.class);
         categoryRepositoryUnderTest.save(accessories);
 
-        SubCategory dresses = new SubCategory("dresses", clothes);
+        SubCategory dresses = modelMapper.map(new SubCategoryDTO("dresses", clothes), SubCategory.class);
         subCategoryRepositoryUnderTest.save(dresses);
-        SubCategory denim = new SubCategory("denim", clothes);
+        SubCategory denim = modelMapper.map(new SubCategoryDTO("denim", clothes), SubCategory.class);
         subCategoryRepositoryUnderTest.save(denim);
-        SubCategory flats = new SubCategory("flats", shoes);
+        SubCategory flats = modelMapper.map(new SubCategoryDTO("flats", shoes), SubCategory.class);
         subCategoryRepositoryUnderTest.save(flats);
-        SubCategory watches = new SubCategory("watches", accessories);
+        SubCategory watches = modelMapper.map(new SubCategoryDTO("watches", accessories), SubCategory.class);
         subCategoryRepositoryUnderTest.save(watches);
 
-        Product product1 = new Product("Smart watch", 132738,
+        ProductDTO product1 = new ProductDTO("Smart watch", 132738,
                 "luxury watch for men", accessories, watches);
-        productRepositoryUnderTest.save(product1);
-        Product product2 = new Product("Rebook flat show", 7482,
+        productRepositoryUnderTest.save(modelMapper.map(product1, Product.class));
+        ProductDTO product2 = new ProductDTO("Rebook flat show", 7482,
                 "Cool shoe for all seasons", shoes, flats);
-        productRepositoryUnderTest.save(product2);
-        Product product3 = new Product("D&G jump suit", 42738,
+        productRepositoryUnderTest.save(modelMapper.map(product2, Product.class));
+        ProductDTO product3 = new ProductDTO("D&G jump suit", 42738,
                 "Beautiful piece for ladies", clothes, dresses);
-        productRepositoryUnderTest.save(product3);
-        Product product4 = new Product("Skirt suit", 17938,
+        productRepositoryUnderTest.save(modelMapper.map(product3, Product.class));
+        ProductDTO product4 = new ProductDTO("Skirt suit", 17938,
                 "Lovely 2 piece suit for ladies", clothes, denim);
-        productRepositoryUnderTest.save(product4);
+        productRepositoryUnderTest.save(modelMapper.map(product4, Product.class));
 
         ProductPage productPage = new ProductPage();
         Pageable pageable = MethodUtils.getPageable(productPage);

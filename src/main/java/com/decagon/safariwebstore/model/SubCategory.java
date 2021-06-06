@@ -23,8 +23,4 @@ public class SubCategory {
     @JoinColumn(name = "category_id")
     private Category category;
 
-    public SubCategory(String name, Category category) {
-        this.name = name;
-        this.category = category;
-    }
 }

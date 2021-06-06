@@ -1,8 +1,10 @@
 package com.decagon.safariwebstore.repository;
 
 import com.decagon.safariwebstore.model.Category;
+import com.decagon.safariwebstore.model.CategoryDTO;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
@@ -16,6 +18,9 @@ class CategoryRepositoryTest {
     @Autowired
     private CategoryRepository categoryRepositoryUnderTest;
 
+    @Autowired
+    private ModelMapper modelMapper;
+
     @AfterEach
     void tearDown() {
         categoryRepositoryUnderTest.deleteAll();
@@ -24,11 +29,11 @@ class CategoryRepositoryTest {
     @Test
     void shouldFindCategoryByName() {
         // given
-        Category clothes = new Category("clothes");
+        Category clothes = modelMapper.map(new CategoryDTO("clothes"), Category.class);
         categoryRepositoryUnderTest.save(clothes);
-        Category shoes = new Category("shoes");
+        Category shoes = modelMapper.map(new CategoryDTO("shoes"), Category.class);
         categoryRepositoryUnderTest.save(shoes);
-        Category accessories = new Category("accessories");
+        Category accessories = modelMapper.map(new CategoryDTO("accessories"), Category.class);
         categoryRepositoryUnderTest.save(accessories);
 
         // when
