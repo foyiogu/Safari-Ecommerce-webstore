@@ -11,11 +11,8 @@ import java.util.List;
 @Setter
 @Entity
 @Table(name = "products")
-@NoArgsConstructor
-public class Product extends AutoDate {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public class Product extends BaseModel {
+  
     private String name;
     @Column(columnDefinition = "decimal")
     private double price;

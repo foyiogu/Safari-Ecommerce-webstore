@@ -10,11 +10,7 @@ import javax.persistence.*;
 @Setter
 @Entity
 @Table(name = "categories")
-@NoArgsConstructor
-public class Category {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public class Category extends BaseModel{
 
     private String name;
 

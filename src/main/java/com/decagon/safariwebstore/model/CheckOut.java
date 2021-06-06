@@ -12,10 +12,7 @@ import java.util.List;
 @Setter
 @Entity
 @Table(name = "checkouts")
-public class CheckOut {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public class CheckOut extends BaseModel{
 
     @Column(name = "date_ordered")
     private Date dateOrdered;
