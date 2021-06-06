@@ -76,7 +76,6 @@ public class UserServiceImplementation implements UserService {
      * */
     @Override
     public void deactivateResetPasswordToken() {
-        System.out.println("Scheduler working");
 
         List<User> accountsList = userRepository.findAllByPasswordResetTokenIsNotNull();
 
@@ -138,8 +137,6 @@ public class UserServiceImplementation implements UserService {
             String mailBody = "To reset your password, click the link below:\n"
                     + appUrl + "/reset?token="
                     + user.getPasswordResetToken();
-
-            System.out.println(user.getPasswordResetToken());
 
             mailService.sendMessage(user.getEmail(), subject, mailBody);
 

@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
 import javax.servlet.http.HttpServletRequest;
 import java.util.Map;
 import java.util.Optional;
@@ -29,7 +28,7 @@ public class AdminController {
     @Autowired
     private RoleRepository roleRepository;
 
-    @PostMapping("/admin/password_forgot")
+    @PostMapping("/admin/password-forgot")
     public ResponseEntity<Response> adminForgotPassword(@RequestParam("email") String accountEmail, HttpServletRequest request){
 
         ResponseEntity<Response> responseEntity = null;
@@ -62,7 +61,7 @@ public class AdminController {
         return responseEntity;
     }
 
-    @PostMapping("/admin/password_reset")
+    @PostMapping("/admin/password-reset")
     public ResponseEntity<Response> adminResetPassword(@RequestParam Map<String, String> requestParams) {
 
         ResponseEntity<Response> responseEntity = null;
