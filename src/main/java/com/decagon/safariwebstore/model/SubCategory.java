@@ -2,6 +2,7 @@ package com.decagon.safariwebstore.model;
 
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
@@ -13,7 +14,9 @@ import javax.persistence.*;
 public class SubCategory extends BaseModel{
 
     private String name;
+
     @ManyToOne
     @JoinColumn(name = "category_id")
     private Category category;
+
 }
