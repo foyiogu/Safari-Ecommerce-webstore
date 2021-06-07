@@ -59,7 +59,6 @@ public class AdminController {
         }
 
         return responseEntity;
-
     }
 
     @PostMapping("/admin/password-reset")

@@ -16,7 +16,7 @@ public interface UserService {
     Optional<User> findUserByResetToken(String resetToken);
     Optional<User> getUserByEmail(String email);
     void deactivateResetPasswordToken();
-    Response userForgotPassword(Role admin, Optional<User> userOptional, String appUrl);
-    Response userResetPassword(Optional<User> userOptional, String password, String confirmPassword);
+    Response adminForgotPassword(Role admin, Optional<User> userOptional, String appUrl);
+    Response adminResetPassword(Optional<User> userOptional, String password, String confirmPassword);
     User findUserByEmail(String email);
 }
