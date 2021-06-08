@@ -5,6 +5,9 @@ import com.decagon.safariwebstore.model.User;
 import com.decagon.safariwebstore.payload.request.auth.RegisterUser;
 import com.decagon.safariwebstore.payload.response.Response;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
+
+import java.util.Optional;
 
 import java.util.Optional;
 
