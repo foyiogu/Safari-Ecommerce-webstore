@@ -95,6 +95,25 @@ public class UserServiceImplementation implements UserService {
         return false;
     }
 
+    @Override
+    public void deactivateResetPasswordToken() {
+
+        List<User> accountsList = userRepository.findAllByPasswordResetTokenIsNotNull();
+
+        accountsList.forEach(account -> {
+            String expireDate = account.getPasswordResetExpireDate();
+            String presentDate = DateUtils.getCurrentTime();
+            int actionDelete = presentDate.compareTo(expireDate);
+
+            if(actionDelete > 0 || actionDelete == 0) {
+                account.setPasswordResetExpireDate(null);
+                account.setPasswordResetToken(null);
+
+                userRepository.save(account);
+            }
+        });
+    }
+
 
 
 
