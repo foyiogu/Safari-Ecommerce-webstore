@@ -86,9 +86,9 @@ public class UserServiceImplementation implements UserService {
         accountsList.forEach(account -> {
             String expireDate = account.getPasswordResetExpireDate();
             String presentDate = DateUtils.getCurrentTime();
-            int actionDelete = presentDate.compareTo(expireDate);
+            int dateDifference = presentDate.compareTo(expireDate);
 
-            if(actionDelete > 0 || actionDelete == 0) {
+            if(dateDifference > 0 || dateDifference == 0) {
                 account.setPasswordResetExpireDate(null);
                 account.setPasswordResetToken(null);
 
