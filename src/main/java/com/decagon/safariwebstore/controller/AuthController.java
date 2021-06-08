@@ -128,9 +128,7 @@ AuthController {
                 throw new InvalidOldPasswordException("Password mismatch error");
             }
 
-            var username = SecurityContextHolder.getContext().getAuthentication().getName();
-            System.out.println("THE USER ISSSS: " + user);
-            System.out.println("THE USERNAME ISSSS: " + username);
+
 
             boolean passwordIsChanged = userService.changeUserPassword(user, updatePasswordRequest);
             if (passwordIsChanged) {
@@ -141,12 +139,6 @@ AuthController {
         return new ResponseEntity<>("Error changing password", HttpStatus.BAD_REQUEST);
     }
 
-//    @PostMapping("/updatePasswordTwo")
-//    public ResponseEntity<String> changePassword(@RequestBody UpdatePasswordRequest updatePasswordRequest){
-//        User user = userService.findUserByEmail(SecurityContextHolder.getContext().getAuthentication().getName());
-//        userService.updatePassword(updatePasswordRequest, user);
-//        return ResponseEntity.ok("Password Changed");
-//
-//    }
+
 
 }
