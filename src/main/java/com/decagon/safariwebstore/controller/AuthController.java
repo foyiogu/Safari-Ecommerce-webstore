@@ -1,10 +1,12 @@
 package com.decagon.safariwebstore.controller;
 
 
+import com.decagon.safariwebstore.exceptions.InvalidOldPasswordException;
 import com.decagon.safariwebstore.exceptions.ResourceNotFoundException;
 import com.decagon.safariwebstore.model.ERole;
 import com.decagon.safariwebstore.model.Role;
 import com.decagon.safariwebstore.model.User;
+import com.decagon.safariwebstore.payload.request.UpdatePasswordRequest;
 import com.decagon.safariwebstore.payload.request.auth.LoginRequest;
 import com.decagon.safariwebstore.payload.request.auth.RegisterUser;
 import com.decagon.safariwebstore.payload.response.UserDTO;
@@ -12,30 +14,37 @@ import com.decagon.safariwebstore.payload.response.auth.LoginResponse;
 import com.decagon.safariwebstore.repository.RoleRepository;
 import com.decagon.safariwebstore.security.service.UserDetailService;
 import com.decagon.safariwebstore.service.UserService;
+import com.decagon.safariwebstore.utils.GenericResponse;
 import com.decagon.safariwebstore.utils.JWTUtil;
 import com.decagon.safariwebstore.utils.mailService.MailService;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.stream.Collectors;
 
 @RestController
 @AllArgsConstructor
-public class AuthController {
+@Slf4j
+public class
+AuthController {
+
 
     private final UserService userService;
     private final RoleRepository roleRepository;
@@ -43,6 +52,9 @@ public class AuthController {
     private final AuthenticationManager authenticationManager;
     private final UserDetailService userDetailService;
     private final JWTUtil jwtUtil;
+
+    @Autowired
+    private MessageSource messages;
 
     @PostMapping("/register")
     public UserDTO register(@Valid @RequestBody RegisterUser registerUser) throws UnirestException {
@@ -80,6 +92,7 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<?> doLogin(@Valid @RequestBody LoginRequest request){
 
+
         Authentication authentication = authenticationManager
                 .authenticate(
                         new UsernamePasswordAuthenticationToken(
@@ -99,5 +112,41 @@ public class AuthController {
 
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
+
+    //Change/Reset Password
+
+    @PostMapping("/user/updatePassword")
+    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
+    public ResponseEntity<String> changeUserPassword(@RequestBody UpdatePasswordRequest updatePasswordRequest) {
+        String newPassword = updatePasswordRequest.getNewPassword();
+        String confirmNewPassword = updatePasswordRequest.getConfirmNewPassword();
+
+        if (newPassword.equals(confirmNewPassword)) {
+            User user = userService.findUserByEmail(SecurityContextHolder.getContext().getAuthentication().getName());
+
+            if (!userService.checkIfValidOldPassword(user, updatePasswordRequest)) {
+                throw new InvalidOldPasswordException("Password mismatch error");
+            }
+
+            var username = SecurityContextHolder.getContext().getAuthentication().getName();
+            System.out.println("THE USER ISSSS: " + user);
+            System.out.println("THE USERNAME ISSSS: " + username);
+
+            boolean passwordIsChanged = userService.changeUserPassword(user, updatePasswordRequest);
+            if (passwordIsChanged) {
+                return ResponseEntity.ok("Password Changed Successfully");
+            }
+
+        }
+        return new ResponseEntity<>("Error changing password", HttpStatus.BAD_REQUEST);
+    }
+
+//    @PostMapping("/updatePasswordTwo")
+//    public ResponseEntity<String> changePassword(@RequestBody UpdatePasswordRequest updatePasswordRequest){
+//        User user = userService.findUserByEmail(SecurityContextHolder.getContext().getAuthentication().getName());
+//        userService.updatePassword(updatePasswordRequest, user);
+//        return ResponseEntity.ok("Password Changed");
+//
+//    }
 
 }
