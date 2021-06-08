@@ -12,7 +12,7 @@ import javax.persistence.*;
 @Table(name = "cart_items")
 public class CartItem extends BaseModel{
 
-    private String quantity;
+    private int quantity;
 
     @Column(columnDefinition = "decimal")
     private double price;
