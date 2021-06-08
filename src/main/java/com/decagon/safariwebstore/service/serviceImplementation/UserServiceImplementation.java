@@ -1,23 +1,31 @@
 package com.decagon.safariwebstore.service.serviceImplementation;
 
 import com.decagon.safariwebstore.exceptions.BadRequestException;
+import com.decagon.safariwebstore.model.Role;
 import com.decagon.safariwebstore.exceptions.ResourceNotFoundException;
 import com.decagon.safariwebstore.model.User;
 import com.decagon.safariwebstore.payload.request.UpdatePasswordRequest;
 import com.decagon.safariwebstore.payload.request.auth.LoginRequest;
 import com.decagon.safariwebstore.payload.request.auth.RegisterUser;
+import com.decagon.safariwebstore.payload.response.Response;
 import com.decagon.safariwebstore.repository.UserRepository;
 import com.decagon.safariwebstore.service.UserService;
+import com.decagon.safariwebstore.utils.DateUtils;
+import com.decagon.safariwebstore.utils.mailService.MailService;
+import com.mashape.unirest.http.exceptions.UnirestException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 import java.util.Optional;
 
 @Service
 public class UserServiceImplementation implements UserService {
-
     UserRepository userRepository;
     BCryptPasswordEncoder bCryptPasswordEncoder;
 
