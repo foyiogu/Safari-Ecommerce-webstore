@@ -25,14 +25,12 @@ public class CartItemController {
     @PostMapping("/add-to-cart/{productId}")
     public ResponseEntity<Response> addItemsToCart(@PathVariable Long productId) {
         UserDetailsImpl userDetails = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        System.out.println("--->>>>>>>" + userDetails);
 
         User user = userService.findUserByEmail(userDetails.getUsername());
 
         Response response = cartItemService.addItemToCart(user, productId);
         String message = response.getMessage();
 
-        System.out.println("<<<<<<<<<<<<" + message);
         if (message.equals("You have added another quantity of the item to cart")
                 || message.equals("You have added a new item to cart")) {
             return new ResponseEntity<>(response, HttpStatus.CREATED);
