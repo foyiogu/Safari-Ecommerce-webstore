@@ -2,8 +2,10 @@ package com.decagon.safariwebstore.service;
 
 import com.decagon.safariwebstore.model.Role;
 import com.decagon.safariwebstore.model.User;
+import com.decagon.safariwebstore.payload.request.auth.EditUser;
 import com.decagon.safariwebstore.payload.request.auth.RegisterUser;
 import com.decagon.safariwebstore.payload.response.Response;
+import com.decagon.safariwebstore.payload.response.UserDTO;
 import org.springframework.stereotype.Component;
 
 import java.util.Optional;
@@ -19,4 +21,5 @@ public interface UserService {
     Response userForgotPassword(Role admin, Optional<User> userOptional, String appUrl);
     Response userResetPassword(Optional<User> userOptional, String password, String confirmPassword);
     User findUserByEmail(String email);
+    UserDTO updateUser(EditUser user);
 }

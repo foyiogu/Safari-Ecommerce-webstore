@@ -4,17 +4,20 @@ import com.decagon.safariwebstore.exceptions.ResourceNotFoundException;
 import com.decagon.safariwebstore.model.ERole;
 import com.decagon.safariwebstore.model.Role;
 import com.decagon.safariwebstore.model.User;
+import com.decagon.safariwebstore.payload.request.auth.EditUser;
+import com.decagon.safariwebstore.payload.request.auth.RegisterUser;
 import com.decagon.safariwebstore.payload.response.Response;
 import com.decagon.safariwebstore.repository.RoleRepository;
 import com.decagon.safariwebstore.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.bind.annotation.*;
+
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 import java.util.Map;
 import java.util.Optional;
 @RestController
@@ -24,6 +27,14 @@ public class UserController {
     private UserService userService;
     @Autowired
     private RoleRepository roleRepository;
+
+
+    @PutMapping("/profile")
+    public ResponseEntity<?> editProfile(@Valid @RequestBody EditUser user) {
+        return new ResponseEntity<>(userService.updateUser(user), HttpStatus.OK);
+    }
+
+
     @PostMapping("/customer/password-forgot")
     public ResponseEntity<Response> userForgotPassword(@RequestParam("email") String accountEmail, HttpServletRequest request){
         ResponseEntity<Response> responseEntity = null;
@@ -45,6 +56,8 @@ public class UserController {
         }
         return responseEntity;
     }
+
+
     @PostMapping("/customer/password-reset")
     public ResponseEntity<Response> customerResetPassword(@RequestParam Map<String, String> requestParams) {
         ResponseEntity<Response> responseEntity = null;
