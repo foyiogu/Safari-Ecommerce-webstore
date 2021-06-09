@@ -22,10 +22,12 @@ import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+
 import java.util.Optional;
 
 @Service
 public class UserServiceImplementation implements UserService {
+
     UserRepository userRepository;
     BCryptPasswordEncoder bCryptPasswordEncoder;
 
@@ -63,14 +65,7 @@ public class UserServiceImplementation implements UserService {
                 bCryptPasswordEncoder.encode(registerUser.getPassword())
         );
     }
-
-    @Override
-    public User findUserByEmail(String email) {
-        Optional<User> user = userRepository.findByEmail(email);
-        if(user.isEmpty()) throw new ResourceNotFoundException("Incorrect parameter; email " + email + " does not exist");
-        return user.get();
-    }
-
+  
     @Override
     public boolean checkIfValidOldPassword(User user,  UpdatePasswordRequest updatePasswordRequest){
 
@@ -94,27 +89,5 @@ public class UserServiceImplementation implements UserService {
         }
         return false;
     }
-
-    @Override
-    public void deactivateResetPasswordToken() {
-
-        List<User> accountsList = userRepository.findAllByPasswordResetTokenIsNotNull();
-
-        accountsList.forEach(account -> {
-            String expireDate = account.getPasswordResetExpireDate();
-            String presentDate = DateUtils.getCurrentTime();
-            int actionDelete = presentDate.compareTo(expireDate);
-
-            if(actionDelete > 0 || actionDelete == 0) {
-                account.setPasswordResetExpireDate(null);
-                account.setPasswordResetToken(null);
-
-                userRepository.save(account);
-            }
-        });
-    }
-
-
-
 
 }
