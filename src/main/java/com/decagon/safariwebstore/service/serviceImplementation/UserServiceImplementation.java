@@ -4,52 +4,46 @@ import com.decagon.safariwebstore.exceptions.BadRequestException;
 import com.decagon.safariwebstore.model.Role;
 import com.decagon.safariwebstore.exceptions.ResourceNotFoundException;
 import com.decagon.safariwebstore.model.User;
-import com.decagon.safariwebstore.payload.request.auth.EditUser;
 import com.decagon.safariwebstore.payload.request.auth.RegisterUser;
 import com.decagon.safariwebstore.payload.response.Response;
-import com.decagon.safariwebstore.payload.response.UserDTO;
 import com.decagon.safariwebstore.repository.UserRepository;
 import com.decagon.safariwebstore.service.UserService;
 import com.decagon.safariwebstore.utils.DateUtils;
 import com.decagon.safariwebstore.utils.mailService.MailService;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-
+import java.util.Optional;
 @Service
 public class UserServiceImplementation implements UserService {
     UserRepository userRepository;
     BCryptPasswordEncoder bCryptPasswordEncoder;
     private MailService mailService;
-
     @Autowired
-    public UserServiceImplementation(UserRepository userRepository, BCryptPasswordEncoder bCryptPasswordEncoder, MailService mailService) {
+    public UserServiceImplementation(UserRepository userRepository, BCryptPasswordEncoder bCryptPasswordEncoder, MailService mailService){
         this.userRepository = userRepository;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
         this.mailService = mailService;
     }
-
     @Override
     public User saveUser(User user) {
         return userRepository.save(user);
     }
-
     @Override
     public boolean existsByMail(String email) {
         return userRepository.existsByEmail(email);
     }
-
     @Override
-    public User registration(RegisterUser registerUser) {
-        if (userRepository.existsByEmail(registerUser.getEmail())) {
+    public User registration(RegisterUser registerUser){
+        if(userRepository.existsByEmail(registerUser.getEmail())) {
             throw new BadRequestException("Error: Email is already taken!");
         }
-        if (!(registerUser.getPassword().equals(registerUser.getConfirmPassword()))) {
+        if(!(registerUser.getPassword().equals(registerUser.getConfirmPassword()))){
             throw new BadRequestException("Error: Password does not match");
         }
         return new User(
@@ -61,21 +55,18 @@ public class UserServiceImplementation implements UserService {
                 bCryptPasswordEncoder.encode(registerUser.getPassword())
         );
     }
-
     @Override
     public Optional<User> findUserByResetToken(String resetToken) {
         return userRepository.findByPasswordResetToken(resetToken);
     }
-
     @Override
     public Optional<User> getUserByEmail(String email) {
         return userRepository.findByEmail(email);
     }
-
     /**
      * This method is called by the scheduler every 1 minutes
      * to check if the time to invalidate the token has reached limit
-     */
+     * */
     @Override
     public void deactivateResetPasswordToken() {
         List<User> accountsList = userRepository.findAllByPasswordResetTokenIsNotNull();
@@ -83,32 +74,30 @@ public class UserServiceImplementation implements UserService {
             String expireDate = account.getPasswordResetExpireDate();
             String presentDate = DateUtils.getCurrentTime();
             int actionDelete = presentDate.compareTo(expireDate);
-            if (actionDelete > 0 || actionDelete == 0) {
+            if(actionDelete > 0 || actionDelete == 0) {
                 account.setPasswordResetExpireDate(null);
                 account.setPasswordResetToken(null);
                 userRepository.save(account);
             }
         });
     }
-
     /**
      * Sends an email to the customer with a url link to reset password
      * the url link will be received in the frontend
-     *
      * @param appUrl
      * @param userOptional
      * @return object
-     */
-    public Response userForgotPassword(Role customer, Optional<User> userOptional, String appUrl) {
+     * */
+    public Response userForgotPassword(Role customer, Optional<User> userOptional, String appUrl){
         //response handler
         Response responseHandler = new Response();
-        if (userOptional.isEmpty()) {
+        if(userOptional.isEmpty()) {
             responseHandler.setStatus(404);
             responseHandler.setMessage("We couldn't find an account with that e-mail address.");
             return responseHandler;
         }
         Role userRole = userOptional.get().getRoles().get(0);
-        if (customer != userRole) {
+        if(customer != userRole){
             responseHandler.setStatus(401);
             responseHandler.setMessage("You don't have access to this link");
             return responseHandler;
@@ -135,28 +124,26 @@ public class UserServiceImplementation implements UserService {
         }
         return responseHandler;
     }
-
     /**
      * This method check the validity of the token sent and also validates passwords(password and confirm password)
      * before saving it
-     *
      * @param userOptional
      * @param password
      * @param confirmPassword
      * @return response
-     */
-    public Response userResetPassword(Optional<User> userOptional, String password, String confirmPassword) {
+     * */
+    public Response userResetPassword(Optional<User> userOptional, String password, String confirmPassword){
         Response responseHandler = new Response();
-        if (!userOptional.isPresent()) {
+        if (!userOptional.isPresent()){
             responseHandler.setStatus(400);
             responseHandler.setMessage("Oops!  This is an invalid password reset link.");
             return responseHandler;
         }
         User resetUser = userOptional.get();
-        if (!password.equals(confirmPassword)) {
+        if(!password.equals(confirmPassword)){
             responseHandler.setStatus(400);
             responseHandler.setMessage("Passwords does not match");
-            return responseHandler;
+            return  responseHandler;
         }
         resetUser.setPassword(bCryptPasswordEncoder.encode(password));
         // Set the reset token to null so it cannot be used again
@@ -173,12 +160,10 @@ public class UserServiceImplementation implements UserService {
         }
         return responseHandler;
     }
-
     @Override
     public User findUserByEmail(String email) {
         Optional<User> user = userRepository.findByEmail(email);
-        if (user.isEmpty())
-            throw new ResourceNotFoundException("Incorrect parameter; email " + email + " does not exist");
+        if(user.isEmpty()) throw new ResourceNotFoundException("Incorrect parameter; email " + email + " does not exist");
         return user.get();
     }
 

@@ -10,6 +10,8 @@ import lombok.ToString;
 @NoArgsConstructor
 @ToString
 public class Response {
+
     private Integer status;
     private String message;
 }
+
