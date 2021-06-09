@@ -9,6 +9,8 @@ import com.decagon.safariwebstore.payload.response.Response;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 public interface UserService {
     User saveUser(User user);
