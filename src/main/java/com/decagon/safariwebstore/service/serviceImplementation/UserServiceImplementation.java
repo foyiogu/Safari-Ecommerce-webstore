@@ -4,6 +4,8 @@ import com.decagon.safariwebstore.exceptions.BadRequestException;
 import com.decagon.safariwebstore.model.Role;
 import com.decagon.safariwebstore.exceptions.ResourceNotFoundException;
 import com.decagon.safariwebstore.model.User;
+import com.decagon.safariwebstore.payload.request.UpdatePasswordRequest;
+import com.decagon.safariwebstore.payload.request.auth.LoginRequest;
 import com.decagon.safariwebstore.payload.request.auth.RegisterUser;
 import com.decagon.safariwebstore.payload.response.Response;
 import com.decagon.safariwebstore.repository.UserRepository;
@@ -15,6 +17,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
+
+import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -29,7 +33,7 @@ public class UserServiceImplementation implements UserService {
     private MailService mailService;
 
     @Autowired
-    public UserServiceImplementation(UserRepository userRepository, BCryptPasswordEncoder bCryptPasswordEncoder, MailService mailService){
+    public UserServiceImplementation(UserRepository userRepository, BCryptPasswordEncoder bCryptPasswordEncoder){
         this.userRepository = userRepository;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
         this.mailService = mailService;
@@ -63,7 +67,7 @@ public class UserServiceImplementation implements UserService {
                 bCryptPasswordEncoder.encode(registerUser.getPassword())
         );
     }
-
+    
     @Override
     public Optional<User> findUserByResetToken(String resetToken) {
         return userRepository.findByPasswordResetToken(resetToken);
@@ -73,7 +77,7 @@ public class UserServiceImplementation implements UserService {
     public Optional<User> getUserByEmail(String email) {
         return userRepository.findByEmail(email);
     }
-
+    
     /**
      * This method is called by the scheduler every 1 minutes
      * to check if the time to invalidate the token has reached limit
@@ -96,7 +100,7 @@ public class UserServiceImplementation implements UserService {
             }
         });
     }
-
+    
     /**
      * Sends an email to the admin with a url link to reset password
      * the url link will be received in the frontend
@@ -156,7 +160,7 @@ public class UserServiceImplementation implements UserService {
 
         return responseHandler;
     }
-
+    
     /**
      * This method check the validity of the token sent and also validates passwords(password and confirm password)
      * before saving it
@@ -213,6 +217,37 @@ public class UserServiceImplementation implements UserService {
         Optional<User> user = userRepository.findByEmail(email);
         if(user.isEmpty()) throw new ResourceNotFoundException("Incorrect parameter; email " + email + " does not exist");
         return user.get();
+    }
+
+    @Override
+    public boolean checkIfValidOldPassword(User user,  UpdatePasswordRequest updatePasswordRequest){
+
+        String newPassword = updatePasswordRequest.getNewPassword();
+        String confirmNewPassword = updatePasswordRequest.getConfirmNewPassword();
+
+        boolean passwordMatch = newPassword.equals(confirmNewPassword);
+
+        boolean matches = bCryptPasswordEncoder.matches(updatePasswordRequest.getOldPassword(), user.getPassword());
+
+        if(!passwordMatch||!matches){
+            throw new BadRequestException("Passwords do not match");
+        }
+
+        return true;
+    }
+
+    @Override
+    public boolean changeUserPassword(User user,  UpdatePasswordRequest updatePasswordRequest){
+
+        String newPassword = updatePasswordRequest.getNewPassword();
+        String confirmNewPassword = updatePasswordRequest.getConfirmNewPassword();
+
+        if (newPassword.equals(confirmNewPassword)) {
+            user.setPassword(bCryptPasswordEncoder.encode(updatePasswordRequest.getNewPassword()));
+            userRepository.save(user);
+            return true;
+        }
+        return false;
     }
 
 
