@@ -4,16 +4,18 @@ import com.decagon.safariwebstore.exceptions.BadRequestException;
 import com.decagon.safariwebstore.model.Role;
 import com.decagon.safariwebstore.exceptions.ResourceNotFoundException;
 import com.decagon.safariwebstore.model.User;
+import com.decagon.safariwebstore.payload.request.auth.EditUser;
 import com.decagon.safariwebstore.payload.request.auth.RegisterUser;
 import com.decagon.safariwebstore.payload.response.Response;
+import com.decagon.safariwebstore.payload.response.UserDTO;
 import com.decagon.safariwebstore.repository.UserRepository;
 import com.decagon.safariwebstore.service.UserService;
 import com.decagon.safariwebstore.utils.DateUtils;
 import com.decagon.safariwebstore.utils.mailService.MailService;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
@@ -197,3 +199,5 @@ public class UserServiceImplementation implements UserService {
                 loggedUser.getRoles());
     }
 }
+
+
