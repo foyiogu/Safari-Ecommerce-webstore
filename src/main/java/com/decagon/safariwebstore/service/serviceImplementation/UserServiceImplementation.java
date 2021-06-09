@@ -30,11 +30,13 @@ public class UserServiceImplementation implements UserService {
 
     UserRepository userRepository;
     BCryptPasswordEncoder bCryptPasswordEncoder;
+    private MailService mailService;
 
     @Autowired
     public UserServiceImplementation(UserRepository userRepository, BCryptPasswordEncoder bCryptPasswordEncoder){
         this.userRepository = userRepository;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
+        this.mailService = mailService;
     }
 
     @Override
