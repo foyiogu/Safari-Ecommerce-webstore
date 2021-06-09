@@ -218,15 +218,22 @@ public class UserServiceImplementation implements UserService {
         if(user.isEmpty()) throw new ResourceNotFoundException("Incorrect parameter; email " + email + " does not exist");
         return user.get();
     }
-  
+
     @Override
     public boolean checkIfValidOldPassword(User user,  UpdatePasswordRequest updatePasswordRequest){
 
         String newPassword = updatePasswordRequest.getNewPassword();
         String confirmNewPassword = updatePasswordRequest.getConfirmNewPassword();
 
-        return  bCryptPasswordEncoder.matches(updatePasswordRequest.getOldPassword(), user.getPassword())&&
-                newPassword.equals(confirmNewPassword);
+        boolean passwordMatch = newPassword.equals(confirmNewPassword);
+
+        boolean matches = bCryptPasswordEncoder.matches(updatePasswordRequest.getOldPassword(), user.getPassword());
+
+        if(!passwordMatch||!matches){
+            throw new BadRequestException("Passwords do not match");
+        }
+
+        return true;
     }
 
     @Override
@@ -242,5 +249,6 @@ public class UserServiceImplementation implements UserService {
         }
         return false;
     }
+
 
 }

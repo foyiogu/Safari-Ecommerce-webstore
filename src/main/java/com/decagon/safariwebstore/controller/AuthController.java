@@ -118,27 +118,14 @@ AuthController {
     @PostMapping("/user/updatePassword")
     @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     public ResponseEntity<String> changeUserPassword(@RequestBody UpdatePasswordRequest updatePasswordRequest) {
-        String newPassword = updatePasswordRequest.getNewPassword();
-        String confirmNewPassword = updatePasswordRequest.getConfirmNewPassword();
 
-        if (newPassword.equals(confirmNewPassword)) {
-            User user = userService.findUserByEmail(SecurityContextHolder.getContext().getAuthentication().getName());
-
-            if (!userService.checkIfValidOldPassword(user, updatePasswordRequest)) {
-                throw new InvalidOldPasswordException("Password mismatch error");
-            }
-
-
-
-            boolean passwordIsChanged = userService.changeUserPassword(user, updatePasswordRequest);
-            if (passwordIsChanged) {
-                return ResponseEntity.ok("Password Changed Successfully");
-            }
-
+        User user = userService.findUserByEmail(SecurityContextHolder.getContext().getAuthentication().getName());
+        userService.checkIfValidOldPassword(user, updatePasswordRequest);
+        boolean passwordIsChanged = userService.changeUserPassword(user, updatePasswordRequest);
+        if (passwordIsChanged) {
+            return ResponseEntity.ok("Password Changed Successfully");
         }
         return new ResponseEntity<>("Error changing password", HttpStatus.BAD_REQUEST);
     }
-
-
 
 }
