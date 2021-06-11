@@ -18,19 +18,13 @@ public interface UserService {
     User saveUser(User user);
     boolean existsByMail(String email);
     User registration(RegisterUser registerUser);
-
     Optional<User> findUserByResetToken(String resetToken);
     Optional<User> getUserByEmail(String email);
-
     void deactivateResetPasswordToken();
     Response userForgotPassword(Role admin, Optional<User> userOptional, String appUrl);
     Response userResetPassword(Optional<User> userOptional, String password, String confirmPassword);
     User findUserByEmail(String email);
     UserDTO updateUser(EditUser user);
-
-    Response adminForgotPassword(Role admin, Optional<User> userOptional, String appUrl);
-    Response adminResetPassword(Optional<User> userOptional, String password, String confirmPassword);
-
     boolean checkIfValidOldPassword(User user, UpdatePasswordRequest updatePasswordRequest);
     boolean changeUserPassword(User user, UpdatePasswordRequest updatePasswordRequest);
 

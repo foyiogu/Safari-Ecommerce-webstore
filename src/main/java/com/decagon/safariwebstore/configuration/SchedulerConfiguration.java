@@ -10,11 +10,13 @@ import org.springframework.stereotype.Component;
 @EnableScheduling
 public class SchedulerConfiguration {
 
+    private UserService userService;
+
     @Autowired
-    UserService userService;
+    public SchedulerConfiguration(UserService userService){
+        this.userService = userService;
+    }
 
     @Scheduled(fixedRate = 60000L)
-    public void scheduleActionWithFixedRate() {
-        userService.deactivateResetPasswordToken();
-    }
+    public void scheduleActionWithFixedRate() { userService.deactivateResetPasswordToken(); }
 }
