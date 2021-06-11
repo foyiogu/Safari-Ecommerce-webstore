@@ -1,34 +1,42 @@
 package com.decagon.safariwebstore.controller;
 
 import com.decagon.safariwebstore.exceptions.ResourceNotFoundException;
-import com.decagon.safariwebstore.model.ERole;
-import com.decagon.safariwebstore.model.Role;
-import com.decagon.safariwebstore.model.User;
+import com.decagon.safariwebstore.model.*;
+import com.decagon.safariwebstore.payload.request.ProductRequest;
 import com.decagon.safariwebstore.payload.response.Response;
 import com.decagon.safariwebstore.repository.RoleRepository;
+import com.decagon.safariwebstore.service.ProductService;
 import com.decagon.safariwebstore.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
+@Slf4j
 @RestController
-@RequestMapping("/api/")
+@RequestMapping("/api/admin")
+@AllArgsConstructor
 public class AdminController {
 
-    @Autowired
-    private UserService userService;
+    private final UserService userService;
 
-    @Autowired
-    private RoleRepository roleRepository;
+    private final RoleRepository roleRepository;
 
-    @PostMapping("/admin/password-forgot")
+    private final ProductService productService;
+
+    private final ModelMapper mapper;
+
+    @PostMapping("/password-forgot")
     public ResponseEntity<Response> adminForgotPassword(@RequestParam("email") String accountEmail, HttpServletRequest request){
 
         ResponseEntity<Response> responseEntity = null;
@@ -61,7 +69,7 @@ public class AdminController {
         return responseEntity;
     }
 
-    @PostMapping("/admin/password-reset")
+    @PostMapping("/password-reset")
     public ResponseEntity<Response> adminResetPassword(@RequestParam Map<String, String> requestParams) {
 
         ResponseEntity<Response> responseEntity = null;
@@ -88,4 +96,14 @@ public class AdminController {
         return responseEntity;
 
     }
+
+    @PostMapping("/add-product")
+    public ResponseEntity<?> addProduct(@Valid @RequestBody ProductRequest productRequest){
+
+        Product product = productService.saveProduct(productRequest);
+
+        return new ResponseEntity<>(new Response(200,
+                "Product saved successfully"), HttpStatus.OK);
+    }
+
 }

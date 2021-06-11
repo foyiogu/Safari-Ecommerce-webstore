@@ -1,8 +1,11 @@
 package com.decagon.safariwebstore.model;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
@@ -10,11 +13,12 @@ import javax.persistence.*;
 @EqualsAndHashCode(callSuper = true)
 @Table(name = "colors")
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class Color extends BaseModel {
 
     private String color;
-
-    @Column(name = "product_id")
-    private Long productId;
+//
+//    private Long productId;
 
 }

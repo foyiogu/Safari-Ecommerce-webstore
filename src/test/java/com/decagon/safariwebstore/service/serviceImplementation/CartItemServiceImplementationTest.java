@@ -12,6 +12,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+
 import java.util.ArrayList;
 import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -42,6 +44,9 @@ public class CartItemServiceImplementationTest {
 
     @Mock private SubCategoryRepository subCategoryRepository;
 
+    private SizeRepository sizeRepository;
+    private ColorRepository colorRepository;
+    private ProductImageRepository productImageRepository;
     private ProductServiceImplementation productServiceUnderTest;
 
     @BeforeEach
@@ -49,7 +54,8 @@ public class CartItemServiceImplementationTest {
         productPage = new ProductPage();
         modelMapper = new ModelMapper();
         productServiceUnderTest = new ProductServiceImplementation(productRepository,
-                categoryRepository, subCategoryRepository);
+                categoryRepository, subCategoryRepository, sizeRepository,
+                colorRepository, productImageRepository);
 
     }
 
