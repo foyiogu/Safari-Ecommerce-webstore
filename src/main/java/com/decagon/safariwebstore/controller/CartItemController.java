@@ -29,14 +29,9 @@ public class CartItemController {
         User user = userService.findUserByEmail(userDetails.getUsername());
 
         Response response = cartItemService.addItemToCart(user, productId);
-        String message = response.getMessage();
-
-        if (message.equals("You have added another quantity of the item to cart")
-                || message.equals("You have added a new item to cart")) {
-            return new ResponseEntity<>(response, HttpStatus.CREATED);
-        } else {
-            if (message.equals("The product is not found")) return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
-            return new ResponseEntity<>(response, HttpStatus.FORBIDDEN);
-        }
+        Integer status = response.getStatus();
+        if (status.equals(201)) return new ResponseEntity<>(response, HttpStatus.CREATED);
+        else if (status.equals(404)) return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(response, HttpStatus.FORBIDDEN);
     }
 }
