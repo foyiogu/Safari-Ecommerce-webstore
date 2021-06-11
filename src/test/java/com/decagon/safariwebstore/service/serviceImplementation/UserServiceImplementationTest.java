@@ -1,18 +1,21 @@
 package com.decagon.safariwebstore.service.serviceImplementation;
 
 import com.decagon.safariwebstore.model.User;
+import com.decagon.safariwebstore.payload.request.UpdatePasswordRequest;
 import com.decagon.safariwebstore.repository.UserRepository;
 import com.decagon.safariwebstore.service.UserService;
+import org.hibernate.service.spi.InjectService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Bean;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.Optional;
+import javax.inject.Inject;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
@@ -20,10 +23,18 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
+//@ExtendWith(BcryptParameterResolver.class)
 class UserServiceImplementationTest {
+
+
+    BcryptParameterResolver bcryptParameterResolver;
+
+    @Mock
+    BCryptPasswordEncoder passwordEncoder;
 
     @Mock
     private UserRepository userRepository;
+
     @InjectMocks
     private UserServiceImplementation userService;
 
@@ -51,42 +62,39 @@ class UserServiceImplementationTest {
     }
 
     @Test
-    void shouldFindUserByEmail() {
-        final String email = "user1@gmail.com";
-        final User users = new User("austin", "sam", "austin@gmail.com", "male", "27-11-1999",  "password");
-        given(userRepository.findByEmail(email)).willReturn(Optional.of(users));
-        final Optional<User> expected = userService.getUserByEmail(email);
-        assertThat(expected).isNotNull();
+    void changeUserPasswordTest() {
+
+        User user = new User("austin", "sam", "austin@gmail.com", "male", "27-11-1999",  "password");
+        given(userRepository.save(user)).willAnswer(invocationOnMock -> invocationOnMock.getArgument(0));
+        User savedUser = userService.saveUser(user);
+
+        UpdatePasswordRequest updatePasswordRequest = new UpdatePasswordRequest();
+        updatePasswordRequest.setOldPassword("password");
+        updatePasswordRequest.setNewPassword("password123");
+        updatePasswordRequest.setConfirmNewPassword("password123");
+
+        boolean changedUserPassword = userService.changeUserPassword(savedUser, updatePasswordRequest);
+        assertThat(changedUserPassword).isEqualTo(true);
+
+
     }
 
     @Test
-    void shouldFindPasswordResetToken() {
-        final String token = "i3ii3rjif31iof2fbougfqe";
-        final User users = new User("austin", "sam", "austin@gmail.com", "male", "27-11-1999","password");
-        given(userRepository.findByPasswordResetToken(token)).willReturn(Optional.of(users));
-        final Optional<User> expected  = userService.findUserByResetToken(token);
-        System.out.println(expected.get().getPasswordResetToken());
-        assertThat(expected).isNotNull();
+    void passwordMismatch(){
+        User user = new User("austin", "sam", "austin@gmail.com", "male", "27-11-1999",  "password");
+        given(userRepository.save(user)).willAnswer(invocationOnMock -> invocationOnMock.getArgument(0));
+        User savedUser = userService.saveUser(user);
+
+        UpdatePasswordRequest updatePasswordRequest = new UpdatePasswordRequest();
+        updatePasswordRequest.setOldPassword("password");
+        updatePasswordRequest.setNewPassword("password123");
+        updatePasswordRequest.setConfirmNewPassword("123password");
+
+        boolean changedUserPassword = userService.changeUserPassword(savedUser, updatePasswordRequest);
+        assertThat(changedUserPassword).isEqualTo(false);
 
     }
 
-    @Test
-    void deactivateResetPasswordToken(){
-
-        final User users = new User
-                ("austin", "sam", "austin@gmail.com", "male", "27-11-1999", null);
-        Date presentDate = new Date();
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-M-yyyy hh:mm:ss");
-        Calendar calendar = Calendar.getInstance();
-        calendar.add(Calendar.MINUTE, 1);
-        String tokenExpiryDate = dateFormat.format(calendar.getTime());
-        users.setPasswordResetExpireDate(tokenExpiryDate);
 
 
-        userService.deactivateResetPasswordToken();
-        assertThat(users.getPasswordResetExpireDate()).isNotNull();
-
-        System.out.println(users.getPasswordResetToken());
-        System.out.println(users.getPasswordResetExpireDate());
-    }
 }
