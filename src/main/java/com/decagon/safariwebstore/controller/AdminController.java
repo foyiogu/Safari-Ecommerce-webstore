@@ -20,9 +20,6 @@ public class AdminController {
     @Autowired
     private AdminService adminService;
 
-    @Autowired
-    private RoleRepository roleRepository;
-
     @PostMapping("/admin/password-forgot")
     public ResponseEntity<Response> adminForgotPassword(@RequestParam("email") String email, HttpServletRequest req){
         return adminService.adminForgotPassword(req, email);
