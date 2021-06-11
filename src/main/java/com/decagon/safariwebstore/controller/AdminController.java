@@ -25,11 +25,7 @@ public class AdminController {
 
     @PostMapping("/admin/password-forgot")
     public ResponseEntity<Response> adminForgotPassword(@RequestParam("email") String email, HttpServletRequest req){
-
-        Role adminRole = roleRepository.findByName(ERole.ADMIN)
-                .orElseThrow(() -> new ResourceNotFoundException("Error: Role is not found."));
-
-        return adminService.adminForgotPassword(req, adminRole, email);
+        return adminService.adminForgotPassword(req, email);
     }
 
     @PostMapping("/admin/password-reset")

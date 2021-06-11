@@ -7,6 +7,6 @@ import org.springframework.http.ResponseEntity;
 import javax.servlet.http.HttpServletRequest;
 
 public interface AdminService {
-    ResponseEntity<Response> adminForgotPassword(HttpServletRequest req, Role adminRole, String email);
+    ResponseEntity<Response> adminForgotPassword(HttpServletRequest req, String email);
     ResponseEntity<Response> adminResetPassword(ResetPassword resetPassword);
 }

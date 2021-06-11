@@ -1,9 +1,12 @@
 package com.decagon.safariwebstore.service.serviceImplementation;
 
+import com.decagon.safariwebstore.exceptions.ResourceNotFoundException;
+import com.decagon.safariwebstore.model.ERole;
 import com.decagon.safariwebstore.model.Role;
 import com.decagon.safariwebstore.model.User;
 import com.decagon.safariwebstore.payload.response.Response;
 import com.decagon.safariwebstore.payload.response.auth.ResetPassword;
+import com.decagon.safariwebstore.repository.RoleRepository;
 import com.decagon.safariwebstore.service.AdminService;
 import com.decagon.safariwebstore.service.UserService;
 import com.decagon.safariwebstore.utils.DateUtils;
@@ -24,27 +27,31 @@ public class AdminServiceImplementation implements AdminService {
     private UserService userService;
     private BCryptPasswordEncoder bCryptPasswordEncoder;
     private MailService mailService;
+    private RoleRepository roleRepository;
 
     @Autowired
-    public AdminServiceImplementation(UserService userService, BCryptPasswordEncoder bCryptPasswordEncoder, MailService mailService){
+    public AdminServiceImplementation(UserService userService, BCryptPasswordEncoder bCryptPasswordEncoder, MailService mailService, RoleRepository roleRepository){
         this.userService = userService;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
         this.mailService = mailService;
+        this.roleRepository = roleRepository;
     }
 
     /**
      * Sends an email to the admin with a url link to reset password
      * @param req
-     * @param adminRole
      * @param email
      * */
     @Override
-    public ResponseEntity<Response> adminForgotPassword(HttpServletRequest req, Role adminRole, String email) {
+    public ResponseEntity<Response> adminForgotPassword(HttpServletRequest req, String email) {
         // Lookup user in database by e-mail
         Optional<User> adminOptional = userService.getUserByEmail(email);
 
         //response handler
         Response res = new Response();
+
+        Role adminRole = roleRepository.findByName(ERole.ADMIN)
+                .orElseThrow(() -> new ResourceNotFoundException("Error: Role is not found."));
 
         if(adminOptional.isEmpty()) {
             res.setStatus(404);
