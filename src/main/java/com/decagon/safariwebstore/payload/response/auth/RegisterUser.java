@@ -1,4 +1,4 @@
-package com.decagon.safariwebstore.payload.request.auth;
+package com.decagon.safariwebstore.payload.response.auth;
 
 import com.decagon.safariwebstore.model.Role;
 import lombok.Data;

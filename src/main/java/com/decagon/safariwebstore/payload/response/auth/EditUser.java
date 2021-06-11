@@ -1,12 +1,9 @@
-package com.decagon.safariwebstore.payload.request.auth;
+package com.decagon.safariwebstore.payload.response.auth;
 
-import com.decagon.safariwebstore.model.Role;
 import lombok.Data;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
-import java.util.List;
 
 @Data
 public class EditUser {
