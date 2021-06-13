@@ -1,11 +1,13 @@
 package com.decagon.safariwebstore.service;
 
-import com.decagon.safariwebstore.model.Role;
 import com.decagon.safariwebstore.model.User;
 import com.decagon.safariwebstore.payload.request.auth.RegisterUser;
 import com.decagon.safariwebstore.payload.response.Response;
+import com.decagon.safariwebstore.payload.response.auth.ResetPassword;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.Optional;
 
 @Component
@@ -16,7 +18,9 @@ public interface UserService {
     Optional<User> findUserByResetToken(String resetToken);
     Optional<User> getUserByEmail(String email);
     void deactivateResetPasswordToken();
-    Response userForgotPassword(Role admin, Optional<User> userOptional, String appUrl);
-    Response userResetPassword(Optional<User> userOptional, String password, String confirmPassword);
     User findUserByEmail(String email);
+    ResponseEntity<Response> userForgotPassword(HttpServletRequest request, String accountEmail);
+    ResponseEntity<Response> userResetPassword(ResetPassword requestPassword);
+
+
 }
