@@ -54,8 +54,7 @@ public class CartItemServiceImplementationTest {
         productPage = new ProductPage();
         modelMapper = new ModelMapper();
         productServiceUnderTest = new ProductServiceImplementation(productRepository,
-                categoryRepository, subCategoryRepository, sizeRepository,
-                colorRepository, productImageRepository);
+                categoryRepository, subCategoryRepository);
 
     }
 

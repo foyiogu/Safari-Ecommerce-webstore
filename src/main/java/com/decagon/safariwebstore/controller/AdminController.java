@@ -1,13 +1,13 @@
 package com.decagon.safariwebstore.controller;
 
-import com.decagon.safariwebstore.exceptions.ResourceNotFoundException;
-import com.decagon.safariwebstore.model.ERole;
-import com.decagon.safariwebstore.model.Role;
+import com.decagon.safariwebstore.payload.request.ProductRequest;
 import com.decagon.safariwebstore.payload.response.Response;
 import com.decagon.safariwebstore.payload.response.auth.ResetPassword;
-import com.decagon.safariwebstore.repository.RoleRepository;
 import com.decagon.safariwebstore.service.AdminService;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.decagon.safariwebstore.service.ProductService;
+import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
@@ -19,8 +19,9 @@ import javax.validation.Valid;
 @AllArgsConstructor
 public class AdminController {
 
-    @Autowired
-    private AdminService adminService;
+    private final AdminService adminService;
+
+    private final ProductService productService;
 
     @PostMapping("/admin/password-forgot")
     public ResponseEntity<Response> adminForgotPassword(@RequestParam("email") String email, HttpServletRequest req){
@@ -35,7 +36,7 @@ public class AdminController {
     @PostMapping("/add-product")
     public ResponseEntity<?> addProduct(@Valid @RequestBody ProductRequest productRequest){
 
-        Product product = productService.saveProduct(productRequest);
+        productService.saveProduct(productRequest);
 
         return new ResponseEntity<>(new Response(200,
                 "Product saved successfully"), HttpStatus.OK);

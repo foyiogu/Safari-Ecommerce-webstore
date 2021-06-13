@@ -46,10 +46,6 @@ class ProductServiceImplementationTest {
     @Mock private CategoryRepository categoryRepository;
 
     @Mock private SubCategoryRepository subCategoryRepository;
-
-    @Mock private SizeRepository sizeRepository;
-    @Mock private ColorRepository colorRepository;
-    @Mock private ProductImageRepository productImageRepository;
     @InjectMocks
     private ProductServiceImplementation productServiceUnderTest;
 
@@ -58,8 +54,7 @@ class ProductServiceImplementationTest {
         productPage = new ProductPage();
         modelMapper = new ModelMapper();
         productServiceUnderTest = new ProductServiceImplementation(productRepository,
-                categoryRepository, subCategoryRepository, sizeRepository,
-                colorRepository, productImageRepository);
+                categoryRepository, subCategoryRepository);
     }
 
     @Test
@@ -179,8 +174,8 @@ class ProductServiceImplementationTest {
         colors.add("#FFFFFF");
 
         List<String> images = new ArrayList<>();
-        images.add("http://awsS3/image.jpg");
-        images.add("http://awsS3/image2.jpg");
+        images.add("https://awsS3/image.jpg");
+        images.add("https://awsS3/image2.jpg");
 
 
         List<Category> c_category = new ArrayList<>();
@@ -188,7 +183,7 @@ class ProductServiceImplementationTest {
         c_category.add(new Category("shoes"));
 
         List<SubCategory> c_subCategories = new ArrayList<>();
-        c_subCategories.add(new SubCategory("denin", new Category("clothes")));
+        c_subCategories.add(new SubCategory("denim", new Category("clothes")));
         c_subCategories.add(new SubCategory("sneakers", new Category("shoes")));
 
         List<Size> c_sizes = new ArrayList<>();
@@ -202,8 +197,8 @@ class ProductServiceImplementationTest {
         c_colors.add(new Color("#FFFFFF"));
 
         List<ProductImage> c_images = new ArrayList<>();
-        c_images.add(new ProductImage("http://awsS3/image.jpg"));
-        c_images.add(new ProductImage("http://awsS3/image2.jpg"));
+        c_images.add(new ProductImage("https://awsS3/image.jpg"));
+        c_images.add(new ProductImage("https://awsS3/image2.jpg"));
 
         ProductRequest productRequest = new ProductRequest();
         productRequest.setName("L.V. shirt");

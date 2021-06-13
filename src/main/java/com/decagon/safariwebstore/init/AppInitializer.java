@@ -1,8 +1,6 @@
 package com.decagon.safariwebstore.init;
 import com.decagon.safariwebstore.model.*;
-import com.decagon.safariwebstore.repository.CategoryRepository;
 import com.decagon.safariwebstore.repository.RoleRepository;
-import com.decagon.safariwebstore.repository.SubCategoryRepository;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.modelmapper.ModelMapper;
@@ -14,8 +12,6 @@ import org.springframework.stereotype.Component;
 @Component
 @AllArgsConstructor
 public class AppInitializer implements ApplicationRunner {
-    private final CategoryRepository categoryRepository;
-    private final SubCategoryRepository subCategoryRepository;
     private final RoleRepository roleRepository;
     private final ModelMapper modelMapper;
     @Override
