@@ -15,6 +15,7 @@ import com.decagon.safariwebstore.utils.DateUtils;
 import com.decagon.safariwebstore.utils.mailService.MailService;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -48,10 +49,10 @@ public class UserServiceImplementation implements UserService {
     @Override
     public User registration(RegisterUser registerUser){
         if(userRepository.existsByEmail(registerUser.getEmail())) {
-            throw new BadRequestException("Error: Email is already taken!");
+            throw new BadRequestException("Error: Email is already taken!", HttpStatus.BAD_REQUEST);
         }
         if(!(registerUser.getPassword().equals(registerUser.getConfirmPassword()))){
-            throw new BadRequestException("Error: Password does not match");
+            throw new BadRequestException("Error: Password does not match", HttpStatus.BAD_REQUEST);
         }
         return new User(
                 registerUser.getFirstName(),
@@ -197,7 +198,7 @@ public class UserServiceImplementation implements UserService {
             loggedUser.setEmail(user.getEmail());
         } else if (user.getEmail() == null || user.getEmail().equals("")) {
             loggedUser.setEmail(email);
-        } else throw new BadRequestException("Error: User with this already exist");
+        } else throw new BadRequestException("Error: User with this already exist", HttpStatus.BAD_REQUEST);
 
         loggedUser = userRepository.save(loggedUser);
 
@@ -220,7 +221,7 @@ public class UserServiceImplementation implements UserService {
         boolean matches = bCryptPasswordEncoder.matches(updatePasswordRequest.getOldPassword(), user.getPassword());
 
         if(!passwordMatch||!matches){
-            throw new BadRequestException("Passwords do not match");
+            throw new BadRequestException("Passwords do not match", HttpStatus.BAD_REQUEST);
         }
 
         return true;
