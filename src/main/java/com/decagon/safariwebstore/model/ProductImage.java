@@ -1,19 +1,19 @@
 package com.decagon.safariwebstore.model;
 
 
-import lombok.Getter;
-import lombok.Setter;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.*;
 
 import javax.persistence.*;
 
 @Entity
 @Table(name = "product_images")
-@Getter
-@Setter
+@Data
+@EqualsAndHashCode(callSuper = true)
+@AllArgsConstructor
+@NoArgsConstructor
 public class ProductImage extends BaseModel{
       ;
         private String image;
-        @Column(name = "product_id")
-        private Long productId;
 
-    }
+}

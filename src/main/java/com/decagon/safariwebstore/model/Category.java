@@ -1,17 +1,17 @@
 package com.decagon.safariwebstore.model;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
+import java.util.List;
 
-@Getter
-@Setter
+@Data
 @Entity
 @Table(name = "categories")
+@AllArgsConstructor
+@NoArgsConstructor
+@EqualsAndHashCode(callSuper = true)
 public class Category extends BaseModel{
 
     private String name;
-
 }
