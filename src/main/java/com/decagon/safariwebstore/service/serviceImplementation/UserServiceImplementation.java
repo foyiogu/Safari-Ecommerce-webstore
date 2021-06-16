@@ -1,13 +1,16 @@
 package com.decagon.safariwebstore.service.serviceImplementation;
 
 import com.decagon.safariwebstore.exceptions.BadRequestException;
-import com.decagon.safariwebstore.model.Role;
 import com.decagon.safariwebstore.exceptions.ResourceNotFoundException;
+import com.decagon.safariwebstore.model.ERole;
+import com.decagon.safariwebstore.model.Role;
 import com.decagon.safariwebstore.model.User;
 import com.decagon.safariwebstore.payload.request.auth.EditUser;
 import com.decagon.safariwebstore.payload.request.UpdatePasswordRequest;
 import com.decagon.safariwebstore.payload.request.auth.RegisterUser;
 import com.decagon.safariwebstore.payload.response.Response;
+import com.decagon.safariwebstore.payload.response.auth.ResetPassword;
+import com.decagon.safariwebstore.repository.RoleRepository;
 import com.decagon.safariwebstore.payload.response.UserDTO;
 import com.decagon.safariwebstore.repository.UserRepository;
 import com.decagon.safariwebstore.service.UserService;
@@ -15,24 +18,30 @@ import com.decagon.safariwebstore.utils.DateUtils;
 import com.decagon.safariwebstore.utils.mailService.MailService;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
 @Service
 public class UserServiceImplementation implements UserService {
-    UserRepository userRepository;
-    BCryptPasswordEncoder bCryptPasswordEncoder;
-    private MailService mailService;
+
+    private UserRepository userRepository;
+    private BCryptPasswordEncoder bCryptPasswordEncoder;
+    private final MailService mailService;
+    private final RoleRepository roleRepository;
 
     @Autowired
-    public UserServiceImplementation(UserRepository userRepository, BCryptPasswordEncoder bCryptPasswordEncoder, MailService mailService){
+    public UserServiceImplementation(UserRepository userRepository, BCryptPasswordEncoder bCryptPasswordEncoder, MailService mailService, RoleRepository roleRepository) {
         this.userRepository = userRepository;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
         this.mailService = mailService;
+        this.roleRepository = roleRepository;
     }
 
     @Override
@@ -95,82 +104,106 @@ public class UserServiceImplementation implements UserService {
     /**
      * Sends an email to the customer with a url link to reset password
      * the url link will be received in the frontend
-     * @param appUrl
-     * @param userOptional
+     * @param request
+     * @param accountEmail
      * @return object
      * */
-    public Response userForgotPassword(Role customer, Optional<User> userOptional, String appUrl){
+
+
+    @Override
+    public ResponseEntity<Response> userForgotPassword(HttpServletRequest request, String accountEmail)
+    {
+        // Lookup user in database by e-mail
+        Optional<User> optionalUser = userRepository.findByEmail(accountEmail);
         //response handler
         Response responseHandler = new Response();
-        if(userOptional.isEmpty()) {
+
+        Role roleUser = roleRepository.findByName(ERole.USER)
+                .orElseThrow(() -> new ResourceNotFoundException("Error: Role is not found."));
+
+        if(!optionalUser.isPresent()) {
             responseHandler.setStatus(404);
             responseHandler.setMessage("We couldn't find an account with that e-mail address.");
-            return responseHandler;
+            return new ResponseEntity<>(responseHandler, HttpStatus.NOT_FOUND);
         }
-        Role userRole = userOptional.get().getRoles().get(0);
-        if(customer != userRole){
+
+        Role userRole = optionalUser.get().getRoles().get(0);
+        if(userRole != roleUser){
             responseHandler.setStatus(401);
             responseHandler.setMessage("You don't have access to this link");
-            return responseHandler;
+            return new ResponseEntity<>(responseHandler, HttpStatus.UNAUTHORIZED);
         }
         //process email
         try {
             // Generate random 36-character string token for reset password
-            User user = userOptional.get();
+            User user = optionalUser.get();
             user.setPasswordResetToken(UUID.randomUUID().toString());
             //24hours expiry date for token
             String tokenExpiryDate = DateUtils.passwordResetExpiryTimeLimit();
             user.setPasswordResetExpireDate(tokenExpiryDate);
+
+            String appUrl = request.getScheme() + "://" + request.getServerName();
             String subject = "Customer Reset Password";
             String mailBody = "To reset your password, click the link below:\n"
                     + appUrl + "/reset?token="
                     + user.getPasswordResetToken();
             mailService.sendMessage(user.getEmail(), subject, mailBody);
             // Save token and expiring date to database
-            this.saveUser(user);
+            userRepository.save(user);
             responseHandler.setStatus(200);
             responseHandler.setMessage("Successfully sent email");
-        } catch (UnirestException e) {
-            e.printStackTrace();
         }
-        return responseHandler;
+        catch (UnirestException e){
+            System.out.println("Error sending email:\n\tError message:"+e.getMessage());
+        }
+        return new ResponseEntity<>(responseHandler, HttpStatus.OK);
     }
 
     /**
      * This method check the validity of the token sent and also validates passwords(password and confirm password)
      * before saving it
-     * @param userOptional
-     * @param password
-     * @param confirmPassword
+     * @param passwordReset
      * @return response
      * */
-    public Response userResetPassword(Optional<User> userOptional, String password, String confirmPassword){
+    public ResponseEntity<Response> userResetPassword(ResetPassword passwordReset){
+
+        //find the user by the token
+        Optional<User> userOptional = userRepository.findByPasswordResetToken(passwordReset.getToken());
+
+        String password = passwordReset.getPassword();
+        String confirmPassword = passwordReset.getConfirmPassword();
+
+        //response handler
         Response responseHandler = new Response();
-        if (!userOptional.isPresent()){
+
+        if (userOptional.isEmpty()){
             responseHandler.setStatus(400);
             responseHandler.setMessage("Oops!  This is an invalid password reset link.");
-            return responseHandler;
+            return new ResponseEntity<>(responseHandler, HttpStatus.BAD_REQUEST);
         }
-        User resetUser = userOptional.get();
+        User user = userOptional.get();
+
         if(!password.equals(confirmPassword)){
             responseHandler.setStatus(400);
             responseHandler.setMessage("Passwords does not match");
-            return  responseHandler;
+            return new ResponseEntity<>(responseHandler, HttpStatus.BAD_REQUEST);
         }
-        resetUser.setPassword(bCryptPasswordEncoder.encode(password));
+
+        //set the encrypted password
+        user.setPassword(bCryptPasswordEncoder.encode(password));
         // Set the reset token to null so it cannot be used again
-        resetUser.setPasswordResetToken(null);
+        user.setPasswordResetToken(null);
         //set the reset passwordRestExpireDate to null
-        resetUser.setPasswordResetExpireDate(null);
+        user.setPasswordResetExpireDate(null);
         try {
-            // Save person
-            this.saveUser(resetUser);
+            // Save user
+            userRepository.save(user);
             responseHandler.setStatus(201);
             responseHandler.setMessage("You have successfully reset your password. You can now login.");
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return responseHandler;
+        return new ResponseEntity<>(responseHandler, HttpStatus.CREATED);
     }
 
     @Override
