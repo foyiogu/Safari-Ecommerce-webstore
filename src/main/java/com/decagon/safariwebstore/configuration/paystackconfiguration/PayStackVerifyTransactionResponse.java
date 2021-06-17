@@ -1,4 +1,4 @@
-package com.decagon.safariwebstore.paystackconfiguration;
+package com.decagon.safariwebstore.configuration.paystackconfiguration;
 
 
 import com.fasterxml.jackson.core.JsonProcessingException;
