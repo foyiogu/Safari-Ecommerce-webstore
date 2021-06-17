@@ -31,7 +31,7 @@ class OrderServiceImplTest {
     private OrderRepository orderRepository;
 
     @InjectMocks
-    private OrderServiceImpl orderService;
+    private OrderServiceImplementation orderService;
 
     @Mock
     private CheckOut checkOut;
