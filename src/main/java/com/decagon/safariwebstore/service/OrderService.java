@@ -7,5 +7,6 @@ import com.decagon.safariwebstore.payload.response.PagedOrderByStatusResponse;
 
 public interface OrderService {
     Order getOrder(Long orderId);
-    PagedOrderByStatusResponse<OrderResponse> getOrderByStatus(String status, User user, int page, int size);
+    PagedOrderByStatusResponse<OrderResponse> userGetOrderByStatus(String status, User user, int page, int size);
+    PagedOrderByStatusResponse<OrderResponse> adminGetOrderByStatus(String status,User user, int page, int size);
 }
