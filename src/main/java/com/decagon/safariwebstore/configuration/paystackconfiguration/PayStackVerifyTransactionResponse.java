@@ -14,7 +14,7 @@ public class PayStackVerifyTransactionResponse extends VerifyTransactionResponse
 
     public PayStackVerifyTransactionResponse verifyTransaction(String reference) throws Exception {
 
-        PayStackVerifyTransactionResponse payStackResponse = null;
+        PayStackVerifyTransactionResponse payStackResponse;
 
         try {
 
@@ -48,8 +48,8 @@ public class PayStackVerifyTransactionResponse extends VerifyTransactionResponse
                     return payStackResponse;
 
             } catch (JsonProcessingException e) {
+                System.err.println("You've already made payment or An error occurred while verifying payment ");
                 return null;
-//                throw new Exception("You've already made payment or An error occurred while verifying payment ");
             }
 
 

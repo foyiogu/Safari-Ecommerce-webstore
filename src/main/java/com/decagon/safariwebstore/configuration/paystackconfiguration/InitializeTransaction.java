@@ -42,7 +42,7 @@ public class InitializeTransaction {
                 }
 
             } else {
-                throw new Exception("Error Occurred while initializing transaction");
+                throw new Exception("Failure initializing paystack transaction");
             }
 
             ObjectMapper mapper = new ObjectMapper();
@@ -50,7 +50,6 @@ public class InitializeTransaction {
             initializeTransactionResponse = mapper.readValue(result.toString(), InitializeTransactionResponse.class);
         } catch (Exception ex) {
             ex.printStackTrace();
-            throw new Exception("Failure initializing paystack transaction");
         }
 
         return initializeTransactionResponse;
