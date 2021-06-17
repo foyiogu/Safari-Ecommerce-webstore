@@ -1,5 +1,9 @@
 package com.decagon.safariwebstore.controller;
 
+import com.decagon.safariwebstore.exceptions.BadRequestException;
+import com.decagon.safariwebstore.model.Product;
+import com.decagon.safariwebstore.model.ProductDTO;
+import com.decagon.safariwebstore.model.ProductPage;
 import com.decagon.safariwebstore.payload.request.ProductRequest;
 import com.decagon.safariwebstore.payload.response.Response;
 import com.decagon.safariwebstore.payload.response.auth.ResetPassword;
@@ -7,11 +11,18 @@ import com.decagon.safariwebstore.service.AdminService;
 import com.decagon.safariwebstore.service.ProductService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @RestController
@@ -22,6 +33,8 @@ public class AdminController {
     private final AdminService adminService;
 
     private final ProductService productService;
+
+    private ModelMapper modelMapper;
 
     @PostMapping("/admin/password-forgot")
     public ResponseEntity<Response> adminForgotPassword(@RequestParam("email") String email, HttpServletRequest req){
@@ -41,6 +54,42 @@ public class AdminController {
         return new ResponseEntity<>(new Response(200,
                 "Product saved successfully"), HttpStatus.OK);
     }
+    @GetMapping("/products")
+    public ResponseEntity<Page<ProductDTO>> getAllProducts(ProductPage adminProductPage) {
+
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+
+        if (auth != null && auth.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ADMIN"))) {
+            Page<Product> products = adminService.getAllProduct(adminProductPage);
+            List<ProductDTO> productList = getAdminProductList(products);
+            Page<ProductDTO> productDTOPage = new PageImpl<>(productList);
+            return new ResponseEntity<>(productDTOPage, HttpStatus.OK);
+
+        }else {
+            throw new BadRequestException("you do not have permission to view this list");
+        }
+    }
+
+    @GetMapping("/products/{id}")
+    public ResponseEntity<Product> getSingleProduct(@PathVariable(name = "id")Long productId) {
+
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+
+        if (auth != null && auth.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ADMIN"))) {
+            Product aProduct = adminService.fetchSingleProduct(productId);
+            return new ResponseEntity<>(aProduct, HttpStatus.OK);
+        }else {
+            throw new BadRequestException("you do not have permission to view this product");
+        }
+
+    }
+
+    private List<ProductDTO> getAdminProductList(Page<Product> products) {
+        return products.stream()
+                .map(product -> modelMapper.map(product, ProductDTO.class))
+                .collect(Collectors.toList());
+    }
+
 
 }
 

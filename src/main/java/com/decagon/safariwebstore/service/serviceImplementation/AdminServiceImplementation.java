@@ -1,18 +1,21 @@
 package com.decagon.safariwebstore.service.serviceImplementation;
 
 import com.decagon.safariwebstore.exceptions.ResourceNotFoundException;
-import com.decagon.safariwebstore.model.ERole;
-import com.decagon.safariwebstore.model.Role;
-import com.decagon.safariwebstore.model.User;
+import com.decagon.safariwebstore.model.*;
 import com.decagon.safariwebstore.payload.response.Response;
 import com.decagon.safariwebstore.payload.response.auth.ResetPassword;
+import com.decagon.safariwebstore.repository.ProductRepository;
 import com.decagon.safariwebstore.repository.RoleRepository;
 import com.decagon.safariwebstore.service.AdminService;
 import com.decagon.safariwebstore.service.UserService;
 import com.decagon.safariwebstore.utils.DateUtils;
+import com.decagon.safariwebstore.utils.MethodUtils;
 import com.decagon.safariwebstore.utils.mailService.MailService;
 import com.mashape.unirest.http.exceptions.UnirestException;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -22,20 +25,15 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Service
+@AllArgsConstructor
 public class AdminServiceImplementation implements AdminService {
 
     private UserService userService;
     private BCryptPasswordEncoder bCryptPasswordEncoder;
     private MailService mailService;
     private RoleRepository roleRepository;
+    private ProductRepository productRepository;
 
-    @Autowired
-    public AdminServiceImplementation(UserService userService, BCryptPasswordEncoder bCryptPasswordEncoder, MailService mailService, RoleRepository roleRepository){
-        this.userService = userService;
-        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
-        this.mailService = mailService;
-        this.roleRepository = roleRepository;
-    }
 
     /**
      * Sends an email to the admin with a url link to reset password
@@ -146,6 +144,7 @@ public class AdminServiceImplementation implements AdminService {
         //set the reset passwordRestExpireDate to null
         admin.setPasswordResetExpireDate(null);
 
+
         try {
             // Save person
             userService.saveUser(admin);
@@ -158,6 +157,19 @@ public class AdminServiceImplementation implements AdminService {
         }
 
         return new ResponseEntity<>(res, HttpStatus.CREATED);
+    }
+
+    @Override
+    @Cacheable(cacheNames = "products", sync = true)
+    public Page<Product> getAllProduct(ProductPage productPage) {
+        Pageable pageable = MethodUtils.getPageable(productPage);
+        return productRepository.findAll(pageable);
+    }
+
+    @Override
+    @Cacheable(cacheNames = "products", sync = true)
+    public Product fetchSingleProduct(Long productId){
+        return productRepository.findById(productId).orElseThrow(()-> new ResourceNotFoundException("This product is not available"));
     }
 }
 
