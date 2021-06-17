@@ -42,5 +42,21 @@ public class AdminController {
                 "Product saved successfully"), HttpStatus.OK);
     }
 
+
+    @PutMapping("/update-product/{id}")
+    public ResponseEntity<?> updateProduct(@PathVariable("id") long productId, @Valid @RequestBody ProductRequest productRequest){
+        productService.updateProduct(productId, productRequest);
+        // log.info(product.toString());
+        return new ResponseEntity<>(new Response(200,
+                "Product updated successfully"), HttpStatus.OK);
+    }
+
+
+    @DeleteMapping("/delete-product/{id}")
+    public ResponseEntity<?> deleteProduct(@PathVariable(name = "id") Long productId) {
+        productService.deleteProduct(productId);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
 }
 
