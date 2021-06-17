@@ -25,6 +25,10 @@ public class Order extends BaseModel {
     private Product product;
 
     @ManyToOne
+    @JoinColumn(name = "users", referencedColumnName = "id")
+    private User user;
+
+    @ManyToOne
     @JoinColumn(name = "checkout_id")
     private CheckOut checkOut;
 

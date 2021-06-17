@@ -3,6 +3,7 @@ package com.decagon.safariwebstore.service.serviceImplementation;
 import com.decagon.safariwebstore.model.CheckOut;
 import com.decagon.safariwebstore.model.Order;
 import com.decagon.safariwebstore.model.Product;
+import com.decagon.safariwebstore.model.User;
 import com.decagon.safariwebstore.payload.response.PagedOrderByStatusResponse;
 import com.decagon.safariwebstore.repository.OrderRepository;
 import org.junit.jupiter.api.Test;
@@ -46,7 +47,11 @@ class OrderServiceImplTest {
 
     @Test
     void shouldGetOrdersByStatus() {
-        
+
+        User user = new User
+                ( "austin", "sam", "austin@gmail.com", "male", "27-11-1999", null);
+
+
         when(checkOut.getId()).thenReturn(100L);
         when(product.getId()).thenReturn(200L);
 
@@ -74,9 +79,9 @@ class OrderServiceImplTest {
 
         String staus2 = "DELIVERED";
 
-        when(orderRepository.findByStatus(staus2, pageable)).thenReturn(orderPage);
+        when(orderRepository.findByStatusAndUser(staus2, user, pageable)).thenReturn(orderPage);
 
-        orderPage = orderRepository.findByStatus(staus2, pageable);
+        orderPage = orderRepository.findByStatusAndUser(staus2, user, pageable);
         assertThat(orderPage).isNotNull();
 
 
