@@ -1,23 +1,28 @@
 package com.decagon.safariwebstore.service.serviceImplementation;
 
+import com.decagon.safariwebstore.exceptions.BadRequestException;
 import com.decagon.safariwebstore.exceptions.ResourceNotFoundException;
-import com.decagon.safariwebstore.model.Category;
-import com.decagon.safariwebstore.model.Product;
-import com.decagon.safariwebstore.model.ProductPage;
-import com.decagon.safariwebstore.model.SubCategory;
-import com.decagon.safariwebstore.repository.CategoryRepository;
-import com.decagon.safariwebstore.repository.ProductRepository;
-import com.decagon.safariwebstore.repository.SubCategoryRepository;
+import com.decagon.safariwebstore.model.*;
+import com.decagon.safariwebstore.payload.request.ProductRequest;
+import com.decagon.safariwebstore.repository.*;
 import com.decagon.safariwebstore.service.ProductService;
 import com.decagon.safariwebstore.utils.MethodUtils;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 @AllArgsConstructor
+@Slf4j
 public class ProductServiceImplementation implements ProductService {
 
     private final ProductRepository productRepository;
@@ -52,15 +57,32 @@ public class ProductServiceImplementation implements ProductService {
 
         Category category = getCategory(categoryName);
 
-        SubCategory subCategory = subCategoryRepository
-                .findByNameAndCategory(subCategoryName, category).orElseThrow(
-                        () -> {
-                            throw new ResourceNotFoundException("Sub-Category not found!");
-                        });
+        SubCategory subCategory = getSubCategory(subCategoryName, category);
 
         Pageable pageable = MethodUtils.getPageable(productPage);
 
         return productRepository.findAllByCategoryAndSubCategory(category, subCategory, pageable);
+    }
+
+    @Override
+    @Caching(evict = {
+            @CacheEvict(value = "products", allEntries = true),
+            @CacheEvict(value = "productsCategory", allEntries = true),
+            @CacheEvict(value = "productsSubCategory", allEntries = true)
+    })
+    public Product saveProduct(ProductRequest productRequest) {
+
+        Product product = new Product();
+        product.setName(productRequest.getName());
+        product.setPrice(productRequest.getPrice());
+        product.setDescription(productRequest.getDescription());
+        product.setCategory(setCategory(productRequest.getCategory()));
+        product.setSubCategory(setSubCategory(productRequest.getCategory(), productRequest.getSubCategory()));
+        product.setSizes(setSizeList(productRequest.getSizes()));
+        product.setColors(setColorList(productRequest.getColors()));
+        product.setProductImages(setImageList(productRequest.getProductImages()));
+
+        return productRepository.save(product);
     }
 
     private Category getCategory(String categoryName) {
@@ -69,4 +91,65 @@ public class ProductServiceImplementation implements ProductService {
                     throw  new ResourceNotFoundException("Category not found!");
                 });
     }
+
+
+    private SubCategory getSubCategory(String subCategoryName, Category category){
+        return subCategoryRepository
+                .findByNameAndCategory(subCategoryName, category).orElseThrow(
+                        () -> {
+                            throw new ResourceNotFoundException("Sub-Category not found!");
+                        });
+    }
+
+    private List<Category> setCategory(List<String> categoryList){
+        return categoryList.stream().map(categoryItem -> {
+            Category category = new Category();
+            category.setName(categoryItem);
+            return category;
+        }).collect(Collectors.toList());
+    }
+
+    private List<SubCategory> setSubCategory(List<String> categoryList, List<String> subCategoryList){
+        if(categoryList.size() != subCategoryList.size()) throw new BadRequestException("category and subCategory must have equal elements");
+
+        List<SubCategory> subCategories = new ArrayList<>();
+        for(int i = 0; i < categoryList.size(); i++){
+            Category category = new Category(categoryList.get(i));
+            subCategories.add(setCategoryAndSubCategory(category, subCategoryList.get(i)));
+        }
+        return subCategories;
+    }
+
+    private SubCategory setCategoryAndSubCategory(Category category, String subCategoryList){
+        SubCategory subCategory = new SubCategory();
+        subCategory.setName(subCategoryList);
+        subCategory.setCategory(category);
+        return subCategory;
+    }
+
+    private List<Color> setColorList(List<String> colorList){
+        return colorList.stream().map(colorItem -> {
+            Color color = new Color();
+            color.setColor(colorItem);
+            return color;
+        }).collect(Collectors.toList());
+    }
+
+    private List<Size> setSizeList(List<String> sizeList){
+        return sizeList.stream().map(sizeItem -> {
+            Size size = new Size();
+            size.setSize(sizeItem);
+            return size;
+        }).collect(Collectors.toList());
+    }
+
+    private List<ProductImage> setImageList(List<String> productImageList){
+        return productImageList.stream().map(productImage -> {
+            ProductImage image = new ProductImage();
+            image.setImage(productImage);
+            return image;
+        }).collect(Collectors.toList());
+    }
 }
+
+

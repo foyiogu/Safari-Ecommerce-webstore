@@ -1,22 +1,24 @@
 package com.decagon.safariwebstore.model;
 
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 
-@Getter
-@Setter
+@Data
 @Entity
 @Table(name = "sub_categories")
+@EqualsAndHashCode(callSuper = true)
+@AllArgsConstructor
+@NoArgsConstructor
 public class SubCategory extends BaseModel{
 
     private String name;
 
-    @ManyToOne
-    @JoinColumn(name = "category_id")
+    @ManyToOne(cascade = CascadeType.ALL)
     private Category category;
 
+//    public void setCategory(Category category) {
+//        this.category = category;
+//    }
 }
