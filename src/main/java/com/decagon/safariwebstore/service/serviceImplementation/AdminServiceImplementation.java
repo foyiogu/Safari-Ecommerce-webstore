@@ -1,5 +1,6 @@
 package com.decagon.safariwebstore.service.serviceImplementation;
 
+import com.decagon.safariwebstore.exceptions.BadRequestException;
 import com.decagon.safariwebstore.exceptions.ResourceNotFoundException;
 import com.decagon.safariwebstore.model.*;
 import com.decagon.safariwebstore.payload.response.Response;
@@ -13,16 +14,22 @@ import com.decagon.safariwebstore.utils.MethodUtils;
 import com.decagon.safariwebstore.utils.mailService.MailService;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import lombok.AllArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -33,10 +40,11 @@ public class AdminServiceImplementation implements AdminService {
     private MailService mailService;
     private RoleRepository roleRepository;
     private ProductRepository productRepository;
+    private ModelMapper modelMapper;
 
 
     /**
-     * Sends an email to the admin with a url link to reset password
+     * Sends an email to the admin with the url link to reset password
      * @param req
      * @param email
      * */
@@ -138,7 +146,7 @@ public class AdminServiceImplementation implements AdminService {
         //set the encrypted password
         admin.setPassword(bCryptPasswordEncoder.encode(password));
 
-        // Set the reset token to null so it cannot be used again
+        // Set the reset token to null, so it cannot be used again
         admin.setPasswordResetToken(null);
 
         //set the reset passwordRestExpireDate to null
@@ -161,15 +169,44 @@ public class AdminServiceImplementation implements AdminService {
 
     @Override
     @Cacheable(cacheNames = "products", sync = true)
-    public Page<Product> getAllProduct(ProductPage productPage) {
-        Pageable pageable = MethodUtils.getPageable(productPage);
-        return productRepository.findAll(pageable);
+    public Page<ProductDTO> getAllProduct(ProductPage productPage) {
+
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+
+        if (auth != null && auth.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ADMIN"))) {
+
+            Pageable pageable = MethodUtils.getPageable(productPage);
+            Page<Product> products = productRepository.findAll(pageable);
+
+            List<ProductDTO> productList = getAdminProductList(products);
+
+            return new PageImpl<>(productList);
+
+        }else {
+            throw new BadRequestException("you do not have permission to view this list");
+        }
+
     }
 
     @Override
     @Cacheable(cacheNames = "products", sync = true)
     public Product fetchSingleProduct(Long productId){
-        return productRepository.findById(productId).orElseThrow(()-> new ResourceNotFoundException("This product is not available"));
+        return productRepository.findById(productId).orElseThrow(
+                ()-> new ResourceNotFoundException("This product is not available"));
+    }
+
+
+    private List<ProductDTO> getAdminProductList(Page<Product> products) {
+
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+
+        if (auth != null && auth.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ADMIN"))) {
+            return products.stream()
+                    .map(product -> modelMapper.map(product, ProductDTO.class))
+                    .collect(Collectors.toList());
+        }else {
+            throw new BadRequestException("you do not have permission to view this product");
+        }
     }
 }
 
