@@ -27,6 +27,6 @@ public class SecurityAuthorisationConstants {
             "/api/customer/password-reset/",
             // -- Swagger UI v3 (OpenAPI) End
             "/products/**",
-            "/ordersByStatus"
+            "/orders/**"
     };
 }
