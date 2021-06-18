@@ -13,5 +13,7 @@ public interface ProductService {
     Page<Product> getProductsByCategoryAndSubCategory(ProductPage productPage,
                                                       String categoryName, String subCategoryName);
     Product saveProduct(ProductRequest productRequest);
+    Product updateProduct(Long productId, ProductRequest productRequest);
+    void deleteProduct(Long productId);
 
 }

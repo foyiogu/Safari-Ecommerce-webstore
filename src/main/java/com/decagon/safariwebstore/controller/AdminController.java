@@ -73,5 +73,22 @@ public class AdminController {
             throw new BadRequestException("you do not have permission to view this product");
         }
     }
+
+
+    @PutMapping("/update-product/{id}")
+    public ResponseEntity<?> updateProduct(@PathVariable("id") long productId, @Valid @RequestBody ProductRequest productRequest){
+        productService.updateProduct(productId, productRequest);
+        // log.info(product.toString());
+        return new ResponseEntity<>(new Response(200,
+                "Product updated successfully"), HttpStatus.OK);
+    }
+
+
+    @DeleteMapping("/delete-product/{id}")
+    public ResponseEntity<?> deleteProduct(@PathVariable(name = "id") Long productId) {
+        productService.deleteProduct(productId);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
 }
 
