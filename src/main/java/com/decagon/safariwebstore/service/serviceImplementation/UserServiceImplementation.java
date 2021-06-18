@@ -31,8 +31,8 @@ import java.util.UUID;
 @Service
 public class UserServiceImplementation implements UserService {
 
-    private UserRepository userRepository;
-    private BCryptPasswordEncoder bCryptPasswordEncoder;
+    private final UserRepository userRepository;
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final MailService mailService;
     private final RoleRepository roleRepository;
 

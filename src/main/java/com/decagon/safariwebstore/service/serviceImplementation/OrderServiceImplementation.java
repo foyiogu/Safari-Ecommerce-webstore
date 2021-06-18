@@ -8,20 +8,15 @@ import com.decagon.safariwebstore.model.Role;
 import com.decagon.safariwebstore.model.User;
 import com.decagon.safariwebstore.payload.response.OrderResponse;
 import com.decagon.safariwebstore.payload.response.PagedOrderByStatusResponse;
-import com.decagon.safariwebstore.payload.response.Response;
-import com.decagon.safariwebstore.repository.CategoryRepository;
 import com.decagon.safariwebstore.repository.OrderRepository;
 import com.decagon.safariwebstore.repository.RoleRepository;
 import com.decagon.safariwebstore.service.OrderService;
-import com.decagon.safariwebstore.service.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -33,8 +28,7 @@ import java.util.List;
 public class OrderServiceImplementation implements OrderService {
 
     private final OrderRepository orderRepository;
-    RoleRepository roleRepository;
-    private UserService userService;
+    private final RoleRepository roleRepository;
 
     @Override
     public Order getOrder(Long orderId) {
