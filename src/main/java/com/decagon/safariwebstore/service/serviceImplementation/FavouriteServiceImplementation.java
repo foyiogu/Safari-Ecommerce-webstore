@@ -18,19 +18,20 @@ public class FavouriteServiceImplementation implements FavouriteService {
     @Autowired
     UserServiceImplementation userServiceImplementation;
     @Override
-    public boolean customerAddProductToFavorite(UserDetailsImpl userImpl, Long productId) {
+    public String customerAddProductToFavorite(UserDetailsImpl userImpl, Long productId) {
         User user = userServiceImplementation.findUserByEmail(userImpl.getUsername());
         Long userId = user.getId();
         Optional<Favourite> favouriteOptional = favouriteRepository.findFavouriteByUserIdAndProductId(userId,productId);
-        System.out.println(favouriteOptional);
         if(favouriteOptional.isPresent()){
             favouriteRepository.deleteById(favouriteOptional.get().getId());
+            return "Product removed from " + user.getFirstName() + " Favorite successfully";
         }else{
             Favourite newFavorite = new Favourite();
             newFavorite.setProductId(productId);
             newFavorite.setUserId(userId);
             favouriteRepository.save(newFavorite);
+            return "Product successfully added to " + user.getFirstName() + " Favorite";
         }
-        return false;
+
     }
 }
