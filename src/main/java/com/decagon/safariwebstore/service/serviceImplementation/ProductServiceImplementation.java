@@ -150,6 +150,35 @@ public class ProductServiceImplementation implements ProductService {
             return image;
         }).collect(Collectors.toList());
     }
+
+    @CacheEvict(value = "products", allEntries = true)
+    public Product updateProduct(Long productId, ProductRequest productRequest) {
+
+        Product product1 = productRepository.findById(productId).get();
+
+
+        product1.setName(productRequest.getName());
+        product1.setPrice(productRequest.getPrice());
+        product1.setDescription(productRequest.getDescription());
+        product1.setCategory(setCategory(productRequest.getCategory()));
+        product1.setSubCategory(setSubCategory(productRequest.getCategory(), productRequest.getSubCategory()));
+        product1.setSizes(setSizeList(productRequest.getSizes()));
+        product1.setColors(setColorList(productRequest.getColors()));
+        product1.setProductImages(setImageList(productRequest.getProductImages()));
+
+        return productRepository.save(product1);
+    }
+
+    @Override
+    @CacheEvict(value = "product", allEntries = true)
+    public void deleteProduct(Long productId) {
+        productRepository.deleteById(productId);
+    }
+
+//    public Product findById(long id){
+//       return productRepository.findById(id).get();
+//    }
+
 }
 
 
