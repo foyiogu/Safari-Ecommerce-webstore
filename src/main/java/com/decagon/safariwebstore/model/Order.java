@@ -16,7 +16,9 @@ import javax.persistence.*;
 public class Order extends BaseModel {
 
     private String quantity;
+
     private String status;
+
     @Column(columnDefinition = "decimal")
     private double price;
 

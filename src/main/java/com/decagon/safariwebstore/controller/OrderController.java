@@ -9,6 +9,7 @@ import com.decagon.safariwebstore.service.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,15 +28,28 @@ public class OrderController {
         return new ResponseEntity<>(order, HttpStatus.OK);
     }
 
-    @GetMapping("/ordersByStatus")
-    public ResponseEntity<PagedOrderByStatusResponse<OrderResponse>> getOrdersByStatus(
+    @GetMapping("/user/status")
+    public ResponseEntity<PagedOrderByStatusResponse<OrderResponse>> getOrdersByStatusUser(
             @RequestParam(value = "page", required = false, defaultValue = "0") Integer page,
             @RequestParam(value = "size", required = false, defaultValue = "30") Integer size,
             @RequestParam(name = "status") String status){
 
         String upCase = status.toUpperCase();
         User user = userService.findUserByEmail(SecurityContextHolder.getContext().getAuthentication().getName());
-        PagedOrderByStatusResponse<OrderResponse> orderByStatus = orderService.getOrderByStatus(upCase, user, page, size);
+        PagedOrderByStatusResponse<OrderResponse> orderByStatus = orderService.userGetOrderByStatus(upCase, user, page, size);
+        return ResponseEntity.ok(orderByStatus);
+
+    }
+
+    @GetMapping("/admin/status")
+    public ResponseEntity<PagedOrderByStatusResponse<OrderResponse>> getOrdersByStatusAdmin(
+            @RequestParam(value = "page", required = false, defaultValue = "0") Integer page,
+            @RequestParam(value = "size", required = false, defaultValue = "30") Integer size,
+            @RequestParam(name = "status") String status){
+
+        String upCase = status.toUpperCase();
+        User user = userService.findUserByEmail(SecurityContextHolder.getContext().getAuthentication().getName());
+        PagedOrderByStatusResponse<OrderResponse> orderByStatus = orderService.adminGetOrderByStatus(upCase, user, page, size);
         return ResponseEntity.ok(orderByStatus);
 
     }
