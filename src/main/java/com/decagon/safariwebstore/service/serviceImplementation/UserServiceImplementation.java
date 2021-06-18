@@ -31,8 +31,8 @@ import java.util.UUID;
 @Service
 public class UserServiceImplementation implements UserService {
 
-    private final UserRepository userRepository;
-    private final BCryptPasswordEncoder bCryptPasswordEncoder;
+    private UserRepository userRepository;
+    private BCryptPasswordEncoder bCryptPasswordEncoder;
     private final MailService mailService;
     private final RoleRepository roleRepository;
 
@@ -275,7 +275,7 @@ public class UserServiceImplementation implements UserService {
 
     @Override
     public User findUserById(Long userId) {
-        Optional<User> optionalUser = userRepository.findById(userId);
-        return optionalUser.orElse(null);
+        Optional<User> userWithId = userRepository.findById(userId);
+        return userWithId.orElse(null);
     }
 }
