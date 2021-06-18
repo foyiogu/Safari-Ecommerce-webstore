@@ -58,6 +58,7 @@ public class OrderServiceImplementation implements OrderService {
 
     }
 
+
     @Override
     public PagedOrderByStatusResponse<OrderResponse> adminGetOrderByStatus(String status,User user, int page, int size) {
 
@@ -72,6 +73,25 @@ public class OrderServiceImplementation implements OrderService {
         return ordersPageResponse(content, orderPage);
 
     }
+
+    @Override
+    public PagedOrderByStatusResponse<OrderResponse> adminGetOrderByUser(User user, User userWithId, Integer page, Integer size) {
+        checkUserRole(ERole.ADMIN, user);
+        Pageable pageable = PageRequest.of(page, size, Sort.Direction.DESC, "createdAt");
+        Page<Order> orderPage = orderRepository.findByUser(userWithId, pageable);
+        List<Order> content = orderPage.getNumberOfElements() == 0 ? Collections.emptyList() : orderPage.getContent();
+        return ordersPageResponse(content, orderPage);
+    }
+
+    @Override
+    public PagedOrderByStatusResponse<OrderResponse> userGetOrderByUser(User user, Integer page, Integer size) {
+        checkUserRole(ERole.USER, user);
+        Pageable pageable = PageRequest.of(page, size, Sort.Direction.DESC, "createdAt");
+        Page<Order> orderPage = orderRepository.findByUser(user, pageable);
+        List<Order> content = orderPage.getNumberOfElements() == 0 ? Collections.emptyList() : orderPage.getContent();
+        return ordersPageResponse(content, orderPage);
+    }
+
 
     public PagedOrderByStatusResponse<OrderResponse> ordersPageResponse(List<Order> list, Page<Order> orderPage){
         List<OrderResponse> orderResponseList = new ArrayList<>();

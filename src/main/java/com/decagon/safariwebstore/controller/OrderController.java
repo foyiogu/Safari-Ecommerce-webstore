@@ -13,6 +13,9 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 
 @RestController
 @AllArgsConstructor
@@ -51,6 +54,36 @@ public class OrderController {
         User user = userService.findUserByEmail(SecurityContextHolder.getContext().getAuthentication().getName());
         PagedOrderByStatusResponse<OrderResponse> orderByStatus = orderService.adminGetOrderByStatus(upCase, user, page, size);
         return ResponseEntity.ok(orderByStatus);
+
+    }
+
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<PagedOrderByStatusResponse<OrderResponse>> userGetOrdersByUser(@PathVariable Long userId,
+            @RequestParam(value = "page", required = false, defaultValue = "0") Integer page,
+            @RequestParam(value = "size", required = false, defaultValue = "30") Integer size){
+
+        User user = userService.findUserByEmail(SecurityContextHolder.getContext().getAuthentication().getName());
+        User userWithId = userService.findUserById(userId);
+        if (userWithId != null && userWithId.equals(user)) {
+            PagedOrderByStatusResponse<OrderResponse> orderByUser = orderService.userGetOrderByUser(user, page, size);
+            return ResponseEntity.ok(orderByUser);
+        }
+        return (ResponseEntity<PagedOrderByStatusResponse<OrderResponse>>) ResponseEntity.badRequest();
+
+    }
+
+    @GetMapping("/admin/{userId}")
+    public ResponseEntity<PagedOrderByStatusResponse<OrderResponse>> adminGetOrdersByUser(@PathVariable Long userId,
+            @RequestParam(value = "page", required = false, defaultValue = "0") Integer page,
+            @RequestParam(value = "size", required = false, defaultValue = "30") Integer size){
+
+        User user = userService.findUserByEmail(SecurityContextHolder.getContext().getAuthentication().getName());
+        User userWithId = userService.findUserById(userId);
+        if (userWithId != null) {
+            PagedOrderByStatusResponse<OrderResponse> orderByUser = orderService.adminGetOrderByUser(user, userWithId,  page, size);
+            return ResponseEntity.ok(orderByUser);
+        }
+        return (ResponseEntity<PagedOrderByStatusResponse<OrderResponse>>) ResponseEntity.badRequest();
 
     }
 
