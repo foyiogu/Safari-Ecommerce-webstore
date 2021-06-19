@@ -72,9 +72,11 @@ public class OrderController {
 
         User user = userService.findUserByEmail(SecurityContextHolder.getContext().getAuthentication().getName());
         User userWithId = userService.findUserById(userId);
-        PagedOrderByStatusResponse<OrderResponse> orderByUser = orderService.adminGetOrderByUser(user, userWithId,  page, size);
-        return ResponseEntity.ok(orderByUser);
-
+        if (userWithId != null) {
+            PagedOrderByStatusResponse<OrderResponse> orderByUser = orderService.adminGetOrderByUser(user, userWithId,  page, size);
+            return ResponseEntity.ok(orderByUser);
+        }
+        return (ResponseEntity<PagedOrderByStatusResponse<OrderResponse>>) ResponseEntity.badRequest();
 
     }
 
