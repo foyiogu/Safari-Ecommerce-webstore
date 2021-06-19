@@ -275,7 +275,8 @@ public class UserServiceImplementation implements UserService {
 
     @Override
     public User findUserById(Long userId) {
-        Optional<User> userWithId = userRepository.findById(userId);
-        return userWithId.orElse(null);
+        Optional<User> user = userRepository.findById(userId);
+        if(user.isEmpty()) throw new ResourceNotFoundException("Incorrect parameter; email " + userId + " does not exist");
+        return user.get();
     }
 }
