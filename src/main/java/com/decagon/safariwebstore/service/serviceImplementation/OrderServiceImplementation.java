@@ -18,6 +18,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -71,7 +72,9 @@ public class OrderServiceImplementation implements OrderService {
     }
 
     @Override
-    public PagedOrderByStatusResponse<OrderResponse> adminGetOrderByUser(User user, User userWithId, Integer page, Integer size) {
+    public PagedOrderByStatusResponse<OrderResponse> adminGetOrderByUser(Long userId, Integer page, Integer size) {
+        User user = userService.findUserByEmail(SecurityContextHolder.getContext().getAuthentication().getName());
+        User userWithId = userService.findUserById(userId);
         checkUserRole(ERole.ADMIN, user);
         Pageable pageable = PageRequest.of(page, size, Sort.Direction.DESC, "createdAt");
         Page<Order> orderPage = orderRepository.findByUser(userWithId, pageable);
@@ -80,7 +83,8 @@ public class OrderServiceImplementation implements OrderService {
     }
 
     @Override
-    public PagedOrderByStatusResponse<OrderResponse> userGetOrderByUser(User user, Integer page, Integer size) {
+    public PagedOrderByStatusResponse<OrderResponse> userGetOrderByUser(Integer page, Integer size) {
+        User user = userService.findUserByEmail(SecurityContextHolder.getContext().getAuthentication().getName());
         checkUserRole(ERole.USER, user);
         Pageable pageable = PageRequest.of(page, size, Sort.Direction.DESC, "createdAt");
         Page<Order> orderPage = orderRepository.findByUser(user, pageable);
