@@ -9,6 +9,6 @@ public interface OrderService {
     Order getOrder(Long orderId);
     PagedOrderByStatusResponse<OrderResponse> userGetOrderByStatus(String status, User user, int page, int size);
     PagedOrderByStatusResponse<OrderResponse> adminGetOrderByStatus(String status,User user, int page, int size);
-    PagedOrderByStatusResponse<OrderResponse> adminGetOrderByUser(User user, User userWithId, Integer page, Integer size);
-    PagedOrderByStatusResponse<OrderResponse> userGetOrderByUser(User user, Integer page, Integer size);
+    PagedOrderByStatusResponse<OrderResponse> adminGetOrderByUser(Long userId, Integer page, Integer size);
+    PagedOrderByStatusResponse<OrderResponse> userGetOrderByUser(Integer page, Integer size);
 }
