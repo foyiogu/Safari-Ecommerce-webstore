@@ -58,7 +58,10 @@ public class OrderController {
     public ResponseEntity<PagedOrderByStatusResponse<OrderResponse>> userGetOrdersByUser(
             @RequestParam(value = "page", required = false, defaultValue = "0") Integer page,
             @RequestParam(value = "size", required = false, defaultValue = "30") Integer size){
-        return ResponseEntity.ok(orderService.userGetOrderByUser(page, size));
+
+        User user = userService.findUserByEmail(SecurityContextHolder.getContext().getAuthentication().getName());
+        PagedOrderByStatusResponse<OrderResponse> orderByUser = orderService.userGetOrderByUser(user, page, size);
+        return ResponseEntity.ok(orderByUser);
 
     }
 
@@ -66,7 +69,11 @@ public class OrderController {
     public ResponseEntity<PagedOrderByStatusResponse<OrderResponse>> adminGetOrdersByUser(@PathVariable Long userId,
             @RequestParam(value = "page", required = false, defaultValue = "0") Integer page,
             @RequestParam(value = "size", required = false, defaultValue = "30") Integer size){
-        return ResponseEntity.ok(orderService.adminGetOrderByUser(userId, page, size));
+
+        User user = userService.findUserByEmail(SecurityContextHolder.getContext().getAuthentication().getName());
+        User userWithId = userService.findUserById(userId);
+        PagedOrderByStatusResponse<OrderResponse> orderByUser = orderService.adminGetOrderByUser(user, userWithId,  page, size);
+        return ResponseEntity.ok(orderByUser);
 
     }
 
