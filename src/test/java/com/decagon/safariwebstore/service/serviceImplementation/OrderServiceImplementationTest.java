@@ -107,4 +107,43 @@ public class OrderServiceImplementationTest {
 
     }
 
+    @Test
+    void shouldGetOrdersByUser() {
+
+        User user = new User
+                ( "Sophia", "Okito", "sophia@gmail.com", "female", "31-10-1994", null);
+
+
+        when(checkOut.getId()).thenReturn(100L);
+        when(product.getId()).thenReturn(200L);
+
+        Order order = new Order();
+        order.setProduct(product);
+        order.setCheckOut(checkOut);
+        order.setPrice(2000.0);
+        order.setStatus("DELIVERED");
+        order.setCreatedAt(new Date());
+        order.setUpdatedAt(new Date());
+        order.setQuantity("5");
+
+        Pageable pageable = PageRequest.of(0, 20, Sort.Direction.DESC, "createdAt");
+
+        assertThat(order.getProduct().getId()).isEqualTo(200L);
+        assertThat(order.getCheckOut().getId()).isEqualTo(100L);
+
+        given(orderRepository.save(order)).willAnswer(invocation -> invocation.getArgument(0));
+
+        Order save = orderRepository.save(order);
+        verify(orderRepository).save(any(Order.class));
+
+
+        assertThat(save.getQuantity()).isEqualTo("5");
+        when(orderRepository.findByUser(user, pageable)).thenReturn(orderPage);
+
+        orderPage = orderRepository.findByUser(user, pageable);
+        assertThat(orderPage).isNotNull();
+
+
+    }
+
 }

@@ -1,44 +1,52 @@
 package com.decagon.safariwebstore.service.serviceImplementation;
 
+import com.decagon.safariwebstore.exceptions.BadRequestException;
 import com.decagon.safariwebstore.exceptions.ResourceNotFoundException;
-import com.decagon.safariwebstore.model.ERole;
-import com.decagon.safariwebstore.model.Role;
-import com.decagon.safariwebstore.model.User;
+import com.decagon.safariwebstore.model.*;
 import com.decagon.safariwebstore.payload.response.Response;
 import com.decagon.safariwebstore.payload.response.auth.ResetPassword;
+import com.decagon.safariwebstore.repository.ProductRepository;
 import com.decagon.safariwebstore.repository.RoleRepository;
 import com.decagon.safariwebstore.service.AdminService;
 import com.decagon.safariwebstore.service.UserService;
 import com.decagon.safariwebstore.utils.DateUtils;
+import com.decagon.safariwebstore.utils.MethodUtils;
 import com.decagon.safariwebstore.utils.mailService.MailService;
 import com.mashape.unirest.http.exceptions.UnirestException;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
+import org.modelmapper.ModelMapper;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PathVariable;
+
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
+@AllArgsConstructor
 public class AdminServiceImplementation implements AdminService {
 
-    private UserService userService;
-    private BCryptPasswordEncoder bCryptPasswordEncoder;
-    private MailService mailService;
-    private RoleRepository roleRepository;
+    private final UserService userService;
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
+    private final MailService mailService;
+    private final RoleRepository roleRepository;
+    private final ProductRepository productRepository;
+    private final ModelMapper modelMapper;
 
-    @Autowired
-    public AdminServiceImplementation(UserService userService, BCryptPasswordEncoder bCryptPasswordEncoder, MailService mailService, RoleRepository roleRepository){
-        this.userService = userService;
-        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
-        this.mailService = mailService;
-        this.roleRepository = roleRepository;
-    }
 
     /**
-     * Sends an email to the admin with a url link to reset password
+     * Sends an email to the admin with the url link to reset password
      * @param req
      * @param email
      * */
@@ -140,11 +148,12 @@ public class AdminServiceImplementation implements AdminService {
         //set the encrypted password
         admin.setPassword(bCryptPasswordEncoder.encode(password));
 
-        // Set the reset token to null so it cannot be used again
+        // Set the reset token to null, so it cannot be used again
         admin.setPasswordResetToken(null);
 
         //set the reset passwordRestExpireDate to null
         admin.setPasswordResetExpireDate(null);
+
 
         try {
             // Save person
@@ -158,6 +167,52 @@ public class AdminServiceImplementation implements AdminService {
         }
 
         return new ResponseEntity<>(res, HttpStatus.CREATED);
+    }
+
+    @Override
+    @Cacheable(cacheNames = "products", sync = true)
+    public ResponseEntity<Page<ProductDTO>> getAllProducts(ProductPage adminProductPage) {
+
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+
+        if (auth != null && auth.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ADMIN"))) {
+
+            Pageable pageable = MethodUtils.getPageable(adminProductPage);
+            Page<Product> products = productRepository.findAll(pageable);
+            List<ProductDTO> productList = getAdminProductList(products);
+            Page<ProductDTO> productDTOPage = new PageImpl<>(productList);
+
+            return new ResponseEntity<>(productDTOPage, HttpStatus.OK);
+
+        }else {
+            throw new BadRequestException("you do not have permission to view this list");
+        }
+
+    }
+
+    @Override
+    @Cacheable(cacheNames = "products", sync = true)
+    public ResponseEntity<Product> getSingleProduct(Long productId) {
+
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+
+        if (auth != null && auth.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ADMIN"))) {
+
+            Product aProduct = productRepository.findById(productId).orElseThrow(
+                    ()-> new ResourceNotFoundException("This product is not available"));
+            return new ResponseEntity<>(aProduct, HttpStatus.OK);
+        }else {
+            throw new BadRequestException("you do not have permission to view this product");
+        }
+    }
+
+
+
+    private List<ProductDTO> getAdminProductList(Page<Product> products) {
+
+            return products.stream()
+                    .map(product -> modelMapper.map(product, ProductDTO.class))
+                    .collect(Collectors.toList());
     }
 }
 
