@@ -9,9 +9,9 @@ import com.decagon.safariwebstore.service.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+
 
 
 @RestController
@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.*;
 public class OrderController {
 
     private final OrderService orderService;
-    private UserService userService;
+    private final UserService userService;
 
     @GetMapping("/{orderId}")
     public ResponseEntity<Order> viewParticularOrder(@PathVariable Long orderId) {
@@ -51,6 +51,22 @@ public class OrderController {
         User user = userService.findUserByEmail(SecurityContextHolder.getContext().getAuthentication().getName());
         PagedOrderByStatusResponse<OrderResponse> orderByStatus = orderService.adminGetOrderByStatus(upCase, user, page, size);
         return ResponseEntity.ok(orderByStatus);
+
+    }
+
+    @GetMapping("/user")
+    public ResponseEntity<PagedOrderByStatusResponse<OrderResponse>> userGetOrdersByUser(
+            @RequestParam(value = "page", required = false, defaultValue = "0") Integer page,
+            @RequestParam(value = "size", required = false, defaultValue = "30") Integer size){
+        return ResponseEntity.ok(orderService.userGetOrderByUser(page, size));
+
+    }
+
+    @GetMapping("/admin/{userId}")
+    public ResponseEntity<PagedOrderByStatusResponse<OrderResponse>> adminGetOrdersByUser(@PathVariable Long userId,
+            @RequestParam(value = "page", required = false, defaultValue = "0") Integer page,
+            @RequestParam(value = "size", required = false, defaultValue = "30") Integer size){
+        return ResponseEntity.ok(orderService.adminGetOrderByUser(userId, page, size));
 
     }
 
