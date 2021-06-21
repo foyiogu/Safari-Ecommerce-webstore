@@ -12,6 +12,6 @@ import javax.servlet.http.HttpServletRequest;
 public interface AdminService {
     ResponseEntity<Response> adminForgotPassword(HttpServletRequest req, String email);
     ResponseEntity<Response> adminResetPassword(ResetPassword resetPassword);
-    Page<ProductDTO> getAllProduct(ProductPage productPage);
-    Product fetchSingleProduct(Long productId);
+    ResponseEntity<Page<ProductDTO>> getAllProducts(ProductPage adminProductPage);
+    ResponseEntity<Product> getSingleProduct(Long productId);
 }

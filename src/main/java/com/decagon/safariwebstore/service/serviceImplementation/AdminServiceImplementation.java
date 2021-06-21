@@ -25,6 +25,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PathVariable;
+
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Optional;
@@ -35,12 +37,12 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class AdminServiceImplementation implements AdminService {
 
-    private UserService userService;
-    private BCryptPasswordEncoder bCryptPasswordEncoder;
-    private MailService mailService;
-    private RoleRepository roleRepository;
-    private ProductRepository productRepository;
-    private ModelMapper modelMapper;
+    private final UserService userService;
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
+    private final MailService mailService;
+    private final RoleRepository roleRepository;
+    private final ProductRepository productRepository;
+    private final ModelMapper modelMapper;
 
 
     /**
@@ -169,18 +171,18 @@ public class AdminServiceImplementation implements AdminService {
 
     @Override
     @Cacheable(cacheNames = "products", sync = true)
-    public Page<ProductDTO> getAllProduct(ProductPage productPage) {
+    public ResponseEntity<Page<ProductDTO>> getAllProducts(ProductPage adminProductPage) {
 
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
         if (auth != null && auth.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ADMIN"))) {
 
-            Pageable pageable = MethodUtils.getPageable(productPage);
+            Pageable pageable = MethodUtils.getPageable(adminProductPage);
             Page<Product> products = productRepository.findAll(pageable);
-
             List<ProductDTO> productList = getAdminProductList(products);
+            Page<ProductDTO> productDTOPage = new PageImpl<>(productList);
 
-            return new PageImpl<>(productList);
+            return new ResponseEntity<>(productDTOPage, HttpStatus.OK);
 
         }else {
             throw new BadRequestException("you do not have permission to view this list");
@@ -190,23 +192,27 @@ public class AdminServiceImplementation implements AdminService {
 
     @Override
     @Cacheable(cacheNames = "products", sync = true)
-    public Product fetchSingleProduct(Long productId){
-        return productRepository.findById(productId).orElseThrow(
-                ()-> new ResourceNotFoundException("This product is not available"));
-    }
-
-
-    private List<ProductDTO> getAdminProductList(Page<Product> products) {
+    public ResponseEntity<Product> getSingleProduct(Long productId) {
 
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
         if (auth != null && auth.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ADMIN"))) {
-            return products.stream()
-                    .map(product -> modelMapper.map(product, ProductDTO.class))
-                    .collect(Collectors.toList());
+
+            Product aProduct = productRepository.findById(productId).orElseThrow(
+                    ()-> new ResourceNotFoundException("This product is not available"));
+            return new ResponseEntity<>(aProduct, HttpStatus.OK);
         }else {
             throw new BadRequestException("you do not have permission to view this product");
         }
+    }
+
+
+
+    private List<ProductDTO> getAdminProductList(Page<Product> products) {
+
+            return products.stream()
+                    .map(product -> modelMapper.map(product, ProductDTO.class))
+                    .collect(Collectors.toList());
     }
 }
 

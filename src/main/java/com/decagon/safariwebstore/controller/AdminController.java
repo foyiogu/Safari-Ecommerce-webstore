@@ -25,18 +25,18 @@ import javax.validation.Valid;
 @RestController
 @RequestMapping("/api/admin")
 @AllArgsConstructor
-public class AdminController {
+public class  AdminController {
 
     private final AdminService adminService;
 
     private final ProductService productService;
 
-    @PostMapping("/admin/password-forgot")
+    @PostMapping("/password-forgot")
     public ResponseEntity<Response> adminForgotPassword(@RequestParam("email") String email, HttpServletRequest req){
         return adminService.adminForgotPassword(req, email);
     }
 
-    @PostMapping("/admin/password-reset")
+    @PostMapping("/password-reset")
     public ResponseEntity<Response> adminResetPassword(@Valid @RequestBody ResetPassword resetPassword) {
         return adminService.adminResetPassword(resetPassword);
     }
@@ -49,29 +49,15 @@ public class AdminController {
         return new ResponseEntity<>(new Response(200,
                 "Product saved successfully"), HttpStatus.OK);
     }
+
     @GetMapping("/products")
     public ResponseEntity<Page<ProductDTO>> getAllProducts(ProductPage adminProductPage) {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-
-        if (auth != null && auth.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ADMIN"))) {
-            Page<ProductDTO> productDTOPage = adminService.getAllProduct(adminProductPage);
-            return new ResponseEntity<>(productDTOPage, HttpStatus.OK);
-        }else {
-        throw new BadRequestException("you do not have permission to view this list");
-         }
+        return adminService.getAllProducts(adminProductPage);
     }
 
     @GetMapping("/products/{id}")
     public ResponseEntity<Product> getSingleProduct(@PathVariable(name = "id")Long productId) {
-
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-
-        if (auth != null && auth.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ADMIN"))) {
-            Product aProduct = adminService.fetchSingleProduct(productId);
-            return new ResponseEntity<>(aProduct, HttpStatus.OK);
-        }else {
-            throw new BadRequestException("you do not have permission to view this product");
-        }
+        return adminService.getSingleProduct(productId);
     }
 
 
