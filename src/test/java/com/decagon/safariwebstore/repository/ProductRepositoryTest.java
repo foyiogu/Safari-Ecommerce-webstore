@@ -12,7 +12,7 @@
 //
 //import static org.junit.jupiter.api.Assertions.*;
 //
-////@DataJpaTest
+//@DataJpaTest
 //class ProductRepositoryTest {
 //
 //    @Autowired

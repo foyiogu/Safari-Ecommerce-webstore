@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 @EnableScheduling
 public class SchedulerConfiguration {
 
-    private UserService userService;
+    private final UserService userService;
 
     @Autowired
     public SchedulerConfiguration(UserService userService){

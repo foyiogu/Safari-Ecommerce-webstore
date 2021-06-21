@@ -8,8 +8,6 @@ import com.decagon.safariwebstore.model.Role;
 import com.decagon.safariwebstore.model.User;
 import com.decagon.safariwebstore.payload.response.OrderResponse;
 import com.decagon.safariwebstore.payload.response.PagedOrderByStatusResponse;
-import com.decagon.safariwebstore.payload.response.Response;
-import com.decagon.safariwebstore.repository.CategoryRepository;
 import com.decagon.safariwebstore.repository.OrderRepository;
 import com.decagon.safariwebstore.repository.RoleRepository;
 import com.decagon.safariwebstore.service.OrderService;
@@ -20,7 +18,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
@@ -59,6 +56,7 @@ public class OrderServiceImplementation implements OrderService {
 
     }
 
+
     @Override
     public PagedOrderByStatusResponse<OrderResponse> adminGetOrderByStatus(String status,User user, int page, int size) {
 
@@ -73,6 +71,28 @@ public class OrderServiceImplementation implements OrderService {
         return ordersPageResponse(content, orderPage);
 
     }
+
+    @Override
+    public PagedOrderByStatusResponse<OrderResponse> adminGetOrderByUser(Long userId, Integer page, Integer size) {
+        User user = userService.findUserByEmail(SecurityContextHolder.getContext().getAuthentication().getName());
+        User userWithId = userService.findUserById(userId);
+        checkUserRole(ERole.ADMIN, user);
+        Pageable pageable = PageRequest.of(page, size, Sort.Direction.DESC, "createdAt");
+        Page<Order> orderPage = orderRepository.findByUser(userWithId, pageable);
+        List<Order> content = orderPage.getNumberOfElements() == 0 ? Collections.emptyList() : orderPage.getContent();
+        return ordersPageResponse(content, orderPage);
+    }
+
+    @Override
+    public PagedOrderByStatusResponse<OrderResponse> userGetOrderByUser(Integer page, Integer size) {
+        User user = userService.findUserByEmail(SecurityContextHolder.getContext().getAuthentication().getName());
+        checkUserRole(ERole.USER, user);
+        Pageable pageable = PageRequest.of(page, size, Sort.Direction.DESC, "createdAt");
+        Page<Order> orderPage = orderRepository.findByUser(user, pageable);
+        List<Order> content = orderPage.getNumberOfElements() == 0 ? Collections.emptyList() : orderPage.getContent();
+        return ordersPageResponse(content, orderPage);
+    }
+
 
     public PagedOrderByStatusResponse<OrderResponse> ordersPageResponse(List<Order> list, Page<Order> orderPage){
         List<OrderResponse> orderResponseList = new ArrayList<>();
