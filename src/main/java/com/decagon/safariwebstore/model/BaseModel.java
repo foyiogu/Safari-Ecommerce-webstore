@@ -1,5 +1,6 @@
 package com.decagon.safariwebstore.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Getter;
 import lombok.Setter;
@@ -28,9 +29,11 @@ public class BaseModel implements Serializable {
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "created_at")
     @CreatedDate
+    @JsonIgnore
     private Date createdAt;
 
     @Column(name = "updated_at")
     @LastModifiedDate
+    @JsonIgnore
     private Date updatedAt;
 }

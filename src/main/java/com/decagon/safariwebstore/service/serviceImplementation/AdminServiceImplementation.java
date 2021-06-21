@@ -50,7 +50,7 @@ public class AdminServiceImplementation implements AdminService {
         //response handler
         Response res = new Response();
 
-        Role adminRole = roleRepository.findByName(ERole.ADMIN)
+        Role adminRole = roleRepository.findByName(ERole.ROLE_ADMIN)
                 .orElseThrow(() -> new ResourceNotFoundException("Error: Role is not found."));
 
         if(adminOptional.isEmpty()) {

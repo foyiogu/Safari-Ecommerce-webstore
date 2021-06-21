@@ -9,6 +9,7 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -24,16 +25,19 @@ public class AdminController {
     private final ProductService productService;
 
     @PostMapping("/admin/password-forgot")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Response> adminForgotPassword(@RequestParam("email") String email, HttpServletRequest req){
         return adminService.adminForgotPassword(req, email);
     }
 
     @PostMapping("/admin/password-reset")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Response> adminResetPassword(@Valid @RequestBody ResetPassword resetPassword) {
         return adminService.adminResetPassword(resetPassword);
     }
 
     @PostMapping("/add-product")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> addProduct(@Valid @RequestBody ProductRequest productRequest){
 
         productService.saveProduct(productRequest);
@@ -44,6 +48,7 @@ public class AdminController {
 
 
     @PutMapping("/update-product/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> updateProduct(@PathVariable("id") long productId, @Valid @RequestBody ProductRequest productRequest){
         productService.updateProduct(productId, productRequest);
         // log.info(product.toString());
@@ -53,6 +58,7 @@ public class AdminController {
 
 
     @DeleteMapping("/delete-product/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> deleteProduct(@PathVariable(name = "id") Long productId) {
         productService.deleteProduct(productId);
         return new ResponseEntity<>(HttpStatus.OK);

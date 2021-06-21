@@ -111,7 +111,7 @@ public class CartItemServiceImplementationTest {
         User user = new User
                 ("austin", "sam", "austin@gmail.com", "male", "27-11-1999", null);
 
-        product.setUsers(List.of(user));
+//        product.setUsers(List.of(user));
 
         assertThat(productRepository.findById(product.getId())).isNotPresent();
         given(productRepository.save(product)).willAnswer(invocation -> invocation.getArgument(0));

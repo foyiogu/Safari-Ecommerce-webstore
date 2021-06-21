@@ -47,7 +47,7 @@ public class OrderServiceImplementation implements OrderService {
     @Override
     public PagedOrderByStatusResponse<OrderResponse> userGetOrderByStatus(String status, User user, int page, int size) {
 
-        checkUserRole(ERole.USER, user);
+        checkUserRole(ERole.ROLE_USER, user);
             Pageable pageable = PageRequest.of(page, size, Sort.Direction.DESC, "createdAt");
 
             Page<Order> orderPage = orderRepository.findByStatusAndUser(status, user, pageable);
@@ -61,7 +61,7 @@ public class OrderServiceImplementation implements OrderService {
     @Override
     public PagedOrderByStatusResponse<OrderResponse> adminGetOrderByStatus(String status,User user, int page, int size) {
 
-        checkUserRole(ERole.ADMIN, user);
+        checkUserRole(ERole.ROLE_ADMIN, user);
 
         Pageable pageable = PageRequest.of(page, size, Sort.Direction.DESC, "createdAt");
 

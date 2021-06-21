@@ -17,14 +17,14 @@ public class AppInitializer implements ApplicationRunner {
     @Override
     public void run(ApplicationArguments args) {
         Role role;
-        if (roleRepository.findByName(ERole.ADMIN).isEmpty()) {
+        if (roleRepository.findByName(ERole.ROLE_ADMIN).isEmpty()) {
             role = new Role();
-            role.setName(ERole.ADMIN);
+            role.setName(ERole.ROLE_ADMIN);
             roleRepository.save(role);
         }
-        if (roleRepository.findByName(ERole.USER).isEmpty()) {
+        if (roleRepository.findByName(ERole.ROLE_USER).isEmpty()) {
             role = new Role();
-            role.setName(ERole.USER);
+            role.setName(ERole.ROLE_USER);
             roleRepository.save(role);
         }
     }

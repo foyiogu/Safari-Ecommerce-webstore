@@ -1,7 +1,6 @@
 package com.decagon.safariwebstore.controller;
 
 
-import com.decagon.safariwebstore.exceptions.InvalidOldPasswordException;
 import com.decagon.safariwebstore.exceptions.ResourceNotFoundException;
 import com.decagon.safariwebstore.model.ERole;
 import com.decagon.safariwebstore.model.Role;
@@ -14,7 +13,6 @@ import com.decagon.safariwebstore.payload.response.auth.LoginResponse;
 import com.decagon.safariwebstore.repository.RoleRepository;
 import com.decagon.safariwebstore.security.service.UserDetailService;
 import com.decagon.safariwebstore.service.UserService;
-import com.decagon.safariwebstore.utils.GenericResponse;
 import com.decagon.safariwebstore.utils.JWTUtil;
 import com.decagon.safariwebstore.utils.mailService.MailService;
 import com.mashape.unirest.http.exceptions.UnirestException;
@@ -36,7 +34,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 import java.util.stream.Collectors;
 
 @RestController
@@ -60,7 +57,7 @@ AuthController {
     public UserDTO register(@Valid @RequestBody RegisterUser registerUser) throws UnirestException {
         User user = userService.registration(registerUser);
         List<Role> roles = new ArrayList<>();
-        Role userRole = roleRepository.findByName(ERole.USER)
+        Role userRole = roleRepository.findByName(ERole.ROLE_USER)
                 .orElseThrow(() -> new ResourceNotFoundException("Error: Role is not found."));
         roles.add(userRole);
         user.setRoles(roles);
@@ -76,7 +73,7 @@ AuthController {
     public UserDTO registerAdmin(@Valid @RequestBody RegisterUser registerUser) throws UnirestException {
         User user = userService.registration(registerUser);
         List<Role> roles = new ArrayList<>();
-        Role userRole = roleRepository.findByName(ERole.ADMIN)
+        Role userRole = roleRepository.findByName(ERole.ROLE_ADMIN)
                 .orElseThrow(() -> new ResourceNotFoundException("Error: Role is not found."));
         roles.add(userRole);
         user.setRoles(roles);
