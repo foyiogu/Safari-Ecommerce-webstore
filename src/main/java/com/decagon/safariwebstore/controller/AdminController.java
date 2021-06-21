@@ -24,20 +24,23 @@ public class AdminController {
 
     private final ProductService productService;
 
-    @PostMapping("/password-forgot")
+
     @PreAuthorize("hasRole('ADMIN')")
+    @PostMapping("/password-forgot")
     public ResponseEntity<Response> adminForgotPassword(@RequestParam("email") String email, HttpServletRequest req){
         return adminService.adminForgotPassword(req, email);
     }
 
-    @PostMapping("/password-reset")
+
     @PreAuthorize("hasRole('ADMIN')")
+    @PostMapping("/password-reset")
     public ResponseEntity<Response> adminResetPassword(@Valid @RequestBody ResetPassword resetPassword) {
         return adminService.adminResetPassword(resetPassword);
     }
 
-    @PostMapping("/add-product")
+
     @PreAuthorize("hasRole('ADMIN')")
+    @PostMapping("/add-product")
     public ResponseEntity<?> addProduct(@Valid @RequestBody ProductRequest productRequest){
 
         productService.saveProduct(productRequest);
@@ -47,8 +50,9 @@ public class AdminController {
     }
 
 
-    @PutMapping("/update-product/{id}")
+
     @PreAuthorize("hasRole('ADMIN')")
+    @PutMapping("/update-product/{id}")
     public ResponseEntity<?> updateProduct(@PathVariable("id") long productId, @Valid @RequestBody ProductRequest productRequest){
         productService.updateProduct(productId, productRequest);
         // log.info(product.toString());
@@ -57,8 +61,9 @@ public class AdminController {
     }
 
 
-    @DeleteMapping("/delete-product/{id}")
+
     @PreAuthorize("hasRole('ADMIN')")
+    @DeleteMapping("/delete-product/{id}")
     public ResponseEntity<?> deleteProduct(@PathVariable(name = "id") Long productId) {
         productService.deleteProduct(productId);
         return new ResponseEntity<>(HttpStatus.OK);
