@@ -24,13 +24,13 @@ public class AdminController {
 
     private final ProductService productService;
 
-    @PostMapping("/admin/password-forgot")
+    @PostMapping("/password-forgot")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Response> adminForgotPassword(@RequestParam("email") String email, HttpServletRequest req){
         return adminService.adminForgotPassword(req, email);
     }
 
-    @PostMapping("/admin/password-reset")
+    @PostMapping("/password-reset")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Response> adminResetPassword(@Valid @RequestBody ResetPassword resetPassword) {
         return adminService.adminResetPassword(resetPassword);
