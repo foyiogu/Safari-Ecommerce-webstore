@@ -76,7 +76,7 @@ public class OrderServiceImplementation implements OrderService {
     public PagedOrderByStatusResponse<OrderResponse> adminGetOrderByUser(Long userId, Integer page, Integer size) {
         User user = userService.findUserByEmail(SecurityContextHolder.getContext().getAuthentication().getName());
         User userWithId = userService.findUserById(userId);
-        checkUserRole(ERole.ADMIN, user);
+        checkUserRole(ERole.ROLE_ADMIN, user);
         Pageable pageable = PageRequest.of(page, size, Sort.Direction.DESC, "createdAt");
         Page<Order> orderPage = orderRepository.findByUser(userWithId, pageable);
         List<Order> content = orderPage.getNumberOfElements() == 0 ? Collections.emptyList() : orderPage.getContent();
@@ -86,7 +86,7 @@ public class OrderServiceImplementation implements OrderService {
     @Override
     public PagedOrderByStatusResponse<OrderResponse> userGetOrderByUser(Integer page, Integer size) {
         User user = userService.findUserByEmail(SecurityContextHolder.getContext().getAuthentication().getName());
-        checkUserRole(ERole.USER, user);
+        checkUserRole(ERole.ROLE_USER, user);
         Pageable pageable = PageRequest.of(page, size, Sort.Direction.DESC, "createdAt");
         Page<Order> orderPage = orderRepository.findByUser(user, pageable);
         List<Order> content = orderPage.getNumberOfElements() == 0 ? Collections.emptyList() : orderPage.getContent();
