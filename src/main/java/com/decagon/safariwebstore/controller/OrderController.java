@@ -13,13 +13,14 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 
+
 @RestController
 @AllArgsConstructor
 @RequestMapping("/orders")
 public class OrderController {
 
     private final OrderService orderService;
-    private UserService userService;
+    private final UserService userService;
 
     @GetMapping("/{orderId}")
     public ResponseEntity<Order> viewParticularOrder(@PathVariable Long orderId) {
@@ -27,16 +28,45 @@ public class OrderController {
         return new ResponseEntity<>(order, HttpStatus.OK);
     }
 
-    @GetMapping("/ordersByStatus")
-    public ResponseEntity<PagedOrderByStatusResponse<OrderResponse>> getOrdersByStatus(
+    @GetMapping("/user/status")
+    public ResponseEntity<PagedOrderByStatusResponse<OrderResponse>> getOrdersByStatusUser(
             @RequestParam(value = "page", required = false, defaultValue = "0") Integer page,
             @RequestParam(value = "size", required = false, defaultValue = "30") Integer size,
             @RequestParam(name = "status") String status){
 
         String upCase = status.toUpperCase();
         User user = userService.findUserByEmail(SecurityContextHolder.getContext().getAuthentication().getName());
-        PagedOrderByStatusResponse<OrderResponse> orderByStatus = orderService.getOrderByStatus(upCase, user, page, size);
+        PagedOrderByStatusResponse<OrderResponse> orderByStatus = orderService.userGetOrderByStatus(upCase, user, page, size);
         return ResponseEntity.ok(orderByStatus);
+
+    }
+
+    @GetMapping("/admin/status")
+    public ResponseEntity<PagedOrderByStatusResponse<OrderResponse>> getOrdersByStatusAdmin(
+            @RequestParam(value = "page", required = false, defaultValue = "0") Integer page,
+            @RequestParam(value = "size", required = false, defaultValue = "30") Integer size,
+            @RequestParam(name = "status") String status){
+
+        String upCase = status.toUpperCase();
+        User user = userService.findUserByEmail(SecurityContextHolder.getContext().getAuthentication().getName());
+        PagedOrderByStatusResponse<OrderResponse> orderByStatus = orderService.adminGetOrderByStatus(upCase, user, page, size);
+        return ResponseEntity.ok(orderByStatus);
+
+    }
+
+    @GetMapping("/user")
+    public ResponseEntity<PagedOrderByStatusResponse<OrderResponse>> userGetOrdersByUser(
+            @RequestParam(value = "page", required = false, defaultValue = "0") Integer page,
+            @RequestParam(value = "size", required = false, defaultValue = "30") Integer size){
+        return ResponseEntity.ok(orderService.userGetOrderByUser(page, size));
+
+    }
+
+    @GetMapping("/admin/{userId}")
+    public ResponseEntity<PagedOrderByStatusResponse<OrderResponse>> adminGetOrdersByUser(@PathVariable Long userId,
+            @RequestParam(value = "page", required = false, defaultValue = "0") Integer page,
+            @RequestParam(value = "size", required = false, defaultValue = "30") Integer size){
+        return ResponseEntity.ok(orderService.adminGetOrderByUser(userId, page, size));
 
     }
 
