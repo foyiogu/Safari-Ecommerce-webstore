@@ -53,13 +53,13 @@ class SubCategoryRepositoryTest {
 
         // when
         Optional<SubCategory> clothesSubcategory = subCategoryRepositoryUnderTest
-                .findByNameAndCategory("dresses", clothes);
+                .findByName("dresses");
         Optional<SubCategory> clothesSubcategory1 = subCategoryRepositoryUnderTest
-                .findByNameAndCategory("denim", clothes);
+                .findByName("denim");
         Optional<SubCategory> shoesSubcategory = subCategoryRepositoryUnderTest
-                .findByNameAndCategory("flats", shoes);
+                .findByName("flats");
         Optional<SubCategory> accessoriesSubcategory = subCategoryRepositoryUnderTest
-                .findByNameAndCategory("watches", accessories);
+                .findByName("watches");
 
         // then
         assertAll(

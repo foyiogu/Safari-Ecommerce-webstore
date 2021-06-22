@@ -57,7 +57,7 @@ public class ProductServiceImplementation implements ProductService {
 
         Category category = getCategory(categoryName);
 
-        SubCategory subCategory = getSubCategory(subCategoryName, category);
+        SubCategory subCategory = getSubCategory(subCategoryName);
 
         Pageable pageable = MethodUtils.getPageable(productPage);
 
@@ -93,9 +93,9 @@ public class ProductServiceImplementation implements ProductService {
     }
 
 
-    private SubCategory getSubCategory(String subCategoryName, Category category){
+    private SubCategory getSubCategory(String subCategoryName){
         return subCategoryRepository
-                .findByNameAndCategory(subCategoryName, category).orElseThrow(
+                .findByName(subCategoryName).orElseThrow(
                         () -> {
                             throw new ResourceNotFoundException("Sub-Category not found!");
                         });
@@ -114,16 +114,14 @@ public class ProductServiceImplementation implements ProductService {
 
         List<SubCategory> subCategories = new ArrayList<>();
         for(int i = 0; i < categoryList.size(); i++){
-            Category category = new Category(categoryList.get(i));
-            subCategories.add(setCategoryAndSubCategory(category, subCategoryList.get(i)));
+            subCategories.add(setSubCategory(subCategoryList.get(i)));
         }
         return subCategories;
     }
 
-    private SubCategory setCategoryAndSubCategory(Category category, String subCategoryList){
+    private SubCategory setSubCategory(String subCategoryList){
         SubCategory subCategory = new SubCategory();
         subCategory.setName(subCategoryList);
-        subCategory.setCategory(category);
         return subCategory;
     }
 

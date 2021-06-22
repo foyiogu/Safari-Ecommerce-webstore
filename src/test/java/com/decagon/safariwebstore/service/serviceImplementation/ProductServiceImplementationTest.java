@@ -107,7 +107,7 @@ class ProductServiceImplementationTest {
         SubCategory dresses = modelMapper.map(new SubCategoryDTO("dresses", clothes), SubCategory.class);
         Pageable pageable = MethodUtils.getPageable(productPage);
         given(categoryRepository.findByName("clothes")).willReturn(java.util.Optional.of(clothes));
-        given(subCategoryRepository.findByNameAndCategory("dresses", clothes))
+        given(subCategoryRepository.findByName("dresses"))
                 .willReturn(java.util.Optional.of(dresses));
 
         // when
@@ -184,8 +184,8 @@ class ProductServiceImplementationTest {
         c_category.add(new Category("shoes"));
 
         List<SubCategory> c_subCategories = new ArrayList<>();
-        c_subCategories.add(new SubCategory("denim", new Category("clothes")));
-        c_subCategories.add(new SubCategory("sneakers", new Category("shoes")));
+        c_subCategories.add(new SubCategory("denim"));
+        c_subCategories.add(new SubCategory("sneakers"));
 
         List<Size> c_sizes = new ArrayList<>();
         c_sizes.add(new Size("L"));
@@ -258,8 +258,8 @@ class ProductServiceImplementationTest {
         c_category.add(new Category("shoes"));
 
         List<SubCategory> c_subCategories = new ArrayList<>();
-        c_subCategories.add(new SubCategory("denim", new Category("clothes")));
-        c_subCategories.add(new SubCategory("sneakers", new Category("shoes")));
+        c_subCategories.add(new SubCategory("denim"));
+        c_subCategories.add(new SubCategory("sneakers"));
 
         List<Size> c_sizes = new ArrayList<>();
         c_sizes.add(new Size("L"));
