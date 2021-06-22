@@ -150,7 +150,7 @@ public class UserServiceImplementation implements UserService {
         //response handler
         Response responseHandler = new Response();
 
-        Role roleUser = roleRepository.findByName(ERole.ROLE_USER)
+        Role roleUser = roleRepository.findByName(ERole.USER)
                 .orElseThrow(() -> new ResourceNotFoundException("Error: Role is not found."));
 
         if(!optionalUser.isPresent()) {

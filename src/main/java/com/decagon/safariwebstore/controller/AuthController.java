@@ -57,7 +57,7 @@ AuthController {
     public UserDTO register(@Valid @RequestBody RegisterUser registerUser) throws UnirestException {
         User user = userService.registration(registerUser);
         List<Role> roles = new ArrayList<>();
-        Role userRole = roleRepository.findByName(ERole.ROLE_USER)
+        Role userRole = roleRepository.findByName(ERole.USER)
                 .orElseThrow(() -> new ResourceNotFoundException("Error: Role is not found."));
         roles.add(userRole);
         user.setRoles(roles);
@@ -73,7 +73,7 @@ AuthController {
     public UserDTO registerAdmin(@Valid @RequestBody RegisterUser registerUser) throws UnirestException {
         User user = userService.registration(registerUser);
         List<Role> roles = new ArrayList<>();
-        Role userRole = roleRepository.findByName(ERole.ROLE_ADMIN)
+        Role userRole = roleRepository.findByName(ERole.ADMIN)
                 .orElseThrow(() -> new ResourceNotFoundException("Error: Role is not found."));
         roles.add(userRole);
         user.setRoles(roles);
