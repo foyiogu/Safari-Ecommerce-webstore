@@ -12,7 +12,8 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.modelmapper.ModelMapper;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+
+
 
 import java.util.Date;
 import java.util.List;
@@ -23,7 +24,6 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
-@AutoConfigureMockMvc(addFilters = false)
 class CheckOutServiceImplementationTest {
 
     @Mock
@@ -35,11 +35,13 @@ class CheckOutServiceImplementationTest {
     @InjectMocks
     CheckOutServiceImplementation checkOutService;
 
-    @Mock
+    @InjectMocks
     OrderResponseDTO orderResponseDTO;
 
     @Mock
     UserRepository userRepository;
+
+
 
     @InjectMocks
     OrderServiceImplementation orderService;
@@ -50,7 +52,7 @@ class CheckOutServiceImplementationTest {
 
 
 
-    @Mock
+    @InjectMocks
     ModelMapper modelMapper;
 
     Order order;
@@ -83,7 +85,7 @@ class CheckOutServiceImplementationTest {
 
 
 
-        product = new Product("Delim Shoe", 1500, null, null, null, null, null, null, List.of(user));
+        product = new Product("Denim Shoe", 1500, null, null, null, null, null, null, List.of(user));
 
         cartItem = new CartItem();
 
@@ -130,12 +132,6 @@ class CheckOutServiceImplementationTest {
 
         Order savedOrder = orderService.saveOrder(order);
         verify(orderRepository).save(any(Order.class));
-
-
-
-
-
-
 
 
 
