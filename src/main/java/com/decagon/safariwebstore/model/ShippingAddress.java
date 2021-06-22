@@ -5,16 +5,19 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.OneToOne;
 
-@EqualsAndHashCode(callSuper = true)
+@EqualsAndHashCode(callSuper = false)
 @Data
-@Entity
-@Table(name = "addresses")
-@AllArgsConstructor
 @NoArgsConstructor
-public class Address extends BaseModel{
+@AllArgsConstructor
+@Entity
+public class ShippingAddress extends BaseModel {
 
+    private String fullName;
+
+    private String email;
 
     private String address;
 
@@ -24,11 +27,8 @@ public class Address extends BaseModel{
 
     private String phone;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User user;
-
-    @Column(name = "is_shipping_address")
     private Boolean isDefaultShippingAddress;
 
+    @OneToOne
+    private Order order;
 }
