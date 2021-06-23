@@ -67,8 +67,7 @@ class CheckOutServiceImplementationTest {
     @BeforeEach
     void setUp() {
         shippingAddress = new ShippingAddress("Emmanuel", "emman@mail.com",
-                "Decagon", "Lagos state", "Lagos", "08056522762", true,
-                null);
+                "Decagon", "Lagos state", "Lagos", "08056522762", true);
 
 
     }

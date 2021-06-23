@@ -1,5 +1,6 @@
 package com.decagon.safariwebstore.service.serviceImplementation;
 
+import com.decagon.safariwebstore.exceptions.ResourceNotFoundException;
 import com.decagon.safariwebstore.model.*;
 import com.decagon.safariwebstore.repository.*;
 import com.decagon.safariwebstore.security.service.UserDetailsImpl;
@@ -44,7 +45,7 @@ public class CheckOutServiceImplementation implements CheckOutService {
 
         Order savedOrder = orderRepository.save(order);
         ShippingAddress shippingAddress = modelMapper.map(request.getShippingAddress(), ShippingAddress.class);
-        shippingAddress.setOrder(savedOrder);
+
         shippingAddressRepository.save(shippingAddress);
 
 
@@ -61,7 +62,9 @@ public class CheckOutServiceImplementation implements CheckOutService {
         return request
                 .getCartItems()
                 .stream()
-                .map(cartItem -> cartItemRepository.findById(cartItem).orElseThrow())
+                .map(cartItem -> cartItemRepository.findById(cartItem).orElseThrow(() -> {
+                    throw new ResourceNotFoundException("CartItem not found or already paid for");
+                }))
                 .collect(Collectors.toList());
     }
 

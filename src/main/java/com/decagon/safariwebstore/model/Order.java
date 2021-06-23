@@ -43,7 +43,8 @@ public class Order extends BaseModel {
     @Column(columnDefinition = "DECIMAL")
     private Double totalCost;
 
-    @OneToOne
+    @OneToOne(cascade=CascadeType.ALL)
+    @JoinColumn(name = "shippingaddress_id")
     private ShippingAddress shippingAddress;
 
     @OneToMany(targetEntity = CartItem.class)
