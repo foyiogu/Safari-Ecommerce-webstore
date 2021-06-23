@@ -1,6 +1,5 @@
 import React from 'react'
 import CardProductItem from './CardProductItem'
-import './css/CardProducts.css'
   
 function CardProducts() {
     return (

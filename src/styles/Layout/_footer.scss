@@ -7,7 +7,7 @@
     align-items: center;
 
 }  
-  .footer-subscription {
+.footer-subscription {
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -17,17 +17,17 @@
     margin-bottom: 24px;
     padding: 24px;
     color: #000;
-  }
+}
   
-  .footer-subscription > p {
-    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande',
-      'Lucida Sans', Arial, sans-serif;
-  }
+  // .footer-subscription > p {
+  //   font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande',
+  //     'Lucida Sans', Arial, sans-serif;
+  // }
   
-  .footer-subscription-heading {
+.footer-subscription-heading {
     margin-bottom: 24px;
     font-size: 24px;
-  }
+}
   
   .footer-subscription-text {
     margin-bottom: 24px;
@@ -127,12 +127,6 @@
     border-radius: 5px;
 }
 
-*, *::before, *::after {
-  box-sizing: border-box;
-}
-*, *::before, *::after {
-  box-sizing: border-box;
-}
 
 .single-block-form {
   display: inline-block;
