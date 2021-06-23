@@ -84,13 +84,16 @@ class CheckOutServiceImplementationTest {
 
 
 
-        product = new Product("Denim Shoe", 1500, null, null, null, null, null, null, List.of(user));
+        product = new Product();
+         product.setName("Denim Shoe");
+         product.setPrice(1500);
+         product.setUsers(List.of(user));
 
         cartItem = new CartItem();
 
         cartItem.setQuantity(2);
         cartItem.setPrice(1500);
-        cartItem.setUser(null);
+        cartItem.setUser(user);
         cartItem.setId(1L);
 
         //Shipping Address
