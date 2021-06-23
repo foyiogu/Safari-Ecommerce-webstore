@@ -13,13 +13,13 @@ public class ProductDTO {
     private String name;
     private double price;
     private String description;
-    private Category category;
-    private SubCategory subCategory;
+    private List<Category> category;
+    private List<SubCategory> subCategory;
     private List<Size> sizes;
     private List<Color> colors;
     private List<ProductImage> productImages;
 
-    public ProductDTO(String name, double price, String description, Category category, SubCategory subCategory) {
+    public ProductDTO(String name, double price, String description, List<Category> category, List<SubCategory> subCategory) {
         this.name = name;
         this.price = price;
         this.description = description;
