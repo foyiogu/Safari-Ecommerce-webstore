@@ -13,6 +13,7 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.cache.annotation.Caching;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
@@ -35,6 +36,27 @@ public class ProductServiceImplementation implements ProductService {
 
         Pageable pageable = MethodUtils.getPageable(productPage);
 
+        return productRepository.findAll(pageable);
+    }
+
+    @Override
+    @Cacheable(cacheNames = "products", sync = true)
+    public Page<Product> searchAllProducts(String keyword) {
+
+        List<Product> searchedProducts = new ArrayList<>();
+        List<Product> productList = productRepository.findAll();
+        List<Product> products = productRepository.findByNameContains(keyword);
+        List<Product> productByCategory = productList.stream().filter(product -> product.getCategory().stream().anyMatch(category -> category.getName().contains(keyword))).collect(Collectors.toList());
+
+        searchedProducts.addAll(products);
+        searchedProducts.addAll(productByCategory);
+
+        ProductPage productPage = new ProductPage();
+        Pageable pageable = MethodUtils.getPageable(productPage);
+
+        if (keyword != null) {
+            return new PageImpl<>(searchedProducts);
+        }
         return productRepository.findAll(pageable);
     }
 
