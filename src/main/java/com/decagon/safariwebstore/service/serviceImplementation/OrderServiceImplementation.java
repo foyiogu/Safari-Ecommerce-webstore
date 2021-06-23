@@ -6,6 +6,7 @@ import com.decagon.safariwebstore.model.ERole;
 import com.decagon.safariwebstore.model.Order;
 import com.decagon.safariwebstore.model.Role;
 import com.decagon.safariwebstore.model.User;
+import com.decagon.safariwebstore.payload.request.UpdateOrderRequest;
 import com.decagon.safariwebstore.payload.response.OrderResponse;
 import com.decagon.safariwebstore.payload.response.PagedOrderByStatusResponse;
 import com.decagon.safariwebstore.repository.OrderRepository;
@@ -13,6 +14,8 @@ import com.decagon.safariwebstore.repository.RoleRepository;
 import com.decagon.safariwebstore.service.OrderService;
 import com.decagon.safariwebstore.service.UserService;
 import lombok.AllArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -24,6 +27,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -91,6 +95,29 @@ public class OrderServiceImplementation implements OrderService {
         Page<Order> orderPage = orderRepository.findByUser(user, pageable);
         List<Order> content = orderPage.getNumberOfElements() == 0 ? Collections.emptyList() : orderPage.getContent();
         return ordersPageResponse(content, orderPage);
+    }
+
+
+    @Override
+    public void updateOrderStatus(Long orderId, UpdateOrderRequest orderRequest) {
+        User user = userService.findUserByEmail(SecurityContextHolder.getContext().getAuthentication().getName());
+        checkUserRole(ERole.ADMIN, user);
+        Optional<Order> orderOptional = orderRepository.findById(orderId);
+        if(orderOptional.isEmpty()) throw new ResourceNotFoundException("Incorrect parameter; order with id, " + orderId + " does not exist");
+        Order order = orderOptional.get();
+        order.setStatus(orderRequest.getStatus());
+        orderRepository.save(order);
+    }
+
+    @Override
+    public void userConfirmOrderStatus(Long orderId) {
+        User user = userService.findUserByEmail(SecurityContextHolder.getContext().getAuthentication().getName());
+        checkUserRole(ERole.USER, user);
+        Optional<Order> orderOptional = orderRepository.findById(orderId);
+        if(orderOptional.isEmpty()) throw new ResourceNotFoundException("Incorrect parameter; order with id, " + orderId + " does not exist");
+        Order order = orderOptional.get();
+        order.setStatus("DELIVERED");
+        orderRepository.save(order);
     }
 
 

@@ -1,10 +1,13 @@
 package com.decagon.safariwebstore.controller;
 
 import com.decagon.safariwebstore.model.Order;
+import com.decagon.safariwebstore.model.Product;
 import com.decagon.safariwebstore.model.User;
+import com.decagon.safariwebstore.payload.request.UpdateOrderRequest;
 import com.decagon.safariwebstore.payload.response.OrderResponse;
 import com.decagon.safariwebstore.payload.response.PagedOrderByStatusResponse;
 import com.decagon.safariwebstore.service.OrderService;
+import com.decagon.safariwebstore.service.ProductService;
 import com.decagon.safariwebstore.service.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -21,6 +24,7 @@ public class OrderController {
 
     private final OrderService orderService;
     private final UserService userService;
+    private final ProductService productService;
 
     @GetMapping("/{orderId}")
     public ResponseEntity<Order> viewParticularOrder(@PathVariable Long orderId) {
@@ -69,5 +73,18 @@ public class OrderController {
         return ResponseEntity.ok(orderService.adminGetOrderByUser(userId, page, size));
 
     }
+
+    @PutMapping("/admin/{orderId}")
+    public ResponseEntity<?> adminUpdateOrderStatus(@PathVariable Long orderId, @RequestBody UpdateOrderRequest orderRequest){
+        orderService.updateOrderStatus(orderId, orderRequest);
+        return new ResponseEntity<>("Product Status Updated Successfully", HttpStatus.OK);
+    }
+
+    @PutMapping("/user/{orderId}")
+    public ResponseEntity<?> userConfirmOrder(@PathVariable Long orderId){
+        orderService.userConfirmOrderStatus(orderId);
+        return new ResponseEntity<>("Product Status Updated Successfully", HttpStatus.OK);
+    }
+
 
 }
