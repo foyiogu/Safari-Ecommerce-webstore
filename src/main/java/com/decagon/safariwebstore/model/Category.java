@@ -14,4 +14,5 @@ import java.util.List;
 public class Category extends BaseModel{
 
     private String name;
+    //should have otm for email
 }

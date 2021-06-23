@@ -8,6 +8,7 @@ import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
+import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -29,6 +30,15 @@ public class ProductController {
     @GetMapping
     public ResponseEntity<Page<ProductDTO>> getAllProducts(ProductPage productPage) {
         Page<Product> products = productService.getAllProducts(productPage);
+        List<ProductDTO> productDTOList = getProductDTOList(products);
+        Page<ProductDTO> productDTOPage = new PageImpl<>(productDTOList);
+
+        return new ResponseEntity<>(productDTOPage, HttpStatus.OK);
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<Page<ProductDTO>> searchProducts(@Param("keyword") String keyword) {
+        Page<Product> products = productService.searchAllProducts(keyword.toLowerCase());
         List<ProductDTO> productDTOList = getProductDTOList(products);
         Page<ProductDTO> productDTOPage = new PageImpl<>(productDTOList);
 

@@ -16,16 +16,16 @@ public class Product extends BaseModel {
     private String name;
     @Column(columnDefinition = "decimal")
 
-    //TODO type should be String
     private double price;
 
     @Column(columnDefinition = "TEXT")
     private String description;
 
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.ALL) //mto
+    @JoinColumn(name = "product_id")
     private List<Category> category;
 
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<SubCategory> subCategory;
 
     @OneToMany(cascade = CascadeType.ALL)
