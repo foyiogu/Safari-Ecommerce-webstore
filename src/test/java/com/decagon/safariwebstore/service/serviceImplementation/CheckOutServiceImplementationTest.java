@@ -84,10 +84,10 @@ class CheckOutServiceImplementationTest {
 
 
 
-        product = new Product();
+         product = new Product();
          product.setName("Denim Shoe");
          product.setPrice(1500);
-         product.setUsers(List.of(user));
+
 
         cartItem = new CartItem();
 
