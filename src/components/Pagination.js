@@ -1,5 +1,5 @@
 import React from 'react'
-import './css/Pagination.css';
+// import './css/Pagination.css';
 // import { Link } from 'react-router-dom';
 
 export default function Pagination() {

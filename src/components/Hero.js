@@ -1,6 +1,6 @@
 import React from 'react'
-import '../App.css'
-import './css/Hero.css'
+// import '../App.css'
+// import './css/Hero.css'
 
 // var slideIndex = 0;
 // showSlides();

@@ -1,5 +1,5 @@
 import React from 'react';
-import '../../src/App.css';   
+// import '../../src/App.css';   
 import Hero  from '../components/Hero';
 import CardProducts from '../components/CardProducts'
 import Pagination from '../components/Pagination';
