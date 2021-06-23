@@ -13,13 +13,10 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.cache.annotation.Caching;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -42,40 +39,6 @@ public class ProductServiceImplementation implements ProductService {
     }
 
     @Override
-    @Cacheable(cacheNames = "products", sync = true)
-    public Page<Product> searchAllProducts(String keyword) {
-        List<Product> searchedProduct = new ArrayList<>();
-
-        List<Product> productList = productRepository.findAll();
-        List<Product> productByCategory = productList.stream().filter(product -> product.getCategory().stream().anyMatch(category -> category.getName().contains(keyword))).collect(Collectors.toList());
-
-
-        ProductPage productPage = new ProductPage();
-        Pageable pageable = MethodUtils.getPageable(productPage);
-
-        log.info("jgjbljgjlgtglhg");
-        List<Product> products = productRepository.findByNameContains(keyword);
-        log.info(products + "here's the list of product that macthes keyword");
-        // List<Product> products1 = productRepository.findByCategoryIn(categories);
-        log.info(productByCategory +"here's the products that matches category");
-
-        searchedProduct.addAll(products);
-        searchedProduct.addAll(productByCategory);
-
-
-        log.info(products +" checking if we get the product list at all");
-        log.info(productByCategory + "searched by category");
-        log.info(searchedProduct.toString());
-        log.info(products.stream().filter(product -> product.getCategory().contains(keyword)).collect(Collectors.toList()).toString()+" this is the fetch result");
-
-        if (keyword != null) {
-            return new PageImpl<>(searchedProduct);
-        }
-        return productRepository.findAll(pageable);
-//
-    }
-
-    @Override
     @Cacheable(cacheNames = "productsCategory", sync = true)
     public Page<Product> getProductsByCategory(ProductPage productPage, String categoryName) {
 
@@ -94,7 +57,7 @@ public class ProductServiceImplementation implements ProductService {
 
         Category category = getCategory(categoryName);
 
-        SubCategory subCategory = getSubCategory(subCategoryName, category);
+        SubCategory subCategory = getSubCategory(subCategoryName);
 
         Pageable pageable = MethodUtils.getPageable(productPage);
 
@@ -130,9 +93,9 @@ public class ProductServiceImplementation implements ProductService {
     }
 
 
-    private SubCategory getSubCategory(String subCategoryName, Category category){
+    private SubCategory getSubCategory(String subCategoryName){
         return subCategoryRepository
-                .findByNameAndCategory(subCategoryName, category).orElseThrow(
+                .findByName(subCategoryName).orElseThrow(
                         () -> {
                             throw new ResourceNotFoundException("Sub-Category not found!");
                         });
@@ -151,16 +114,14 @@ public class ProductServiceImplementation implements ProductService {
 
         List<SubCategory> subCategories = new ArrayList<>();
         for(int i = 0; i < categoryList.size(); i++){
-            Category category = new Category(categoryList.get(i));
-            subCategories.add(setCategoryAndSubCategory(category, subCategoryList.get(i)));
+            subCategories.add(setSubCategory(subCategoryList.get(i)));
         }
         return subCategories;
     }
 
-    private SubCategory setCategoryAndSubCategory(Category category, String subCategoryList){
+    private SubCategory setSubCategory(String subCategoryList){
         SubCategory subCategory = new SubCategory();
         subCategory.setName(subCategoryList);
-//        subCategory.setCategory(category);
         return subCategory;
     }
 

@@ -1,15 +1,14 @@
 package com.decagon.safariwebstore.model;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 
-
-@Getter
-@Setter
+@Data
 @Entity
 @Table(name = "favorite_products")
+@AllArgsConstructor
+@NoArgsConstructor
 public class Favourite extends BaseModel{
 
     @Column(name = "user_id")

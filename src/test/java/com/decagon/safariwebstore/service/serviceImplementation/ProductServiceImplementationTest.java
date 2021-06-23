@@ -18,8 +18,6 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import org.modelmapper.ModelMapper;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 
 import java.util.ArrayList;
@@ -52,7 +50,6 @@ class ProductServiceImplementationTest {
     @InjectMocks
     private ProductServiceImplementation productServiceUnderTest;
 
-
     @BeforeEach
     void setUp() {
         productPage = new ProductPage();
@@ -71,33 +68,6 @@ class ProductServiceImplementationTest {
 
         // then
         verify(productRepository).findAll(pageable);
-    }
-
-    @Test
-    void canSearchProductWithKeyword(){
-        String keyword = "shoes";
-
-        Product product1 = new Product();
-        product1.setName("Shoes");
-        Product product2 = new Product();
-        product2.setName("sizzler");
-
-        List<Product> productList = new ArrayList<>();
-        productList.add(product1);
-        productList.add(product2);
-
-        Pageable pageable = MethodUtils.getPageable(productPage);
-
-        Page<Product> products = new PageImpl<>(productList);
-//        Mockito.lenient().when(productRepository.findByNameContains(keyword,pageable)).thenReturn(products);
-//
-//        //when
-//        productServiceUnderTest.searchAllProducts(keyword);
-//
-//        //then
-//        verify(productRepository).findByNameContains(keyword,pageable);
-
-
     }
 
     @Test
@@ -137,7 +107,7 @@ class ProductServiceImplementationTest {
         SubCategory dresses = modelMapper.map(new SubCategoryDTO("dresses", clothes), SubCategory.class);
         Pageable pageable = MethodUtils.getPageable(productPage);
         given(categoryRepository.findByName("clothes")).willReturn(java.util.Optional.of(clothes));
-        given(subCategoryRepository.findByNameAndCategory("dresses", clothes))
+        given(subCategoryRepository.findByName("dresses"))
                 .willReturn(java.util.Optional.of(dresses));
 
         // when
@@ -214,8 +184,8 @@ class ProductServiceImplementationTest {
         c_category.add(new Category("shoes"));
 
         List<SubCategory> c_subCategories = new ArrayList<>();
-       // c_subCategories.add(new SubCategory("denim", new Category("clothes")));
-      //  c_subCategories.add(new SubCategory("sneakers", new Category("shoes")));
+        c_subCategories.add(new SubCategory("denim"));
+        c_subCategories.add(new SubCategory("sneakers"));
 
         List<Size> c_sizes = new ArrayList<>();
         c_sizes.add(new Size("L"));
@@ -255,7 +225,6 @@ class ProductServiceImplementationTest {
         Mockito.lenient().when(productServiceUnderTest.saveProduct(productRequest)).thenReturn(product);
 
     }
-
     @Test
     void willUpdateProduct(){
         final Long id = 3L;
@@ -289,8 +258,8 @@ class ProductServiceImplementationTest {
         c_category.add(new Category("shoes"));
 
         List<SubCategory> c_subCategories = new ArrayList<>();
-        //c_subCategories.add(new SubCategory("denim", new Category("clothes")));
-        //c_subCategories.add(new SubCategory("sneakers", new Category("shoes")));
+        c_subCategories.add(new SubCategory("denim"));
+        c_subCategories.add(new SubCategory("sneakers"));
 
         List<Size> c_sizes = new ArrayList<>();
         c_sizes.add(new Size("L"));

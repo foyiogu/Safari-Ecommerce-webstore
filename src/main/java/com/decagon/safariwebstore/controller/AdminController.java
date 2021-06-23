@@ -15,8 +15,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -30,17 +28,21 @@ public class  AdminController {
     private final AdminService adminService;
 
     private final ProductService productService;
-
+  
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/password-forgot")
     public ResponseEntity<Response> adminForgotPassword(@RequestParam("email") String email, HttpServletRequest req){
         return adminService.adminForgotPassword(req, email);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/password-reset")
     public ResponseEntity<Response> adminResetPassword(@Valid @RequestBody ResetPassword resetPassword) {
         return adminService.adminResetPassword(resetPassword);
     }
 
+
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/add-product")
     public ResponseEntity<?> addProduct(@Valid @RequestBody ProductRequest productRequest){
 
@@ -61,6 +63,8 @@ public class  AdminController {
     }
 
 
+
+    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/update-product/{id}")
     public ResponseEntity<?> updateProduct(@PathVariable("id") long productId, @Valid @RequestBody ProductRequest productRequest){
         productService.updateProduct(productId, productRequest);
@@ -70,6 +74,8 @@ public class  AdminController {
     }
 
 
+
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/delete-product/{id}")
     public ResponseEntity<?> deleteProduct(@PathVariable(name = "id") Long productId) {
         productService.deleteProduct(productId);

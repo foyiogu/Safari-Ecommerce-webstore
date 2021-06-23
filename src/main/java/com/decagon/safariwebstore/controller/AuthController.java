@@ -1,7 +1,6 @@
 package com.decagon.safariwebstore.controller;
 
 
-import com.decagon.safariwebstore.exceptions.InvalidOldPasswordException;
 import com.decagon.safariwebstore.exceptions.ResourceNotFoundException;
 import com.decagon.safariwebstore.model.ERole;
 import com.decagon.safariwebstore.model.Role;
@@ -14,7 +13,6 @@ import com.decagon.safariwebstore.payload.response.auth.LoginResponse;
 import com.decagon.safariwebstore.repository.RoleRepository;
 import com.decagon.safariwebstore.security.service.UserDetailService;
 import com.decagon.safariwebstore.service.UserService;
-import com.decagon.safariwebstore.utils.GenericResponse;
 import com.decagon.safariwebstore.utils.JWTUtil;
 import com.decagon.safariwebstore.utils.mailService.MailService;
 import com.mashape.unirest.http.exceptions.UnirestException;
@@ -36,7 +34,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 import java.util.stream.Collectors;
 
 @RestController

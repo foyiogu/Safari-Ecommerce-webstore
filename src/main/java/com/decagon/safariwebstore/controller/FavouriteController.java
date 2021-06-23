@@ -8,10 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @Slf4j
 @RestController
@@ -25,4 +22,16 @@ public class FavouriteController {
         UserDetailsImpl userDetails = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         return new ResponseEntity<>(favouriteService.customerAddProductToFavorite(userDetails,productId), HttpStatus.OK);
     }
+
+    @GetMapping("/favourite/products")
+    public ResponseEntity<?> getAllFavouriteProducts(){
+        UserDetailsImpl userDetails = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return new ResponseEntity<>(favouriteService.getFavouriteProducts(userDetails), HttpStatus.OK);
+    }
+
+    @GetMapping("/favourite/product/{productId}")
+    public ResponseEntity<?> getSingleFavouriteProducts(@PathVariable Long productId){
+        return new ResponseEntity<>(favouriteService.getFavouriteProductsById(productId), HttpStatus.OK);
+    }
+
 }

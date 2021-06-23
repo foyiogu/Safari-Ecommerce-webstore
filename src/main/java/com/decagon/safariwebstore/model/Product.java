@@ -1,5 +1,6 @@
 package com.decagon.safariwebstore.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.*;
@@ -16,16 +17,16 @@ public class Product extends BaseModel {
     private String name;
     @Column(columnDefinition = "decimal")
 
+    //TODO type should be String
     private double price;
 
     @Column(columnDefinition = "TEXT")
     private String description;
 
-    @OneToMany(cascade = CascadeType.ALL) //mto
-    @JoinColumn(name = "product_id")
+    @ManyToMany(cascade = CascadeType.ALL)
     private List<Category> category;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @ManyToMany(cascade = CascadeType.ALL)
     private List<SubCategory> subCategory;
 
     @OneToMany(cascade = CascadeType.ALL)
@@ -34,9 +35,6 @@ public class Product extends BaseModel {
     private List<Color> colors;
     @OneToMany(cascade = CascadeType.ALL)
     private List<ProductImage> productImages;
-
-    @ManyToMany(mappedBy = "favouriteProducts")
-    private List<User> users;
 
     public void setName(String name) {
         this.name = name.toLowerCase();
