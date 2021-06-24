@@ -152,4 +152,8 @@ public class OrderServiceImplementation implements OrderService {
         }
 
     }
+
+    public Order saveOrder(Order order){
+        return orderRepository.save(order);
+    }
 }

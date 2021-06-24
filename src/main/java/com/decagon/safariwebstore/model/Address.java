@@ -29,6 +29,6 @@ public class Address extends BaseModel{
     private User user;
 
     @Column(name = "is_shipping_address")
-    private boolean toDefaultShippingAddress;
+    private Boolean isDefaultShippingAddress;
 
 }

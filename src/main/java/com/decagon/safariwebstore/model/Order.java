@@ -7,6 +7,8 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.Date;
+import java.util.List;
 
 @Getter
 @Setter
@@ -14,13 +16,39 @@ import javax.persistence.*;
 @Table(name = "orders")
 
 public class Order extends BaseModel {
-
     private String quantity;
+
+    private String deliveryMethod;
+
+    private Double price;
+
+    private Date dateOrdered;
+
+    private Double cardDiscount;
+
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date dateDelivered;
+
+    @Column(columnDefinition = "DECIMAL")
+    private Double deliveryFee = 2000.00;
+
+    private String paymentType;
 
     private String status;
 
-    @Column(columnDefinition = "decimal")
-    private double price;
+    private Double costOfProducts; //alias subtotal
+
+    private Boolean isGift;
+
+    @Column(columnDefinition = "DECIMAL")
+    private Double totalCost;
+
+    @OneToOne(cascade=CascadeType.ALL)
+    @JoinColumn(name = "shippingaddress_id")
+    private ShippingAddress shippingAddress;
+
+    @OneToMany(targetEntity = CartItem.class)
+    private List<CartItem> cartItems;
 
     @ManyToOne
     @JoinColumn(name = "product_id")
