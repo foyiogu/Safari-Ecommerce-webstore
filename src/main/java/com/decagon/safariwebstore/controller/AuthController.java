@@ -22,6 +22,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -53,7 +54,7 @@ AuthController {
     @Autowired
     private MessageSource messages;
 
-    @PostMapping("/register")
+    @PostMapping("/api/register")
     public UserDTO register(@Valid @RequestBody RegisterUser registerUser) throws UnirestException {
         User user = userService.registration(registerUser);
         List<Role> roles = new ArrayList<>();
@@ -69,7 +70,7 @@ AuthController {
         return UserDTO.build(user);
     }
 
-    @PostMapping("/admin/register")
+    @PostMapping("/api/admin/register")
     public UserDTO registerAdmin(@Valid @RequestBody RegisterUser registerUser) throws UnirestException {
         User user = userService.registration(registerUser);
         List<Role> roles = new ArrayList<>();
@@ -112,8 +113,9 @@ AuthController {
 
     //Change/Reset Password
 
-    @PostMapping("/user/updatePassword")
+    @PostMapping("/api/updatePassword")
     @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
+    @Secured({"ADMIN","USER"})
     public ResponseEntity<String> changeUserPassword(@RequestBody UpdatePasswordRequest updatePasswordRequest) {
 
         User user = userService.findUserByEmail(SecurityContextHolder.getContext().getAuthentication().getName());

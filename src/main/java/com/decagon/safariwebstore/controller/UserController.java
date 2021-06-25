@@ -11,6 +11,7 @@ import com.decagon.safariwebstore.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -30,17 +31,20 @@ public class UserController {
 
 
     @PutMapping("/profile")
+    @Secured({"ADMIN","USER"})
     public ResponseEntity<?> editProfile(@Valid @RequestBody EditUser user) {
         return new ResponseEntity<>(userService.updateUser(user), HttpStatus.OK);
     }
 
     @PostMapping("/customer/password-forgot")
+    @Secured("USER")
     public ResponseEntity<Response> userForgotPassword(@RequestParam("email") String accountEmail, HttpServletRequest request){
         return userService.userForgotPassword(request, accountEmail);
     }
 
 
     @PostMapping("/customer/password-reset")
+    @Secured("USER")
     public ResponseEntity<Response> userResetPassword(@Valid @RequestBody ResetPassword resetPassword) {
         return userService.userResetPassword(resetPassword);
     }

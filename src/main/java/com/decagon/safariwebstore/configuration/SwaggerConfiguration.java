@@ -12,6 +12,7 @@ import springfox.documentation.spi.service.contexts.SecurityContext;
 import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -25,13 +26,14 @@ public class SwaggerConfiguration implements WebMvcConfigurer {
     public Docket swaggerConfig() {
         //Return a prepared Docket Instance
         return new Docket(DocumentationType.SWAGGER_2)
-                .select()
-                .paths(PathSelectors.any())
-                .apis(RequestHandlerSelectors.basePackage("com.decagon.safariwebstore"))
-                .build()
-                .useDefaultResponseMessages(false)
                 .apiInfo(apiDetails())
-                .securitySchemes(securitySchemes()).securityContexts(List.of(securityContext()));
+                .securityContexts(List.of(securityContext()))
+                .securitySchemes(List.of(apiKey()))
+                .useDefaultResponseMessages(false)
+                .select()
+                .apis(RequestHandlerSelectors.basePackage("com.decagon.safariwebstore"))
+                .paths(PathSelectors.any())
+                .build();
     }
 
     @Override
@@ -44,16 +46,20 @@ public class SwaggerConfiguration implements WebMvcConfigurer {
                 .addResourceLocations("classpath:/META-INF/resources/webjars/");
     }
 
-    private List<SecurityScheme> securitySchemes() {
-        return List.of(apiKey());
+    private SecurityContext securityContext() {
+        return SecurityContext.builder().securityReferences(defaultAuth()).build();
     }
 
-    private SecurityContext securityContext() {
-        return SecurityContext.builder().securityReferences(List.of(bearerAuthReference())).forPaths(PathSelectors.any()).build();
-    }
 
     private SecurityReference bearerAuthReference() {
         return new SecurityReference("Bearer", new AuthorizationScope[0]);
+    }
+
+    private List<SecurityReference> defaultAuth() {
+        AuthorizationScope authorizationScope = new AuthorizationScope("global", "accessEverything");
+        AuthorizationScope[] authorizationScopes = new AuthorizationScope[1];
+        authorizationScopes[0] = authorizationScope;
+        return Arrays.asList(new SecurityReference("Bearer", authorizationScopes));
     }
 
 
