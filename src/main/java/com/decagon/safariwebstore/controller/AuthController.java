@@ -30,6 +30,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.CrossOrigin;
 
 import javax.validation.Valid;
 import java.util.ArrayList;
@@ -39,6 +40,7 @@ import java.util.stream.Collectors;
 @RestController
 @AllArgsConstructor
 @Slf4j
+@CrossOrigin
 public class
 AuthController {
 
