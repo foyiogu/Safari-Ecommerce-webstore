@@ -11,8 +11,6 @@ import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-
 @Service
 @AllArgsConstructor
 public class CartItemServiceImplementation implements CartItemService {
@@ -53,7 +51,7 @@ public class CartItemServiceImplementation implements CartItemService {
 
 
     @Override
-    public void saveCartItems(List<CartItem> items) {
-        cartItemRepository.saveAll(items);
+    public CartItem saveCartItem(CartItem item) {
+        return cartItemRepository.save(item);
     }
 }

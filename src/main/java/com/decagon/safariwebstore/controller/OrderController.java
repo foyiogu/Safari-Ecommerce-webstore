@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 
 
+
 @RestController
 @AllArgsConstructor
 @RequestMapping("/orders")
@@ -56,6 +57,22 @@ public class OrderController {
         User user = userService.findUserByEmail(email);
         PagedOrderByStatusResponse<OrderResponseDTO> orderByStatus = orderService.adminGetOrderByStatus(upCase, user, page, size);
         return ResponseEntity.ok(orderByStatus);
+
+    }
+
+    @GetMapping("/user")
+    public ResponseEntity<PagedOrderByStatusResponse<OrderResponseDTO>> userGetOrdersByUser(
+            @RequestParam(value = "page", required = false, defaultValue = "0") Integer page,
+            @RequestParam(value = "size", required = false, defaultValue = "30") Integer size){
+        return ResponseEntity.ok(orderService.userGetOrderByUser(page, size));
+
+    }
+
+    @GetMapping("/admin/{userId}")
+    public ResponseEntity<PagedOrderByStatusResponse<OrderResponseDTO>> adminGetOrdersByUser(@PathVariable Long userId,
+            @RequestParam(value = "page", required = false, defaultValue = "0") Integer page,
+            @RequestParam(value = "size", required = false, defaultValue = "30") Integer size){
+        return ResponseEntity.ok(orderService.adminGetOrderByUser(userId, page, size));
 
     }
 

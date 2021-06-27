@@ -9,6 +9,6 @@ import java.util.List;
 
 public interface CartItemService {
     Response addItemToCart(User user, CartItemDTO cartItemDTO);
-    void saveCartItems(List<CartItem> items);
+    CartItem saveCartItem(CartItem item);
 
 }

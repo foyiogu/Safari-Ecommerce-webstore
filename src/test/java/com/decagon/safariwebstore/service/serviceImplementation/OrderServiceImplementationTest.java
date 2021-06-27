@@ -2,10 +2,10 @@ package com.decagon.safariwebstore.service.serviceImplementation;
 
 import com.decagon.safariwebstore.exceptions.ResourceNotFoundException;
 import com.decagon.safariwebstore.model.Order;
-import com.decagon.safariwebstore.model.Product;
 import com.decagon.safariwebstore.model.User;
 import com.decagon.safariwebstore.repository.OrderRepository;
 import com.decagon.safariwebstore.repository.RoleRepository;
+import com.decagon.safariwebstore.service.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -39,14 +39,15 @@ public class OrderServiceImplementationTest {
     OrderServiceImplementation orderServiceUnderTest;
 
     @Mock
-    private Product product;
+    private UserService userService;
 
     @Mock
     Page<Order> orderPage;
 
     @BeforeEach
     void setUp() {
-        orderServiceUnderTest = new OrderServiceImplementation(orderRepository,roleRepository, modelMapper);
+        orderServiceUnderTest = new OrderServiceImplementation(orderRepository,
+                roleRepository, modelMapper, userService);
     }
 
     @Test
@@ -67,22 +68,13 @@ public class OrderServiceImplementationTest {
         User user = new User
                 ( "austin", "sam", "austin@gmail.com", "male", "27-11-1999", null);
 
-
-//        when(checkOut.getId()).thenReturn(100L);
-        when(product.getId()).thenReturn(200L);
-
         Order order = new Order();
-//        order.setProduct(product);
-//        order.setCheckOut(checkOut);
         order.setStatus("DELIVERED");
         order.setCreatedAt(new Date());
         order.setUpdatedAt(new Date());
         order.setQuantity("5");
 
         Pageable pageable = PageRequest.of(0, 20, Sort.Direction.DESC, "createdAt");
-
-//        assertThat(order.getProduct().getId()).isEqualTo(200L);
-//        assertThat(order.getCheckOut().getId()).isEqualTo(100L);
 
         given(orderRepository.save(order)).willAnswer(invocation -> invocation.getArgument(0));
 
@@ -92,11 +84,40 @@ public class OrderServiceImplementationTest {
 
         assertThat(save.getQuantity()).isEqualTo("5");
 
-        String staus2 = "DELIVERED";
+        String status2 = "DELIVERED";
 
-        when(orderRepository.findByStatusAndUser(staus2, user, pageable)).thenReturn(orderPage);
+        when(orderRepository.findByStatusAndUser(status2, user, pageable)).thenReturn(orderPage);
 
-        orderPage = orderRepository.findByStatusAndUser(staus2, user, pageable);
+        orderPage = orderRepository.findByStatusAndUser(status2, user, pageable);
+        assertThat(orderPage).isNotNull();
+
+
+    }
+
+    @Test
+    void shouldGetOrdersByUser() {
+
+        User user = new User
+                ( "Sophia", "Okito", "sophia@gmail.com", "female", "31-10-1994", null);
+
+        Order order = new Order();
+        order.setStatus("DELIVERED");
+        order.setCreatedAt(new Date());
+        order.setUpdatedAt(new Date());
+        order.setQuantity("5");
+
+        Pageable pageable = PageRequest.of(0, 20, Sort.Direction.DESC, "createdAt");
+
+        given(orderRepository.save(order)).willAnswer(invocation -> invocation.getArgument(0));
+
+        Order save = orderRepository.save(order);
+        verify(orderRepository).save(any(Order.class));
+
+
+        assertThat(save.getQuantity()).isEqualTo("5");
+        when(orderRepository.findByUser(user, pageable)).thenReturn(orderPage);
+
+        orderPage = orderRepository.findByUser(user, pageable);
         assertThat(orderPage).isNotNull();
 
 

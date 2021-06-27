@@ -10,4 +10,6 @@ public interface OrderService {
     PagedOrderByStatusResponse<OrderResponseDTO> userGetOrderByStatus(String status, User user, int page, int size);
     PagedOrderByStatusResponse<OrderResponseDTO> adminGetOrderByStatus(String status,User user, int page, int size);
     Order saveOrder(Order order);
+    PagedOrderByStatusResponse<OrderResponseDTO> adminGetOrderByUser(Long userId, Integer page, Integer size);
+    PagedOrderByStatusResponse<OrderResponseDTO> userGetOrderByUser(Integer page, Integer size);
 }

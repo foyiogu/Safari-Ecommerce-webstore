@@ -15,10 +15,4 @@ public class SubCategory extends BaseModel{
 
     private String name;
 
-    @ManyToOne(cascade = CascadeType.ALL)
-    private Category category;
-
-//    public void setCategory(Category category) {
-//        this.category = category;
-//    }
 }

@@ -9,6 +9,7 @@ import com.decagon.safariwebstore.payload.response.PagedOrderByStatusResponse;
 import com.decagon.safariwebstore.repository.OrderRepository;
 import com.decagon.safariwebstore.repository.RoleRepository;
 import com.decagon.safariwebstore.service.OrderService;
+import com.decagon.safariwebstore.service.UserService;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
@@ -16,6 +17,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
@@ -27,8 +29,9 @@ import java.util.stream.Collectors;
 public class OrderServiceImplementation implements OrderService {
 
     private final OrderRepository orderRepository;
-    RoleRepository roleRepository;
+    private final RoleRepository roleRepository;
     private final ModelMapper modelMapper;
+    private final UserService userService;
 
     @Override
     public OrderResponseDTO getOrder(Long orderId) {
@@ -37,6 +40,7 @@ public class OrderServiceImplementation implements OrderService {
                     throw new ResourceNotFoundException("Order not found!");
                 }), OrderResponseDTO.class);
     }
+
 
     @Override
     public PagedOrderByStatusResponse<OrderResponseDTO> userGetOrderByStatus(String status, User user,
@@ -53,6 +57,7 @@ public class OrderServiceImplementation implements OrderService {
         return ordersPageResponse(content, orderPage);
 
     }
+
 
     @Override
     public PagedOrderByStatusResponse<OrderResponseDTO> adminGetOrderByStatus(String status,User user,
@@ -72,7 +77,7 @@ public class OrderServiceImplementation implements OrderService {
     }
 
     public PagedOrderByStatusResponse<OrderResponseDTO> ordersPageResponse(List<Order> orders,
-                                                                           Page<Order> orderPage){
+                                                                           Page<Order> orderPage) {
         List<OrderResponseDTO> orderResponseList = orders.stream().map(order -> {
             OrderResponseDTO orderResponseDTO = modelMapper.map(order, OrderResponseDTO.class);
             orderResponseDTO.setOrderedBy(modelMapper.map(order.getUser(), UserDTO.class));
@@ -83,6 +88,28 @@ public class OrderServiceImplementation implements OrderService {
                 orderResponseList, orderPage.getNumber(), orderPage.getNumberOfElements(), orders.size(),
                 orderPage.getTotalPages(), orderPage.isLast()
         );
+
+    }
+
+    @Override
+    public PagedOrderByStatusResponse<OrderResponseDTO> adminGetOrderByUser(Long userId, Integer page, Integer size) {
+        User user = userService.findUserByEmail(SecurityContextHolder.getContext().getAuthentication().getName());
+        User userWithId = userService.findUserById(userId);
+        checkUserRole(ERole.ADMIN, user);
+        Pageable pageable = PageRequest.of(page, size, Sort.Direction.DESC, "createdAt");
+        Page<Order> orderPage = orderRepository.findByUser(userWithId, pageable);
+        List<Order> content = orderPage.getNumberOfElements() == 0 ? Collections.emptyList() : orderPage.getContent();
+        return ordersPageResponse(content, orderPage);
+    }
+
+    @Override
+    public PagedOrderByStatusResponse<OrderResponseDTO> userGetOrderByUser(Integer page, Integer size) {
+        User user = userService.findUserByEmail(SecurityContextHolder.getContext().getAuthentication().getName());
+        checkUserRole(ERole.USER, user);
+        Pageable pageable = PageRequest.of(page, size, Sort.Direction.DESC, "createdAt");
+        Page<Order> orderPage = orderRepository.findByUser(user, pageable);
+        List<Order> content = orderPage.getNumberOfElements() == 0 ? Collections.emptyList() : orderPage.getContent();
+        return ordersPageResponse(content, orderPage);
     }
 
     public void checkUserRole(ERole role, User user){

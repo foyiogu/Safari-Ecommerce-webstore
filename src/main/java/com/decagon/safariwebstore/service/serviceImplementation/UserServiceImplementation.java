@@ -27,6 +27,8 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Service
 public class UserServiceImplementation implements UserService {
@@ -62,6 +64,12 @@ public class UserServiceImplementation implements UserService {
         if(!(registerUser.getPassword().equals(registerUser.getConfirmPassword()))){
             throw new BadRequestException("Error: Password does not match");
         }
+        if(!isValidPassword(registerUser.getPassword())){
+            throw new BadRequestException("Error: Password must be between 8 and 20, must be an Alphabet or Number");
+        }
+        if(!isValidEmail(registerUser.getEmail())){
+            throw new BadRequestException("Error: Email must be valid");
+        }
         return new User(
                 registerUser.getFirstName(),
                 registerUser.getLastName(),
@@ -70,6 +78,30 @@ public class UserServiceImplementation implements UserService {
                 registerUser.getDateOfBirth(),
                 bCryptPasswordEncoder.encode(registerUser.getPassword())
         );
+    }
+
+    private boolean isValidPassword(String password) {
+        String regex = "^(([0-9]|[a-z]|[A-Z]|[@])*){8,20}$";
+
+        // Compile the ReGex
+        Pattern p = Pattern.compile(regex);
+        if (password == null) {
+            throw new BadRequestException("Error: Password cannot be null");
+        }
+        Matcher m = p.matcher(password);
+        return m.matches();
+    }
+
+    private boolean isValidEmail(String email) {
+        String regex = "^(.+)@(\\w+)\\.(\\w+)$";
+
+        // Compile the ReGex
+        Pattern p = Pattern.compile(regex);
+        if (email == null) {
+            throw new BadRequestException("Error: Email cannot be null");
+        }
+        Matcher m = p.matcher(email);
+        return m.matches();
     }
 
     @Override
@@ -271,5 +303,12 @@ public class UserServiceImplementation implements UserService {
             return true;
         }
         return false;
+    }
+
+    @Override
+    public User findUserById(Long userId) {
+        Optional<User> user = userRepository.findById(userId);
+        if(user.isEmpty()) throw new ResourceNotFoundException("Incorrect parameter; email " + userId + " does not exist");
+        return user.get();
     }
 }
