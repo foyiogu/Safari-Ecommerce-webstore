@@ -1,5 +1,6 @@
-package com.decagon.safariwebstore.model;
+package com.decagon.safariwebstore.dto;
 
+import com.decagon.safariwebstore.model.ShippingAddress;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -12,9 +13,15 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class OrderRequestDTO {
+    private String quantity;
+
     private String deliveryMethod;
 
+    private Double price;
+
     private Date dateOrdered;
+
+    private Double cardDiscount;
 
     private Date dateDelivered;
 
@@ -22,9 +29,9 @@ public class OrderRequestDTO {
 
     private String paymentType;
 
-    private Double costOfProducts;
+    private String status;
 
-    private Double cardDiscount;
+    private Double costOfProducts; //alias subtotal
 
     private Boolean isGift;
 
@@ -32,6 +39,6 @@ public class OrderRequestDTO {
 
     private ShippingAddress shippingAddress;
 
-    private List<Long> cartItems;
+    private List<Long> cartItemIds;
 
 }

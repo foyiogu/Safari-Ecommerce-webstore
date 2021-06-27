@@ -1,7 +1,7 @@
 package com.decagon.safariwebstore.service;
 
+import com.decagon.safariwebstore.dto.ProductDTO;
 import com.decagon.safariwebstore.model.Product;
-import com.decagon.safariwebstore.model.ProductDTO;
 import com.decagon.safariwebstore.model.ProductPage;
 import com.decagon.safariwebstore.payload.response.Response;
 import com.decagon.safariwebstore.payload.response.auth.ResetPassword;
