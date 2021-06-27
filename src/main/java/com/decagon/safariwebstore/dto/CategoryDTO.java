@@ -1,4 +1,4 @@
-package com.decagon.safariwebstore.model;
+package com.decagon.safariwebstore.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

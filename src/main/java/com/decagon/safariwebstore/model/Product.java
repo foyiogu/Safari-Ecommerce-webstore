@@ -15,8 +15,8 @@ import java.util.List;
 public class Product extends BaseModel {
   
     private String name;
-    @Column(columnDefinition = "decimal")
 
+    @Column(columnDefinition = "decimal")
     //TODO type should be String
     private double price;
 

@@ -48,6 +48,23 @@ public class AddressServiceImplementation implements AddressService {
     }
 
     @Override
+    public Boolean userDefaultAddressExists(User user) {
+        return getAllUserAddresses(user)
+                .stream()
+                .anyMatch(Address::getIsDefaultShippingAddress);
+    }
+
+    @Override
+    public Address getAddressByUserAndAddressAndCityAndState(User user, String address, String city, String state) {
+        return addressRepository.findAddressByUserAndAddressAndCityAndState(user, address,
+                city, state).orElseThrow(
+                () -> {
+                    throw new ResourceNotFoundException("Address not found");
+                }
+        );
+    }
+
+    @Override
     public Boolean isAddressExisting(Address address, User user) {
         return addressRepository
                 .existsAddressByUserAndAddressAndCityAndState(user, address.getAddress(),
