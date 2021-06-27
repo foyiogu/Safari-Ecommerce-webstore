@@ -1,5 +1,7 @@
 package com.decagon.safariwebstore.service.serviceImplementation;
 
+import com.decagon.safariwebstore.dto.OrderRequestDTO;
+import com.decagon.safariwebstore.dto.OrderResponseDTO;
 import com.decagon.safariwebstore.model.*;
 import com.decagon.safariwebstore.repository.OrderRepository;
 import com.decagon.safariwebstore.repository.ShippingAddressRepository;
@@ -9,7 +11,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.modelmapper.ModelMapper;
 
@@ -59,7 +60,7 @@ class CheckOutServiceImplementationTest {
 
     ShippingAddress shippingAddress;
     OrderRequestDTO orderRequestDTO;
-    ProductItem productItem;
+//    ProductItem productItem;
     Product product;
     CartItem cartItem;
 
@@ -91,8 +92,8 @@ class CheckOutServiceImplementationTest {
 
         cartItem = new CartItem();
 
-        cartItem.setQuantity(2);
-        cartItem.setPrice(1500);
+        cartItem.setQuantity("2");
+        cartItem.setPrice(1500D);
         cartItem.setUser(user);
         cartItem.setId(1L);
 
@@ -113,7 +114,7 @@ class CheckOutServiceImplementationTest {
         orderRequestDTO.setDeliveryMethod("door delivery");
         orderRequestDTO.setShippingAddress(shippingAddress);
         orderRequestDTO.setDateDelivered(null);
-        orderRequestDTO.setCartItems(List.of(cartItem.getId()));
+//        orderRequestDTO.setCartItems(List.of(cartItem.getId()));
 
 
         order = new Order();
@@ -126,7 +127,7 @@ class CheckOutServiceImplementationTest {
         order.setDeliveryMethod(orderRequestDTO.getDeliveryMethod());
         order.setShippingAddress(orderRequestDTO.getShippingAddress());
         order.setDateDelivered(orderRequestDTO.getDateDelivered());
-        order.setCartItems(List.of(cartItem));
+//        order.setCartItems(List.of(cartItem));
         order.setUser(user);
 
 

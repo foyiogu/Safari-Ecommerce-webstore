@@ -1,18 +1,17 @@
 package com.decagon.safariwebstore.service.serviceImplementation;
 
 import com.decagon.safariwebstore.exceptions.ResourceNotFoundException;
-import com.decagon.safariwebstore.model.CheckOut;
 import com.decagon.safariwebstore.model.Order;
 import com.decagon.safariwebstore.model.Product;
 import com.decagon.safariwebstore.model.User;
 import com.decagon.safariwebstore.repository.OrderRepository;
 import com.decagon.safariwebstore.repository.RoleRepository;
-import com.decagon.safariwebstore.service.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -34,13 +33,10 @@ public class OrderServiceImplementationTest {
     OrderRepository orderRepository;
     @Mock
     RoleRepository roleRepository;
-    @Mock
-    private UserService userService;
+
+    private ModelMapper modelMapper;
 
     OrderServiceImplementation orderServiceUnderTest;
-
-    @Mock
-    private CheckOut checkOut;
 
     @Mock
     private Product product;
@@ -50,7 +46,7 @@ public class OrderServiceImplementationTest {
 
     @BeforeEach
     void setUp() {
-        orderServiceUnderTest = new OrderServiceImplementation(orderRepository,roleRepository,userService);
+        orderServiceUnderTest = new OrderServiceImplementation(orderRepository,roleRepository, modelMapper);
     }
 
     @Test
@@ -72,13 +68,12 @@ public class OrderServiceImplementationTest {
                 ( "austin", "sam", "austin@gmail.com", "male", "27-11-1999", null);
 
 
-        when(checkOut.getId()).thenReturn(100L);
+//        when(checkOut.getId()).thenReturn(100L);
         when(product.getId()).thenReturn(200L);
 
         Order order = new Order();
-        order.setProduct(product);
-        order.setCheckOut(checkOut);
-        order.setPrice(2000.0);
+//        order.setProduct(product);
+//        order.setCheckOut(checkOut);
         order.setStatus("DELIVERED");
         order.setCreatedAt(new Date());
         order.setUpdatedAt(new Date());
@@ -86,8 +81,8 @@ public class OrderServiceImplementationTest {
 
         Pageable pageable = PageRequest.of(0, 20, Sort.Direction.DESC, "createdAt");
 
-        assertThat(order.getProduct().getId()).isEqualTo(200L);
-        assertThat(order.getCheckOut().getId()).isEqualTo(100L);
+//        assertThat(order.getProduct().getId()).isEqualTo(200L);
+//        assertThat(order.getCheckOut().getId()).isEqualTo(100L);
 
         given(orderRepository.save(order)).willAnswer(invocation -> invocation.getArgument(0));
 

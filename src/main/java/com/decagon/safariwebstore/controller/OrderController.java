@@ -1,17 +1,18 @@
 package com.decagon.safariwebstore.controller;
 
-import com.decagon.safariwebstore.model.Order;
+import com.decagon.safariwebstore.dto.OrderResponseDTO;
 import com.decagon.safariwebstore.model.User;
-import com.decagon.safariwebstore.payload.response.OrderResponse;
 import com.decagon.safariwebstore.payload.response.PagedOrderByStatusResponse;
 import com.decagon.safariwebstore.service.OrderService;
 import com.decagon.safariwebstore.service.UserService;
+import com.decagon.safariwebstore.utils.JWTUtil;
+import com.decagon.safariwebstore.utils.MethodUtils;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletRequest;
 
 
 @RestController
@@ -20,36 +21,40 @@ import org.springframework.web.bind.annotation.*;
 public class OrderController {
 
     private final OrderService orderService;
-    private UserService userService;
+    private final UserService userService;
+    private final JWTUtil jwtUtil;
 
     @GetMapping("/{orderId}")
-    public ResponseEntity<Order> viewParticularOrder(@PathVariable Long orderId) {
-        Order order = orderService.getOrder(orderId);
-        return new ResponseEntity<>(order, HttpStatus.OK);
+    public ResponseEntity<OrderResponseDTO> viewParticularOrder(@PathVariable Long orderId) {
+        return new ResponseEntity<>(orderService.getOrder(orderId), HttpStatus.OK);
     }
 
     @GetMapping("/user/status")
-    public ResponseEntity<PagedOrderByStatusResponse<OrderResponse>> getOrdersByStatusUser(
+    public ResponseEntity<PagedOrderByStatusResponse<OrderResponseDTO>> getOrdersByStatusUser(
             @RequestParam(value = "page", required = false, defaultValue = "0") Integer page,
             @RequestParam(value = "size", required = false, defaultValue = "30") Integer size,
-            @RequestParam(name = "status") String status){
+            @RequestParam(name = "status") String status, HttpServletRequest request){
 
         String upCase = status.toUpperCase();
-        User user = userService.findUserByEmail(SecurityContextHolder.getContext().getAuthentication().getName());
-        PagedOrderByStatusResponse<OrderResponse> orderByStatus = orderService.userGetOrderByStatus(upCase, user, page, size);
+        String jwt = MethodUtils.parseJwt(request);
+        String email = jwtUtil.extractUserName(jwt);
+        User user = userService.findUserByEmail(email);
+        PagedOrderByStatusResponse<OrderResponseDTO> orderByStatus = orderService.userGetOrderByStatus(upCase, user, page, size);
         return ResponseEntity.ok(orderByStatus);
 
     }
 
     @GetMapping("/admin/status")
-    public ResponseEntity<PagedOrderByStatusResponse<OrderResponse>> getOrdersByStatusAdmin(
+    public ResponseEntity<PagedOrderByStatusResponse<OrderResponseDTO>> getOrdersByStatusAdmin(
             @RequestParam(value = "page", required = false, defaultValue = "0") Integer page,
             @RequestParam(value = "size", required = false, defaultValue = "30") Integer size,
-            @RequestParam(name = "status") String status){
+            @RequestParam(name = "status") String status, HttpServletRequest request){
 
         String upCase = status.toUpperCase();
-        User user = userService.findUserByEmail(SecurityContextHolder.getContext().getAuthentication().getName());
-        PagedOrderByStatusResponse<OrderResponse> orderByStatus = orderService.adminGetOrderByStatus(upCase, user, page, size);
+        String jwt = MethodUtils.parseJwt(request);
+        String email = jwtUtil.extractUserName(jwt);
+        User user = userService.findUserByEmail(email);
+        PagedOrderByStatusResponse<OrderResponseDTO> orderByStatus = orderService.adminGetOrderByStatus(upCase, user, page, size);
         return ResponseEntity.ok(orderByStatus);
 
     }

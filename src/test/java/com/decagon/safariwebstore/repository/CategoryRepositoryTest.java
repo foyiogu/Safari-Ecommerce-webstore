@@ -1,7 +1,7 @@
 //package com.decagon.safariwebstore.repository;
 //
 //import com.decagon.safariwebstore.model.Category;
-//import com.decagon.safariwebstore.model.CategoryDTO;
+//import com.decagon.safariwebstore.dto.CategoryDTO;
 //import org.junit.jupiter.api.AfterEach;
 //import org.junit.jupiter.api.Test;
 //import org.modelmapper.ModelMapper;

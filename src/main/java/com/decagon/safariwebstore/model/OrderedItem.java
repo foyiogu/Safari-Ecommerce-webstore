@@ -1,16 +1,17 @@
 package com.decagon.safariwebstore.model;
 
-
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 
 @Data
 @Entity
-@Table(name = "cart_items")
+@Table(name = "ordered_items")
 @EqualsAndHashCode(callSuper = true)
-public class CartItem extends BaseModel{
+public class OrderedItem extends BaseModel {
 
     private Long productId;
 
@@ -29,9 +30,5 @@ public class CartItem extends BaseModel{
     private String color;
 
     private String productImage;
-
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User user;
 
 }
