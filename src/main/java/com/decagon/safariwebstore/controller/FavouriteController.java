@@ -7,6 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,12 +19,14 @@ public class FavouriteController {
     @Autowired
     FavouriteService favouriteService;
     @PutMapping("/favorite/{productId}")
+    @Secured({"ADMIN","USER"})
     public ResponseEntity<?> customerAddFavoriteProduct(@PathVariable Long productId){
         UserDetailsImpl userDetails = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         return new ResponseEntity<>(favouriteService.customerAddProductToFavorite(userDetails,productId), HttpStatus.OK);
     }
 
     @GetMapping("/favourite/products")
+
     public ResponseEntity<?> getAllFavouriteProducts(){
         UserDetailsImpl userDetails = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         return new ResponseEntity<>(favouriteService.getFavouriteProducts(userDetails), HttpStatus.OK);

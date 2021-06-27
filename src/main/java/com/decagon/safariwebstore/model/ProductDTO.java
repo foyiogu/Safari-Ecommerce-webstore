@@ -10,6 +10,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ProductDTO {
+    private Long id;
     private String name;
     private double price;
     private String description;
@@ -19,7 +20,8 @@ public class ProductDTO {
     private List<Color> colors;
     private List<ProductImage> productImages;
 
-    public ProductDTO(String name, double price, String description, List<Category> category, List<SubCategory> subCategory) {
+    public ProductDTO(Long id, String name, double price, String description, List<Category> category, List<SubCategory> subCategory) {
+        this.id = id;
         this.name = name;
         this.price = price;
         this.description = description;

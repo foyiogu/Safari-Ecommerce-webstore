@@ -14,6 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
@@ -31,12 +32,14 @@ public class  AdminController {
   
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/password-forgot")
+    @Secured("ADMIN")
     public ResponseEntity<Response> adminForgotPassword(@RequestParam("email") String email, HttpServletRequest req){
         return adminService.adminForgotPassword(req, email);
     }
 
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/password-reset")
+    @Secured("ADMIN")
     public ResponseEntity<Response> adminResetPassword(@Valid @RequestBody ResetPassword resetPassword) {
         return adminService.adminResetPassword(resetPassword);
     }
@@ -44,6 +47,7 @@ public class  AdminController {
 
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/add-product")
+    @Secured("ADMIN")
     public ResponseEntity<?> addProduct(@Valid @RequestBody ProductRequest productRequest){
 
         productService.saveProduct(productRequest);
@@ -53,11 +57,13 @@ public class  AdminController {
     }
 
     @GetMapping("/products")
+    @Secured("ADMIN")
     public ResponseEntity<Page<ProductDTO>> getAllProducts(ProductPage adminProductPage) {
         return adminService.getAllProducts(adminProductPage);
     }
 
     @GetMapping("/products/{id}")
+    @Secured("ADMIN")
     public ResponseEntity<Product> getSingleProduct(@PathVariable(name = "id")Long productId) {
         return adminService.getSingleProduct(productId);
     }
@@ -66,6 +72,7 @@ public class  AdminController {
 
     @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/update-product/{id}")
+    @Secured("ADMIN")
     public ResponseEntity<?> updateProduct(@PathVariable("id") long productId, @Valid @RequestBody ProductRequest productRequest){
         productService.updateProduct(productId, productRequest);
         // log.info(product.toString());
@@ -76,6 +83,7 @@ public class  AdminController {
 
 
     @PreAuthorize("hasRole('ADMIN')")
+    @Secured("ADMIN")
     @DeleteMapping("/delete-product/{id}")
     public ResponseEntity<?> deleteProduct(@PathVariable(name = "id") Long productId) {
         productService.deleteProduct(productId);

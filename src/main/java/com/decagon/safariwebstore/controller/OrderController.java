@@ -10,6 +10,7 @@ import com.decagon.safariwebstore.service.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
@@ -30,6 +31,7 @@ public class OrderController {
     }
 
     @GetMapping("/user/status")
+    @Secured("USER")
     public ResponseEntity<PagedOrderByStatusResponse<OrderResponse>> getOrdersByStatusUser(
             @RequestParam(value = "page", required = false, defaultValue = "0") Integer page,
             @RequestParam(value = "size", required = false, defaultValue = "30") Integer size,
@@ -43,6 +45,7 @@ public class OrderController {
     }
 
     @GetMapping("/admin/status")
+    @Secured("ADMIN")
     public ResponseEntity<PagedOrderByStatusResponse<OrderResponse>> getOrdersByStatusAdmin(
             @RequestParam(value = "page", required = false, defaultValue = "0") Integer page,
             @RequestParam(value = "size", required = false, defaultValue = "30") Integer size,
@@ -56,6 +59,7 @@ public class OrderController {
     }
 
     @GetMapping("/user")
+    @Secured("USER")
     public ResponseEntity<PagedOrderByStatusResponse<OrderResponse>> userGetOrdersByUser(
             @RequestParam(value = "page", required = false, defaultValue = "0") Integer page,
             @RequestParam(value = "size", required = false, defaultValue = "30") Integer size){
@@ -64,6 +68,7 @@ public class OrderController {
     }
 
     @GetMapping("/admin/{userId}")
+    @Secured("ADMIN")
     public ResponseEntity<PagedOrderByStatusResponse<OrderResponse>> adminGetOrdersByUser(@PathVariable Long userId,
             @RequestParam(value = "page", required = false, defaultValue = "0") Integer page,
             @RequestParam(value = "size", required = false, defaultValue = "30") Integer size){
@@ -72,12 +77,14 @@ public class OrderController {
     }
 
     @PutMapping("/admin/{orderId}")
+    @Secured("ADMIN")
     public ResponseEntity<?> adminUpdateOrderStatus(@PathVariable Long orderId, @RequestBody UpdateOrderRequest orderRequest){
         orderService.updateOrderStatus(orderId, orderRequest);
         return new ResponseEntity<>("Product Status Updated Successfully", HttpStatus.OK);
     }
 
     @PutMapping("/user/{orderId}")
+    @Secured({"ADMIN","USER"})
     public ResponseEntity<?> userConfirmOrder(@PathVariable Long orderId){
         orderService.userConfirmOrderStatus(orderId);
         return new ResponseEntity<>("Product Status Updated Successfully", HttpStatus.OK);

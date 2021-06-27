@@ -9,6 +9,7 @@ import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,6 +25,7 @@ public class CheckOutController {
 
 
     @PostMapping()
+    @Secured({"ADMIN","USER"})
     public ResponseEntity<?> doCheckOut(@RequestBody OrderRequestDTO orderRequest){
         OrderResponseDTO responseDTO = checkoutService.doCheckout(orderRequest);
         return new ResponseEntity<>( responseDTO, HttpStatus.OK);
