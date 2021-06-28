@@ -1,0 +1,42 @@
+
+.wrapper {
+    width: 100%;
+    margin: 3rem 3rem 0 0;
+    padding: 2rem 0 0 0;
+}
+
+.title {
+    font-weight: 400;
+}
+
+.info-wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+.info-content {
+    width: 200px;
+    height: 100px;
+    box-shadow: 0 0 5px 1px rgba(0, 0, 0, 0.1);
+    margin: 2rem 2rem 0 0;
+    padding: 1.5rem 2rem;
+    border-radius: 6px;
+}
+
+.info-title {
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+}
+
+.info-content h2 {
+    color: #ED165F;
+}
+
+.account-info {
+    width: 90%;
+    margin: 2rem 2rem 0 0;
+    padding: 1.5rem 2rem;
+    border-radius: 6px;
+    box-shadow: 0 0 5px 1px rgba(0, 0, 0, 0.1);
+}
