@@ -20,8 +20,6 @@ public class Order extends BaseModel {
 
     private String deliveryMethod;
 
-    private Double price;
-
     private Date dateOrdered;
 
     private Double cardDiscount;
@@ -30,7 +28,7 @@ public class Order extends BaseModel {
     private Date dateDelivered;
 
     @Column(columnDefinition = "DECIMAL")
-    private Double deliveryFee = 2000.00;
+    private Double deliveryFee;
 
     private String paymentType;
 
@@ -47,19 +45,11 @@ public class Order extends BaseModel {
     @JoinColumn(name = "shippingaddress_id")
     private ShippingAddress shippingAddress;
 
-    @OneToMany(targetEntity = CartItem.class)
-    private List<CartItem> cartItems;
-
-    @ManyToOne
-    @JoinColumn(name = "product_id")
-    private Product product;
+    @OneToMany(targetEntity = OrderedItem.class)
+    private List<OrderedItem> orderedItems;
 
     @ManyToOne
     @JoinColumn(name = "users", referencedColumnName = "id")
     private User user;
-
-    @ManyToOne
-    @JoinColumn(name = "checkout_id")
-    private CheckOut checkOut;
 
 }

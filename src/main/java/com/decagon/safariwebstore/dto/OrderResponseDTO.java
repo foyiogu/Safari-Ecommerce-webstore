@@ -1,13 +1,16 @@
-package com.decagon.safariwebstore.model;
+package com.decagon.safariwebstore.dto;
 
+import com.decagon.safariwebstore.model.OrderedItem;
+import com.decagon.safariwebstore.model.ShippingAddress;
 import lombok.Data;
 
-import javax.persistence.*;
 import java.util.Date;
 import java.util.List;
 
 @Data
 public class OrderResponseDTO {
+    private String quantity;
+
     private String deliveryMethod;
 
     private Date dateOrdered;
@@ -20,13 +23,18 @@ public class OrderResponseDTO {
 
     private String paymentType;
 
+    private String status;
+
     private Double costOfProducts; //alias subtotal
+
+    private Boolean isGift;
 
     private Double totalCost;
 
     private ShippingAddress shippingAddress;
 
-    List<ProductItem> products;
+    private List<OrderedItem> orderedItems;
 
+    private UserDTO orderedBy;
 
 }

@@ -19,7 +19,6 @@ public class SecurityAuthorisationConstants {
             "/swagger-ui/**",
             "/swagger-ui/login/",
             "/swagger-ui/api/login/",
-
             "/swagger-ui/#/**",
             // -- Swagger UI v3 (OpenAPI) End
             "/login",
@@ -27,6 +26,7 @@ public class SecurityAuthorisationConstants {
             "api/login/",
             "/#/api/login/",
             "/register",
+            "/api/register",
             "/api/admin/**",
             "/api/**",
             "/api/admin/products/**",
