@@ -41,6 +41,7 @@ import java.util.stream.Collectors;
 @RestController
 @AllArgsConstructor
 @Slf4j
+@RequestMapping("/api")
 @CrossOrigin
 public class
 AuthController {
@@ -54,9 +55,9 @@ AuthController {
     private final JWTUtil jwtUtil;
 
     @Autowired
-    private MessageSource messages;
+    private final MessageSource messages;
 
-    @PostMapping("/api/register")
+    @PostMapping("/register")
     public UserDTO register(@Valid @RequestBody RegisterUser registerUser) throws UnirestException {
         User user = userService.registration(registerUser);
         List<Role> roles = new ArrayList<>();
@@ -72,7 +73,7 @@ AuthController {
         return UserDTO.build(user);
     }
 
-    @PostMapping("/api/admin/register")
+    @PostMapping("/admin/register")
     public UserDTO registerAdmin(@Valid @RequestBody RegisterUser registerUser) throws UnirestException {
         User user = userService.registration(registerUser);
         List<Role> roles = new ArrayList<>();
@@ -115,7 +116,7 @@ AuthController {
 
     //Change/Reset Password
 
-    @PostMapping("/api/updatePassword")
+    @PostMapping("/updatePassword")
     @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     @Secured({"ADMIN","USER"})
     public ResponseEntity<String> changeUserPassword(@RequestBody UpdatePasswordRequest updatePasswordRequest) {
