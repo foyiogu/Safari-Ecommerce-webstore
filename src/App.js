@@ -15,6 +15,9 @@ import AccountInfo from './pages/account/Account'
 import AccountAddressBook from './pages/account/AddressBook'
 import AccountMyOrders from './pages/account/MyOrders'
 import AccountMyFavourites from './pages/account/MyFavourites'
+import AdminDashboard from "./pages/admindashboard/AdminDashboard";
+import AdminOrders from "./pages/adminorders/AdminOrders";
+import AdminProducts from "./pages/adminproducts/AdminProducts";
 
 function App() {
   return (
@@ -36,6 +39,9 @@ function App() {
       <Route path='/account/addressbook' component={AccountAddressBook} />
       <Route path='/account/myorders' component={AccountMyOrders} />
       <Route path='/account/myfavourites' component={AccountMyFavourites} />
+      <Route path='/admin/dashboard' component={AdminDashboard} />
+      <Route path='/admin/orders' component={AdminOrders} />
+      <Route path='/admin/products' component={AdminProducts} />
     </Switch>
     </Router>
     </>
