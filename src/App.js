@@ -1,16 +1,16 @@
 import Navbar from './components/Navbar';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import './styles/style.scss';
-import Home from './pages/Home'
-import About from './pages/About'
-import Contact from './pages/Contact'
-import Cart from './pages/Cart'
-import Checkout from './pages/Checkout'
-import SignInSignUp from './pages/SignInSignUp'
-import TermsConditions from './pages/TermsConditions'
-import Clothes from './pages/categories/Clothes'
-import Shoes from './pages/categories/Shoes'
-import Accessories from './pages/categories/Accessories'
+import Home from './pages/HomePage'
+import About from './pages/AboutPage'
+import Contact from './pages/ContactPage'
+import Cart from './pages/CartPage'
+import Checkout from './pages/CheckoutPage'
+import SignInSignUp from './pages/SignInSignUpPage'
+import TermsConditions from './pages/TermsConditionsPage'
+// import Clothes from './pages/categories/ClothesPage'
+// import Shoes from './pages/categories/ShoesPage'
+// import Accessories from './pages/categories/AccessoriesPage'
 import AccountInfo from './pages/account/Account'
 import AccountAddressBook from './pages/account/AddressBook'
 import AccountMyOrders from './pages/account/MyOrders'
@@ -32,9 +32,9 @@ function App() {
       <Route path='/cart' component={Cart} />
       <Route path='/checkout' component={Checkout} />
       <Route path='/signin-signup' component={SignInSignUp} />
-      <Route path='/categories/clothes/' component={Clothes} />
+      {/* <Route path='/categories/clothes/' component={Clothes} />
       <Route path='/categories/shoes' component={Shoes} />
-      <Route path='/categories/accessories' component={Accessories} />
+      <Route path='/categories/accessories' component={Accessories} /> */}
       <Route path='/account/information' component={AccountInfo} />
       <Route path='/account/addressbook' component={AccountAddressBook} />
       <Route path='/account/myorders' component={AccountMyOrders} />

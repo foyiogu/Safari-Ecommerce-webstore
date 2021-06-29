@@ -1,6 +1,9 @@
 import React from 'react';
-// import { Button } from './Button';
+import '../styles/Layout/_footer.scss';
+// import './css/BackToTop.css'
+import '../styles/Components/_button.scss'
 import { Link } from 'react-router-dom';
+import { BackTop } from 'antd';
 
 function Footer() {
   return (
@@ -8,42 +11,45 @@ function Footer() {
       <div class='footer-links'>
         <div className='footer-link-wrapper'>
           <div class='footer-link-items'>
-            <img src="http://localhost:3000/images/navbar/Logo.png" alt="" />
-          </div>
-          <div class='footer-link-items'>
-            <Link to='/about'>About</Link>
-            <Link to='/contact'>Contact</Link>
-            <Link to='/termscondition'>Terms & Condition</Link>
+          <img src="http://localhost:3000/images/navbar/Logo.png" alt="" />
           </div>
         </div>
         <div className='footer-link-wrapper'>
           <div class='footer-link-items'>
-            <Link to='/'> <i class='fab fa-facebook-f' />Facebook</Link>
-            <Link to='/'><i class='fab fa-twitter' />Twitter</Link>
-            <Link to='/'> <i class='fab fa-instagram' />Insagram</Link>
+
+            <Link to='/sign-up'>About Us</Link>
+            <Link to='/'>Contact</Link>
+            <Link to='/'>Terms & Conditions</Link>
           </div>
         </div>
         <div className='footer-link-wrapper'>
           <div class='footer-link-items'>
-           <p className="footer-subscribe">Subscribe to our newsletter</p>
-           <div className='input'>
-          <form className="subscribe-form single-block-form">
-            <input
-              className='footer-input sbf__input'
-              name='email'
-              type='email'
-              placeholder='Email Address'
+            <Link to='/'>Facebook</Link>
+            <Link to='/'>Twitter</Link>
+            <Link to='/'>Instagram</Link>
+          </div>
+        </div>
+        <div className='footer-link-wrapper'>
+          <div class='footer-link-items'>
+          <form className="">
+            <input className='footer-input' name='email' type='email' placeholder='Email Address'
             />
-            <input type="submit" value="OK" class="sbf__button button"></input>
+            <input type="submit" value="OK" class="subscribe-button"></input>
           </form>
-        </div>
-        </div>
+          </div>
         </div>
         <div className='footer-link-wrapper'>
-        <div class='footer-link-items'>
-        <p className="footer-contact">Lorem ipsum dolor sit amet<br />+234123456789<br />support@safariwebstore.com</p>
+          <div class='footer-link-items'>
+          <p>Lorem ipsum dolor sit. <br/>
+              +23401234567890<br />
+              safari@localhost.com 
+              </p>
+          </div>
         </div>
-        </div>
+      < BackTop>
+        <button className ="backtotop" id="backtotop" title="Go to top"><img src="/images/backtotop-icon.svg" alt="backtotop" className="top-icon"/></button>
+      </BackTop>
+
       </div>
     </div>
   );
