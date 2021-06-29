@@ -17,7 +17,7 @@ const SideBar = ({menuItems}) => {
                  activeStyle={{
                    color: '#FFFFFF',
                    background: '#ED165F',
-                   borderRadius: '0 50px 50px 0'
+                   borderRadius: '0 50px 50px 0',
                  }}
               >
                 {menuItem.name}
