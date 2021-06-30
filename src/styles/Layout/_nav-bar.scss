@@ -252,3 +252,32 @@
     margin-top: -10px;
   }
   }
+
+  @media screen and (max-width: 1240px) {
+.nav-menu.active {
+    background: #c0354c;
+    left: 0;
+    opacity: 1;
+    transition: all 0.5s ease;
+    z-index: 1;
+    margin-top: -10px;
+
+    .nav-links {
+      color: #fff;
+      font-size: 20px;
+  }
+}
+}
+
+.active-icon {
+  color: #ED165F !important;
+}
+
+
+.cart-numbers {
+    background: #c0354c;
+    color: #fff;
+    border-radius: 10px;
+    padding: 2px 7px;
+    margin-right: 5px;
+}

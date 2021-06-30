@@ -1,20 +1,19 @@
+
 :root {
   --primary: #fff;
 }
 
-.btn,
-button {
+.btn {
   padding: 8px 20px;
-  border-radius: 6px;
+  border-radius: 2px;
   outline: none;
   border: none;
   cursor: pointer;
-  text-transform: uppercase;
 }
 
 .btn--primary {
-  background-color: $color-primary;
-  color: $color-white;
+  background-color: var(--primary);
+  color: #242424;
   border: 1px solid var(--primary);
 }
 
@@ -44,19 +43,82 @@ button {
   transition: 250ms;
 }
 
-.btn-block {
-  display: block;
-  width: 100%;
-  font-size: 1rem;
-  font-weight: 400;
-  height: 47px;
-  margin: 5px auto;
-}
-.btn-block--contained{
-  background-color: $color-primary;
-  color: $color-white;
+.subscribe-button {
+  padding: 9.5px 10px 9.5px 10px;
+  background-color: #e9425e;
+  border: none;
+  display: inline-flex;
+  color: #fff;
+  margin-left: -12px;
 }
 
-.btn-block--outline{
-  border: $color-primary solid thin;
+
+.cart-button {
+  background-color: #fff;
+    color: #000;
+    font-weight: 800;
+    font-size: 18px;
+    line-height: 24px;
+    letter-spacing: 2px;
+    border: 2px solid #ED165F;
+    padding: 12px 28px 12px 28px;
+    border-radius: 6px;
+    cursor: pointer !important; 
+}
+
+.cart-proceed-checkout {
+  background: #ED165F;
+  color: #fff;
+  margin-left: 50px;
+}
+
+
+@media screen and (max-width:717px) {
+
+  .cart-proceed-checkout {
+    margin-top: 20px !important;
+  }
+
+  
+}
+
+.favourite-buynow {
+  
+    background: #ED165F;
+    border-radius: 6px;
+    color: #fff;
+    border: none;
+    padding: 12px 33px 11px 33px;
+    margin-left: 32px !important;
+}
+
+.favourite-amount {
+  font-family: Roboto;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 14px;
+  line-height: 16px;
+color: #ED165F;
+}
+
+.favourite-remove 
+  {
+    border: none;
+    background: #fff;
+    font-style: normal;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 18px;
+    letter-spacing: 0.2px;
+    color: #ED165F;
+    margin-top: 10px;
+}
+
+.product-item-addtocart {
+  background: #e9425e;
+  color: #fff;
+  border: none;
+  font-size: 25px;
+  padding: 15px 70px;
+  width: 100%;
 }
