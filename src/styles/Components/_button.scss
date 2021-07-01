@@ -1,7 +1,12 @@
 :root {
   --primary: #fff;
 }
-
+button:disabled{
+  background-color: $color-white;
+  color: $color-primary;
+  border: thin solid $color-primary;
+  cursor: progress;
+}
 .btn,
 button {
   padding: 8px 20px;

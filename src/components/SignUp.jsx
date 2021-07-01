@@ -1,55 +1,88 @@
-import React from 'react';
-import { InputField, Label } from './form-fields';
+import React, {useState, useEffect} from 'react';
+import {doRegistration} from '../services/auth-service';
+import {CheckBox, InputField, Label} from './form-fields';
+import Alert from "./Alert";
 
-const SignUp = ()=>{
-    const [fields, setFields] = React.useState({email:'', password:'', firstName:'', lastName:'', confirmPassword:''})
+const SignUp = () => {
+    const [fields, setFields] = useState({
+        email: '',
+        password: '',
+        firstName: '',
+        lastName: '',
+        confirmPassword: '',
+        newsletter: ''
+    });
+    const [alertBox, setAlertBox] = useState({state:false, message:'',type:'error'});
+    const [disabledButton, setDisabledButton] = useState('');
+
+    useEffect(() => {
+        fields.password.length > 6  && !(fields.password.localeCompare(fields.confirmPassword))
+            ? setDisabledButton('')
+            : setDisabledButton('disabled');
+    }, [fields]);
+
+    const handleChange = (event) => {
+        const {name, value, checked} = event.target;
+        setFields((fields) => ({...fields, [name]: name !== 'newsletter' ? value : checked}));
+    };
+
     return <section className='sign-up'>
         <h5 className='form-title'>CREATE ACCOUNT</h5>
-        <form method='POST'>
-            <Label elementId='first-name' text='first name' />
+        {alertBox.state && <Alert text={alertBox.message} variant={alertBox.type}/>}
+        <form method='POST' onSubmit={(e) => doRegistration(e, fields, setDisabledButton, setAlertBox)}>
+            <Label elementId='first-name' text='first name'/>
             <InputField
-            type='text'
-            value = {fields.firstName}
-            placeholder=''
-            id='first-name'
-            name='firstName'
+                type='text'
+                value={fields.firstName}
+                placeholder=''
+                id='first-name'
+                name='firstName'
+                changeHandler={handleChange}
             />
-            <Label elementId='last-name' text='last name' />
+            <Label elementId='last-name' text='last name'/>
             <InputField
-            type='text'
-            value = {fields.lastName}
-            placeholder=''
-            id='last-name'
-            name='firstName'
-            />
-
-          
-            <Label elementId='email' text='email' />
-            <InputField
-            type='email'
-            value = {fields.email}
-            placeholder=''
-            id='email'
-            name='email'
+                type='text'
+                value={fields.lastName}
+                placeholder=''
+                id='last-name'
+                name='lastName'
+                changeHandler={handleChange}
             />
 
-            <Label elementId='password' text='create password' />
+
+            <Label elementId='email' text='email'/>
             <InputField
-            type='password'
-            value = {fields.password}
-            placeholder=''
-            name='password'
-            id='password'
+                type='email'
+                value={fields.email}
+                placeholder=''
+                id='email'
+                name='email'
+                changeHandler={handleChange}
             />
-            <Label elementId='confirm-password' text='confirm password' />
+
+            <Label elementId='password' text='create password'/>
             <InputField
-            type='password'
-            value = {fields.confirmpassword}
-            placeholder=''
-            name='confirmPassword'
-            id='confirm-password'
+                type='password'
+                value={fields.password}
+                placeholder=''
+                name='password'
+                id='password'
+                changeHandler={handleChange}
             />
-            <button type='submit' className='btn-block btn-block--contained' >create account</button>
+            <Label elementId='confirm-password' text='confirm password'/>
+            <InputField
+                type='password'
+                value={fields.confirmPassword}
+                placeholder=''
+                name='confirmPassword'
+                id='confirm-password'
+                changeHandler={handleChange}
+            />
+
+            <CheckBox name='newsletter' id="newsletter" checked={fields.newsletter} changeHandler={handleChange}/>
+            <Label elementId="newsletter" text="i want to receive safari newsletters with the best deals & offers"/>
+            <button type='submit' className='btn-block btn-block--contained' disabled={disabledButton}>create account
+            </button>
         </form>
     </section>;
 }
