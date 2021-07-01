@@ -1,5 +1,5 @@
-@import '../Vendors/reset-css';
-@import url('http://fonts.cdnfonts.com/css/mulish');
+@import "../Vendors/reset-css";
+@import url("http://fonts.cdnfonts.com/css/mulish");
 
 html {
   scroll-behavior: smooth;
@@ -9,7 +9,9 @@ body {
   overflow-x: hidden;
 }
 
-*, *::after, *::before{
+*,
+*::after,
+*::before {
   box-sizing: border-box;
 }
 
@@ -18,29 +20,29 @@ body {
 }
 
 a {
-    text-decoration: none;
-  }
-
-  input{
-    outline: none;
-  }
-
-  .ui.checkbox input.hidden+label {
-    cursor: pointer;
-    -webkit-user-select: none;
-    user-select: none;
-    font-weight: 400;
+  text-decoration: none;
 }
 
-.ui.checkbox input:checked~.box:after, .ui.checkbox input:checked~label:after {
+input {
+  outline: none;
+}
+
+.ui.checkbox input.hidden + label {
+  cursor: pointer;
+  -webkit-user-select: none;
+  user-select: none;
+  font-weight: 400;
+}
+
+.ui.checkbox input:checked ~ .box:after,
+.ui.checkbox input:checked ~ label:after {
   opacity: 1;
   color: #fff !important;
-  background: #ED165F;
+  background: #ed165f;
 }
 
 .container {
   width: 90% !important;
-  min-height: 500px;
 }
 
 .account-dashboard {
@@ -53,5 +55,3 @@ a {
   padding-top: 34px;
   padding-bottom: 48px;
 }
-
-

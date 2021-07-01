@@ -8,7 +8,7 @@ import Cart from './pages/CartPage'
 import Checkout from './pages/CheckoutPage'
 import SignInSignUp from './pages/SignInSignUpPage'
 import TermsConditions from './pages/TermsConditionsPage'
-// import Clothes from './pages/categories/ClothesPage'
+import Clothes from './pages/categories/Clothes';
 // import Shoes from './pages/categories/ShoesPage'
 // import Accessories from './pages/categories/AccessoriesPage'
 import AccountInfo from './pages/account/Account'
@@ -32,8 +32,8 @@ function App() {
       <Route path='/cart' component={Cart} />
       <Route path='/checkout' component={Checkout} />
       <Route path='/signin-signup' component={SignInSignUp} />
-      {/* <Route path='/categories/clothes/' component={Clothes} />
-      <Route path='/categories/shoes' component={Shoes} />
+      <Route path='/categories/clothes/' component={Clothes} />
+      {/* <Route path='/categories/shoes' component={Shoes} />
       <Route path='/categories/accessories' component={Accessories} /> */}
       <Route path='/account/information' component={AccountInfo} />
       <Route path='/account/addressbook' component={AccountAddressBook} />
