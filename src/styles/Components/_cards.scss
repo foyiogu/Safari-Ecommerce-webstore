@@ -26,7 +26,7 @@
     width: auto;
     display: block;
     flex: 1;
-    
+
     border-radius: 10px;
     padding-bottom: 30px;
     margin-bottom: 40px;
@@ -154,11 +154,9 @@
   }
 }
 
-
 figure {
   margin: 0 !important;
 }
-
 
 .cards__item {
   position: relative;
@@ -168,4 +166,41 @@ figure {
   border-radius: 10px;
   padding-bottom: 30px;
   margin: 0px 25px 40px 25px;
+}
+
+@media only screen and (min-width: 1371px) {
+  .clothes__items {
+    display: grid;
+    place-items: center;
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media only screen and (max-width: 1370px) {
+  .clothes__items {
+    display: grid;
+    place-items: center;
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+@media only screen and (max-width: 1200px) {
+  .clothes__items {
+    display: grid;
+    place-items: center;
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media only screen and (max-width: 1000px) {
+  .clothes__items {
+    display: grid;
+    place-items: center;
+    grid-template-columns: repeat(1, 1fr);
+  }
+}
+
+@media only screen and (max-width: 1024px) {
+  .clothes__items {
+    margin-bottom: 2rem;
+  }
 }
