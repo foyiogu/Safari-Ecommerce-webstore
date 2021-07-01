@@ -66,6 +66,8 @@ function Navbar() {
                 to="/sign-up"
                 className="nav-links-mobile"
                 onClick={closeMobileMenu}
+                // to='/dashboard'
+                // className='nav-links-mobile'
               >
                 Account
               </Link>
