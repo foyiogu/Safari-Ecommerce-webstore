@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import ProductApi from '../apis/ProductApi';
 import { NavLink } from "react-router-dom";
 import { useContext } from "react";
 import CartContext from "../store/Cart-Context";
@@ -10,6 +11,17 @@ function Navbar() {
 
   const handleClick = () => setClick(!click);
   const closeMobileMenu = () => setClick(false);
+
+  const search = async (e) => {
+
+    if(e.key === "Enter"){
+      alert("You searched for "+e.target.value)
+
+      const searchedProduct = await ProductApi.searchProductByParams(e.target.value);
+
+      console.log(searchedProduct, "DHHDHD")
+    }
+  }
 
   return (
     <>
@@ -80,12 +92,8 @@ function Navbar() {
           </div>
           <ul className={click ? "nav-menu-right active" : "nav-menu-right"}>
             <li className="nav-item">
-              <form>
-                <input
-                  type="text"
-                  placeholder="Search..."
-                  className="searchbox"
-                />
+            <form onSubmit={e => e.preventDefault()}>
+                <input type="text" placeholder="Search..." onKeyPress={search} className="searchbox"/>
               </form>
             </li>
             <li className="nav-item">

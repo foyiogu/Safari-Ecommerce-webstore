@@ -1,10 +1,9 @@
 import React from "react";
-import { Link } from "react-router-dom";
 import CartContext from "../store/Cart-Context";
 import { useContext, useEffect, useState } from "react";
-import productApis from "../apis/ProductApi";
+import ProductApis from "../apis/ProductApi";
+import { Link } from "react-router-dom";
 import FavouriteContext from "../store/Favourite-Context";
-
 function CardProductItem(props) {
   const [cartItemsDB, setCartItemsDB] = useState([]);
 
@@ -24,7 +23,7 @@ function CardProductItem(props) {
   function toggleAddToCartHandler() {
     if (itemIsInCart) {
       cartCtx.removeCartItem(props.id);
-      productApis.deleteProductFromCart(props.id);
+      ProductApis.deleteProductFromCart(props.id);
     } else {
       cartCtx.addToCart({
         id: props.id,
@@ -33,7 +32,7 @@ function CardProductItem(props) {
         image: props.image,
       });
 
-      productApis.addProductToCart(props.id);
+      ProductApis.addProductToCart(props.id);
     }
   }
 
@@ -48,38 +47,41 @@ function CardProductItem(props) {
         name: props.name,
         image: props.image,
       });
-      productApis.addProductToFavorite(props.id);
+      ProductApis.addProductToFavorite(props.id);
     }
   }
 
   return (
     <>
-      <li className="cards__item">
-        <div>
-          <figure className="cards_item_pic_wrap">
-            <img
-              src={props.src}
-              alt="ProductPhoto"
-              className="cards_item_img"
-            />
-          </figure>
-          <div className="cards__item__info">
-            <h5 className="cards__item__text">{props.name}</h5>
-            <p className="cards__item__price">{props.price}</p>
-            <div className="product-item-hover">
-              <div className="favourite" onClick={toggleAddToFavoriteHandler}>
-                <i class="far fa-heart">{itemIsFavorite ? "x" : "a"}</i>
-              </div>
+      {" "}
+      <Link to={props.path}>
+        <li className="cards__item">
+          <div>
+            <figure className="cards_item_pic_wrap">
+              <img
+                src={props.src}
+                alt="ProductPhoto"
+                className="cards_item_img"
+              />
+            </figure>
+            <div className="cards__item__info">
+              <h5 className="cards__item__text">{props.name}</h5>
+              <p className="cards__item__price">{props.price}</p>
+              <div className="product-item-hover">
+                <div className="favourite" onClick={toggleAddToFavoriteHandler}>
+                  <i class="far fa-heart">{itemIsFavorite ? "x" : ""}</i>
+                </div>
 
-              <button className="addtocart" onClick={toggleAddToCartHandler}>
-                {itemIsInCart ? "Remove from cart" : "ADD TO CART"}
-                <i class="cart-icon fas fa-shopping-cart"></i>
-              </button>
+                <button className="addtocart" onClick={toggleAddToCartHandler}>
+                  ADD TO CART
+                  <i class="cart-icon fas fa-shopping-cart"></i>
+                </button>
+              </div>
+              {/* <div>{props.id}</div> */}
             </div>
-            <div>{props.id}</div>
           </div>
-        </div>
-      </li>
+        </li>
+      </Link>
     </>
   );
 }
