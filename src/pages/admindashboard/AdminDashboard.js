@@ -6,7 +6,7 @@ const AdminDashboard = (props) => {
   return (
      <AdminLayout>
        <div className="wrapper">
-         <h1 className="title">Dashboard</h1>
+        
 
          <div className="info-wrapper">
            <div className="info-content">
