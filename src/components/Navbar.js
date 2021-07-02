@@ -1,102 +1,132 @@
-import React, { useState } from 'react';
-// import { Button } from './Button';
-import { Link } from 'react-router-dom';
-// import './css/Navbar.css';
+import React, { useState } from "react";
+import { Link } from "react-router-dom";
+import ProductApi from '../apis/ProductApi';
+import { NavLink } from "react-router-dom";
+import { useContext } from "react";
+import CartContext from "../store/Cart-Context";
 
 function Navbar() {
+  const cartCtx = useContext(CartContext);
   const [click, setClick] = useState(false);
-//   const [button, setButton] = useState(true);
 
   const handleClick = () => setClick(!click);
   const closeMobileMenu = () => setClick(false);
 
-//   const showButton = () => {
-//     if (window.innerWidth <= 960) {
-//       setButton(false);
-//     } else {
-//       setButton(true);
-//     }
-//   };
+  const search = async (e) => {
 
-//   useEffect(() => {
-//     showButton();
-//   }, []);
+    if(e.key === "Enter"){
+      alert("You searched for "+e.target.value)
 
-//   window.addEventListener('resize', showButton);
+      const searchedProduct = await ProductApi.searchProductByParams(e.target.value);
+
+      console.log(searchedProduct, "DHHDHD")
+    }
+  }
 
   return (
     <>
-      <nav className='navbar'>
-        <div className='navbar-container'>
-          <div className='menu-icon' onClick={handleClick}>
-            <i className={click ? 'fas fa-times' : 'fas fa-bars'} />
+      <nav className="navbar">
+        <div className="navbar-container">
+          <div className="menu-icon" onClick={handleClick}>
+            <i className={click ? "fas fa-times" : "fas fa-bars"} />
           </div>
-          <ul className={click ? 'nav-menu active' : 'nav-menu'}>
-            <li className='nav-item active'>
-              <Link to='/' className='nav-links' onClick={closeMobileMenu}>
+          <ul className={click ? "nav-menu active" : "nav-menu"}>
+            <li className="nav-item">
+              <NavLink
+                exact
+                activeClassName="active"
+                to="/"
+                className="nav-links"
+                onKeyPress={closeMobileMenu}
+              >
                 Home
-              </Link>
+              </NavLink>
             </li>
-            <li className='nav-item'>
-              <Link
-                to='/categories/clothes'
-                className='nav-links'
+            <li className="nav-item">
+              <NavLink
+                activeClassName="active"
+                to="/categories/clothes"
+                className="nav-links"
                 onClick={closeMobileMenu}
               >
                 Clothes
-              </Link>
+              </NavLink>
             </li>
-            <li className='nav-item'>
-              <Link
-                to='categories/shoes'
-                className='nav-links'
+            <li className="nav-item">
+              <NavLink
+                activeClassName="active"
+                to="/categories/shoes"
+                className="nav-links"
                 onClick={closeMobileMenu}
               >
                 Shoes
-              </Link>
+              </NavLink>
             </li>
-            <li className='nav-item'>
-              <Link
-                to='categories/accessories'
-                className='nav-links'
+            <li className="nav-item">
+              <NavLink
+                activeClassName="active"
+                to="/categories/accessories"
+                className="nav-links"
                 onClick={closeMobileMenu}
               >
                 Accessories
-              </Link>
+              </NavLink>
             </li>
 
             <li>
               <Link
-                to='/sign-up'
-                className='nav-links-mobile'
+                to="/sign-up"
+                className="nav-links-mobile"
                 onClick={closeMobileMenu}
+                // to='/dashboard'
+                // className='nav-links-mobile'
               >
                 Account
               </Link>
             </li>
           </ul>
           <div>
-          <Link to='/' className='navbar-logo' onClick={closeMobileMenu}>
-            <img src='../images/navbar/Logo.png' alt='safari-logo'/>
-          </Link>
+            <Link to="/" className="navbar-logo" onClick={closeMobileMenu}>
+              <img src="../images/navbar/Logo.png" alt="safari-logo" />
+            </Link>
           </div>
-          <ul className={click ? 'nav-menu-right active' : 'nav-menu-right'}>
-            <li className='nav-item'>
-              <input type="text" placeholder="Search..." className="searchbox"/>
+          <ul className={click ? "nav-menu-right active" : "nav-menu-right"}>
+            <li className="nav-item">
+            <form onSubmit={e => e.preventDefault()}>
+                <input type="text" placeholder="Search..." onKeyPress={search} className="searchbox"/>
+              </form>
             </li>
-            <li className='nav-item'>
-               <i class="fas fa-search search-icon"></i>
+            <li className="nav-item">
+              <i class="fas fa-search search-icon"></i>
             </li>
-            <li className='nav-item'> 
-            <Link to='/signin-signup' className='nav-links'><i class="fas fa-user"></i></Link>
+            <li className="nav-item">
+              <NavLink
+                activeClassName="active-icon"
+                to="/signin-signup"
+                className="nav-links"
+              >
+                <i class="fas fa-user"></i>
+              </NavLink>
             </li>
-            <li className='nav-item'> 
-            <Link to='/cart' className='nav-links'><i class="fas fa-shopping-cart"></i></Link>
+            <li className="nav-item">
+              <NavLink
+                activeClassName="active-icon"
+                to="/cart"
+                className="nav-links"
+              >
+                <div className="cart-numbers">{cartCtx.totalItemsInCart}</div>
+                <i class="fas fa-shopping-cart"></i>
+              </NavLink>
             </li>
-            <li className='nav-item'> 
-            <Link to='/favourites' className='nav-links'><i class="fas fa-heart"></i></Link>
+            <li className="nav-item">
+              <NavLink
+                activeClassName="active-icon"
+                to="/account/favourites"
+                className="nav-links"
+              >
+                <i class="fas fa-heart"></i>
+              </NavLink>
             </li>
-           
           </ul>
         </div>
       </nav>
