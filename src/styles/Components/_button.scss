@@ -3,7 +3,7 @@
   --primary: #fff;
 }
 
-.btn {
+.btn,button {
   padding: 8px 20px;
   border-radius: 2px;
   outline: none;
@@ -132,4 +132,12 @@ color: #ED165F;
     color: #ED165F;
     border: none;
     text-transform: uppercase;
+}
+
+
+button:disabled{
+  background-color: $color-white;
+  color: $color-primary;
+  border: thin solid $color-primary;
+  cursor: progress;
 }

@@ -10,12 +10,12 @@ const SelectField = ()=>{
     return (<></>);
 }
 
-const CheckBox = ({name, value, id,checked, ...props})=>{
-    return (<input type='checkbox' name={name} value={value} id={id} props checked={checked} className='check-box'/>);
+const CheckBox = ({name, value, id,checked,changeHandler, ...props})=>{
+    return (<input type='checkbox' name={name} value={value} id={id} props checked={checked} className='check-box' onChange={changeHandler}/>);
 }
 
 const Label = ({elementId, id, text})=>(
-    <label for={elementId} id={id} className='label'>{text}</label>
+    <label htmlFor={elementId} id={id} className='label'>{text}</label>
 );
 
 
