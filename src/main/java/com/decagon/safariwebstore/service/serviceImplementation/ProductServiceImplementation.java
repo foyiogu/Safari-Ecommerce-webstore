@@ -46,7 +46,10 @@ public class ProductServiceImplementation implements ProductService {
         List<Product> searchedProducts = new ArrayList<>();
         List<Product> productList = productRepository.findAll();
         List<Product> products = productRepository.findByNameContains(keyword);
-        List<Product> productByCategory = productList.stream().filter(product -> product.getCategory().stream().anyMatch(category -> category.getName().contains(keyword))).collect(Collectors.toList());
+        List<Product> productByCategory = productList.stream()
+                .filter(product -> product.getCategory()
+                        .stream().anyMatch(category -> category.getName()
+                                .contains(keyword))).collect(Collectors.toList());
 
         searchedProducts.addAll(products);
         searchedProducts.addAll(productByCategory);
